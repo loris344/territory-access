@@ -91,7 +91,7 @@ const Apply = () => {
                     .filter((e) => e.status !== "closed")
                     .map((e) => (
                       <option key={e.id} value={e.slug}>
-                        {e.name} — {e.price_eur.toLocaleString("fr-FR")} €
+                        {e.name} — ${e.price_usd.toLocaleString("en-US")}
                       </option>
                     ))}
                 </select>

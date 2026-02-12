@@ -70,8 +70,8 @@ const ExpeditionDetail = () => {
               <div>
                 <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Dates</p>
                 <p className="font-heading text-sm">
-                  {new Date(expedition.start_date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })} –{" "}
-                  {new Date(expedition.end_date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
+                  {new Date(expedition.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} –{" "}
+                  {new Date(expedition.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
                 </p>
               </div>
               <div>
@@ -80,7 +80,7 @@ const ExpeditionDetail = () => {
               </div>
               <div>
                 <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Price</p>
-                <p className="font-heading text-sm">{expedition.price_eur.toLocaleString("fr-FR")} €</p>
+                <p className="font-heading text-sm">${expedition.price_usd.toLocaleString("en-US")}</p>
               </div>
               <div>
                 <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Intensity</p>
