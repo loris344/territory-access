@@ -23,7 +23,7 @@ const WorldMap = () => {
   };
 
   return (
-    <section id="map" className="py-24 lg:py-32 bg-background">
+    <section id="map" className="py-12 lg:py-16 bg-background">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
