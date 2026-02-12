@@ -27,12 +27,12 @@ const Navbar = () => {
             >
               Apply
             </Link>
-            <a
-              href="#contact"
+            <Link
+              to="/apply"
               className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors"
             >
               Contact
-            </a>
+            </Link>
           </div>
 
           {/* Mobile toggle */}
@@ -68,13 +68,13 @@ const Navbar = () => {
             >
               Apply
             </Link>
-            <a
-              href="#contact"
+            <Link
+              to="/apply"
               onClick={() => setIsOpen(false)}
               className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground"
             >
               Contact
-            </a>
+            </Link>
           </div>
         )}
       </div>

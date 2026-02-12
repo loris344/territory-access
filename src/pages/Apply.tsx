@@ -14,7 +14,6 @@ const applicationSchema = z.object({
   email: z.string().trim().email("Invalid email").max(255, "Max 255 characters"),
   phone: z.string().trim().min(5, "Invalid phone number").max(30, "Max 30 characters"),
   nationality: z.string().trim().min(1, "Required").max(100, "Max 100 characters"),
-  linkedin_url: z.string().url("Invalid URL").optional().or(z.literal("")),
   physical_condition: z.string().trim().min(10, "Min 10 characters").max(2000, "Max 2000 characters"),
   motivation_text: z.string().trim().min(20, "Min 20 characters").max(5000, "Max 5000 characters"),
 });
@@ -38,10 +37,14 @@ const Apply = () => {
     email: "",
     phone: "",
     nationality: "",
-    linkedin_url: "",
     physical_condition: "",
     motivation_text: "",
   });
+
+  // Scroll to top on mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   // Fetch expeditions from DB, fallback to local data
   useEffect(() => {
@@ -120,7 +123,7 @@ const Apply = () => {
       email: result.data.email,
       phone: result.data.phone,
       nationality: result.data.nationality,
-      linkedin_url: result.data.linkedin_url || null,
+      linkedin_url: null,
       physical_condition: result.data.physical_condition,
       motivation_text: result.data.motivation_text,
       status: "pending",
@@ -242,20 +245,13 @@ const Apply = () => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
                 <div>
                   <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
                     Nationality
                   </label>
                   <input type="text" name="nationality" value={form.nationality} onChange={handleChange} required className={inputClass} />
                   {errorText("nationality")}
-                </div>
-                <div>
-                  <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
-                    LinkedIn URL
-                  </label>
-                  <input type="url" name="linkedin_url" value={form.linkedin_url} onChange={handleChange} className={inputClass} placeholder="https://" />
-                  {errorText("linkedin_url")}
                 </div>
               </div>
 
