@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ComposableMap,
   Geographies,
   Geography,
   Marker,
+  ZoomableGroup,
 } from "react-simple-maps";
 import { motion, AnimatePresence } from "framer-motion";
 import { getActiveExpeditions, type Expedition } from "@/data/expeditions";
@@ -16,10 +17,19 @@ const WorldMap = () => {
   const navigate = useNavigate();
   const [hovered, setHovered] = useState<Expedition | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     setTooltipPos({ x: e.clientX, y: e.clientY });
   };
+
+  const handleZoomIn = useCallback(() => {
+    setZoom((z) => Math.min(z * 1.5, 8));
+  }, []);
+
+  const handleZoomOut = useCallback(() => {
+    setZoom((z) => Math.max(z / 1.5, 1));
+  }, []);
 
   return (
     <section id="map" className="py-24 lg:py-32 bg-background">
@@ -35,12 +45,33 @@ const WorldMap = () => {
           <h2 className="heading-display text-2xl sm:text-3xl md:text-4xl">
             Where We Go
           </h2>
+          <p className="body-text text-xs text-muted-foreground mt-3 tracking-wider uppercase">
+            Drag to explore · Scroll to zoom
+          </p>
         </motion.div>
 
         <div
           className="relative border border-border bg-card overflow-hidden"
           onMouseMove={handleMouseMove}
         >
+          {/* Zoom controls */}
+          <div className="absolute top-4 right-4 z-10 flex flex-col gap-1">
+            <button
+              onClick={handleZoomIn}
+              className="w-8 h-8 bg-background/80 backdrop-blur-sm border border-border text-foreground flex items-center justify-center text-sm hover:bg-secondary transition-colors"
+              aria-label="Zoom in"
+            >
+              +
+            </button>
+            <button
+              onClick={handleZoomOut}
+              className="w-8 h-8 bg-background/80 backdrop-blur-sm border border-border text-foreground flex items-center justify-center text-sm hover:bg-secondary transition-colors"
+              aria-label="Zoom out"
+            >
+              −
+            </button>
+          </div>
+
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{
@@ -49,48 +80,67 @@ const WorldMap = () => {
             }}
             style={{ width: "100%", height: "auto" }}
           >
-            <Geographies geography={geoUrl}>
-              {({ geographies }) =>
-                geographies.map((geo) => (
-                  <Geography
-                    key={geo.rsmKey}
-                    geography={geo}
-                    fill="hsl(220, 10%, 18%)"
-                    stroke="hsl(220, 8%, 28%)"
-                    strokeWidth={0.5}
-                    style={{
-                      default: { outline: "none" },
-                      hover: { outline: "none", fill: "hsl(220, 10%, 22%)" },
-                      pressed: { outline: "none" },
-                    }}
-                  />
-                ))
-              }
-            </Geographies>
+            <ZoomableGroup
+              zoom={zoom}
+              onMoveEnd={({ zoom: newZoom }) => setZoom(newZoom)}
+              minZoom={1}
+              maxZoom={8}
+            >
+              <Geographies geography={geoUrl}>
+                {({ geographies }) =>
+                  geographies.map((geo) => (
+                    <Geography
+                      key={geo.rsmKey}
+                      geography={geo}
+                      fill="hsl(0, 0%, 11%)"
+                      stroke="hsl(0, 0%, 20%)"
+                      strokeWidth={0.5}
+                      style={{
+                        default: { outline: "none" },
+                        hover: { outline: "none", fill: "hsl(0, 0%, 15%)" },
+                        pressed: { outline: "none" },
+                      }}
+                    />
+                  ))
+                }
+              </Geographies>
 
-            {expeditions.map((exp) => (
-              <Marker
-                key={exp.id}
-                coordinates={exp.coordinates}
-                onMouseEnter={() => setHovered(exp)}
-                onMouseLeave={() => setHovered(null)}
-                onClick={() => navigate(`/expeditions/${exp.slug}`)}
-              >
-                <circle
-                  r={5}
-                  fill="hsl(0, 85%, 50%)"
-                  stroke="hsl(0, 0%, 10%)"
-                  strokeWidth={1.5}
-                  className="cursor-pointer"
-                  style={{ transition: "r 0.2s" }}
-                />
-                <circle
-                  r={10}
-                  fill="transparent"
-                  className="cursor-pointer"
-                />
-              </Marker>
-            ))}
+              {expeditions.map((exp) => (
+                <Marker
+                  key={exp.id}
+                  coordinates={exp.coordinates}
+                  onMouseEnter={() => setHovered(exp)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => navigate(`/expeditions/${exp.slug}`)}
+                >
+                  {/* Outer glow ring */}
+                  <circle
+                    r={12 / zoom}
+                    fill="hsla(0, 0%, 96%, 0.06)"
+                    className="cursor-pointer"
+                  />
+                  {/* Mid ring */}
+                  <circle
+                    r={7 / zoom}
+                    fill="hsla(0, 0%, 96%, 0.12)"
+                    className="cursor-pointer"
+                  />
+                  {/* Core dot */}
+                  <circle
+                    r={3.5 / zoom}
+                    fill="hsl(0, 0%, 96%)"
+                    className="cursor-pointer"
+                    style={{ transition: "r 0.2s" }}
+                  />
+                  {/* Invisible hit area */}
+                  <circle
+                    r={14 / zoom}
+                    fill="transparent"
+                    className="cursor-pointer"
+                  />
+                </Marker>
+              ))}
+            </ZoomableGroup>
           </ComposableMap>
 
           {/* Tooltip */}
@@ -108,7 +158,7 @@ const WorldMap = () => {
                 }}
               >
                 <div className="border border-border bg-card min-w-[280px] overflow-hidden">
-                  {/* Image placeholder */}
+                  {/* Image */}
                   <div className="aspect-[16/9] bg-secondary flex items-center justify-center">
                     {hovered.hero_image_url ? (
                       <img
