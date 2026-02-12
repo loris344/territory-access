@@ -19,6 +19,23 @@ const ExpeditionCard = ({ expedition }: { expedition: Expedition }) => {
       to={`/expeditions/${expedition.slug}`}
       className="group block border border-border bg-card hover:border-accent/50 transition-all duration-300"
     >
+      {/* Hero image placeholder */}
+      <div className="aspect-[16/9] bg-secondary border-b border-border overflow-hidden">
+        {expedition.hero_image_url ? (
+          <img
+            src={expedition.hero_image_url}
+            alt={expedition.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center">
+            <span className="font-heading text-[10px] tracking-[0.2em] uppercase text-muted-foreground">
+              Image coming soon
+            </span>
+          </div>
+        )}
+      </div>
+
       <div className="p-6 sm:p-8">
         {/* Status badge */}
         <div className="flex items-center justify-between mb-6">
@@ -40,11 +57,11 @@ const ExpeditionCard = ({ expedition }: { expedition: Expedition }) => {
           {expedition.location}
         </p>
 
-        {/* Dates & Price */}
+        {/* Dates */}
         <div className="flex items-center gap-4 mb-6 text-sm text-muted-foreground body-text">
           <span>
-            {new Date(expedition.start_date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })} –{" "}
-            {new Date(expedition.end_date).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
+            {new Date(expedition.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} –{" "}
+            {new Date(expedition.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
           </span>
         </div>
 
@@ -55,7 +72,7 @@ const ExpeditionCard = ({ expedition }: { expedition: Expedition }) => {
         {/* Price & CTA */}
         <div className="flex items-center justify-between pt-6 border-t border-border">
           <span className="font-heading text-xl tracking-wider">
-            {expedition.price_eur.toLocaleString("fr-FR")} €
+            ${expedition.price_usd.toLocaleString("en-US")}
           </span>
           <span className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground group-hover:text-foreground transition-colors">
             View details →
