@@ -37,7 +37,7 @@ const ExpeditionCard = ({ expedition }: { expedition: Expedition }) => {
         )}
       </div>
 
-      <div className="p-6 sm:p-8">
+      <div className="p-4 sm:p-6 md:p-8">
         {/* Status badge */}
         <div className="flex items-center justify-between mb-6">
           <span className={`font-heading text-[10px] tracking-[0.15em] uppercase px-3 py-1 ${statusStyles[expedition.status]}`}>
