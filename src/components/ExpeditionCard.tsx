@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import type { Expedition } from "@/data/expeditions";
 
+
 const statusStyles = {
   open: "bg-foreground/10 text-foreground border border-foreground/20",
   limited: "bg-accent/10 text-accent-red border border-accent/30",

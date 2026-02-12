@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   ComposableMap,
   Geographies,
@@ -13,6 +13,7 @@ const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 const WorldMap = () => {
   const expeditions = getActiveExpeditions();
+  const navigate = useNavigate();
   const [hovered, setHovered] = useState<Expedition | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
@@ -32,12 +33,12 @@ const WorldMap = () => {
         >
           <div className="h-px w-12 bg-accent mb-10" />
           <h2 className="heading-display text-2xl sm:text-3xl md:text-4xl">
-            Operations Map
+            Where We Go
           </h2>
         </motion.div>
 
         <div
-          className="relative border border-border bg-card"
+          className="relative border border-border bg-card overflow-hidden"
           onMouseMove={handleMouseMove}
         >
           <ComposableMap
@@ -54,12 +55,12 @@ const WorldMap = () => {
                   <Geography
                     key={geo.rsmKey}
                     geography={geo}
-                    fill="hsl(0, 0%, 15%)"
-                    stroke="hsl(0, 0%, 22%)"
+                    fill="hsl(220, 10%, 18%)"
+                    stroke="hsl(220, 8%, 28%)"
                     strokeWidth={0.5}
                     style={{
                       default: { outline: "none" },
-                      hover: { outline: "none", fill: "hsl(0, 0%, 18%)" },
+                      hover: { outline: "none", fill: "hsl(220, 10%, 22%)" },
                       pressed: { outline: "none" },
                     }}
                   />
@@ -73,11 +74,12 @@ const WorldMap = () => {
                 coordinates={exp.coordinates}
                 onMouseEnter={() => setHovered(exp)}
                 onMouseLeave={() => setHovered(null)}
+                onClick={() => navigate(`/expeditions/${exp.slug}`)}
               >
                 <circle
                   r={5}
-                  fill="hsl(0, 100%, 41%)"
-                  stroke="hsl(0, 0%, 0%)"
+                  fill="hsl(0, 85%, 50%)"
+                  stroke="hsl(0, 0%, 10%)"
                   strokeWidth={1.5}
                   className="cursor-pointer"
                   style={{ transition: "r 0.2s" }}
@@ -105,28 +107,44 @@ const WorldMap = () => {
                   top: tooltipPos.y - 10,
                 }}
               >
-                <Link
-                  to={`/expeditions/${hovered.slug}`}
-                  className="pointer-events-none block border border-border bg-card p-4 min-w-[220px]"
-                >
-                  <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-1">
-                    {hovered.location}
-                  </p>
-                  <p className="font-heading text-sm tracking-wider uppercase mb-2">
-                    {hovered.name}
-                  </p>
-                  <div className="flex items-center justify-between text-xs text-muted-foreground">
-                    <span className="font-heading tracking-wider">
-                      {hovered.duration_days} DAYS
-                    </span>
-                    <span className="font-heading tracking-wider">
-                      ${hovered.price_usd.toLocaleString("en-US")}
-                    </span>
+                <div className="border border-border bg-card min-w-[280px] overflow-hidden">
+                  {/* Image placeholder */}
+                  <div className="aspect-[16/9] bg-secondary flex items-center justify-center">
+                    {hovered.hero_image_url ? (
+                      <img
+                        src={hovered.hero_image_url}
+                        alt={hovered.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <span className="font-heading text-[9px] tracking-[0.2em] uppercase text-muted-foreground">
+                        Photo coming soon
+                      </span>
+                    )}
                   </div>
-                  <div className="mt-2 text-xs text-muted-foreground">
-                    {new Date(hovered.start_date).toLocaleDateString("en-US", { month: "short", year: "numeric" })}
+
+                  <div className="p-4">
+                    <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-1">
+                      {hovered.country}
+                    </p>
+                    <p className="font-heading text-sm tracking-wider uppercase mb-2">
+                      {hovered.name}
+                    </p>
+                    <p className="body-text text-xs text-muted-foreground mb-3 line-clamp-2">
+                      {hovered.short_description}
+                    </p>
+                    <div className="flex items-center gap-3 text-[10px] text-muted-foreground font-heading tracking-wider uppercase">
+                      <span>{hovered.duration_days} days</span>
+                      <span className="text-border">|</span>
+                      <span>{hovered.difficulty_level}</span>
+                      <span className="text-border">|</span>
+                      <span>{hovered.intensity_type}</span>
+                    </div>
+                    <div className="mt-2 text-[10px] text-muted-foreground font-heading tracking-wider">
+                      {new Date(hovered.start_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })} – {new Date(hovered.end_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                    </div>
                   </div>
-                </Link>
+                </div>
               </motion.div>
             )}
           </AnimatePresence>

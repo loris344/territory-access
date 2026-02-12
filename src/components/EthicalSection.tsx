@@ -4,8 +4,8 @@ const EthicalSection = () => {
   const points = [
     "No active war zones.",
     "No illegal access.",
-    "No staged or humiliating experiences.",
-    "No propaganda tourism.",
+    "No staged or degrading experiences.",
+    "Respect for local communities at all times.",
   ];
 
   return (
@@ -20,7 +20,7 @@ const EthicalSection = () => {
           <div className="h-px w-12 bg-accent mb-10" />
 
           <h2 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-10">
-            Structured. Legal. Controlled.
+            Our Commitments
           </h2>
 
           <ul className="space-y-4">
