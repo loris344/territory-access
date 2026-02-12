@@ -23,8 +23,8 @@ const WorldMap = () => {
   };
 
   return (
-    <section id="map" className="py-12 lg:py-16 bg-background">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section id="map" className="py-8 sm:py-12 lg:py-16 bg-background">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -51,7 +51,7 @@ const WorldMap = () => {
               scale: 180,
               center: [50, 42],
             }}
-            style={{ width: "100%", height: "450px" }}
+            style={{ width: "100%", height: "clamp(280px, 50vw, 450px)" }}
           >
             <ZoomableGroup
               center={[50, 42]}
