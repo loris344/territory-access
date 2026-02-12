@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { getExpeditionBySlug } from "@/data/expeditions";
@@ -18,6 +19,10 @@ const statusLabels = {
 const ExpeditionDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const expedition = slug ? getExpeditionBySlug(slug) : undefined;
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [slug]);
 
   if (!expedition) {
     return (
