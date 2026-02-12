@@ -65,6 +65,13 @@ export type Database = {
             referencedRelation: "expeditions"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_applications_expedition"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
         ]
       }
       expedition_days_itinerary: {
