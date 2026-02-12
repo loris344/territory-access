@@ -8,7 +8,7 @@ const HeroSection = () => {
       {/* Background image with dark overlay */}
       <div className="absolute inset-0">
         <img src={heroBg} alt="" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 bg-background/80" />
+        <div className="absolute inset-0 bg-background/65" />
       </div>
 
       <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-8 text-center">
@@ -28,7 +28,8 @@ const HeroSection = () => {
           </div>
 
           <h1 className="heading-display text-3xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight mb-8">
-            We organize expeditions<br />
+            We organize expeditions
+            <br />
             <span className="text-accent-red">in territories others avoid.</span>
           </h1>
 
