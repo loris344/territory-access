@@ -21,18 +21,6 @@ const Navbar = () => {
             >
               Expeditions
             </Link>
-            <Link
-              to="/apply"
-              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Apply
-            </Link>
-            <Link
-              to="/apply"
-              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors"
-            >
-              Contact
-            </Link>
           </div>
 
           {/* Mobile toggle */}
@@ -60,20 +48,6 @@ const Navbar = () => {
               className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground"
             >
               Expeditions
-            </Link>
-            <Link
-              to="/apply"
-              onClick={() => setIsOpen(false)}
-              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground"
-            >
-              Apply
-            </Link>
-            <Link
-              to="/apply"
-              onClick={() => setIsOpen(false)}
-              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground"
-            >
-              Contact
             </Link>
           </div>
         )}
