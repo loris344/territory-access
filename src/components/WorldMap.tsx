@@ -48,13 +48,13 @@ const WorldMap = () => {
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{
-              scale: 120,
-              center: [45, 30],
+              scale: 220,
+              center: [50, 35],
             }}
-            style={{ width: "100%", height: "400px" }}
+            style={{ width: "100%", height: "450px" }}
           >
             <ZoomableGroup
-              center={[45, 30]}
+              center={[50, 35]}
               minZoom={1}
               maxZoom={8}
             >
