@@ -15,13 +15,22 @@ const Navbar = () => {
 
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-10">
-            <Link to="/#expeditions" className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/#expeditions"
+              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors"
+            >
               Expeditions
             </Link>
-            <Link to="/apply" className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors">
+            <Link
+              to="/apply"
+              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors"
+            >
               Apply
             </Link>
-            <a href="#contact" className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors">
+            <a
+              href="#contact"
+              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors"
+            >
               Contact
             </a>
           </div>
@@ -30,31 +39,47 @@ const Navbar = () => {
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="md:hidden flex flex-col gap-1.5 p-2"
-            aria-label="Toggle menu">
-
-            <span className={`block w-6 h-px bg-foreground transition-transform ${isOpen ? "rotate-45 translate-y-[3.5px]" : ""}`} />
+            aria-label="Toggle menu"
+          >
+            <span
+              className={`block w-6 h-px bg-foreground transition-transform ${isOpen ? "rotate-45 translate-y-[3.5px]" : ""}`}
+            />
             <span className={`block w-6 h-px bg-foreground transition-opacity ${isOpen ? "opacity-0" : ""}`} />
-            <span className={`block w-6 h-px bg-foreground transition-transform ${isOpen ? "-rotate-45 -translate-y-[3.5px]" : ""}`} />
+            <span
+              className={`block w-6 h-px bg-foreground transition-transform ${isOpen ? "-rotate-45 -translate-y-[3.5px]" : ""}`}
+            />
           </button>
         </div>
 
         {/* Mobile menu */}
-        {isOpen &&
-        <div className="md:hidden border-t border-border py-6 flex flex-col gap-6">
-            <Link to="/#expeditions" onClick={() => setIsOpen(false)} className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground">
+        {isOpen && (
+          <div className="md:hidden border-t border-border py-6 flex flex-col gap-6">
+            <Link
+              to="/#expeditions"
+              onClick={() => setIsOpen(false)}
+              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground"
+            >
               Expeditions
             </Link>
-            <Link to="/apply" onClick={() => setIsOpen(false)} className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground">
+            <Link
+              to="/apply"
+              onClick={() => setIsOpen(false)}
+              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground"
+            >
               Apply
             </Link>
-            <a href="#contact" onClick={() => setIsOpen(false)} className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground">
+            <a
+              href="#contact"
+              onClick={() => setIsOpen(false)}
+              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground"
+            >
               Contact
             </a>
           </div>
-        }
+        )}
       </div>
-    </nav>);
-
+    </nav>
+  );
 };
 
 export default Navbar;
