@@ -46,6 +46,11 @@ const Footer = () => {
                   Expeditions
                 </a>
               </p>
+              <p>
+                <Link to="/apply" className="hover:text-foreground transition-colors">
+                  Apply
+                </Link>
+              </p>
             </div>
           </div>
           <div>
