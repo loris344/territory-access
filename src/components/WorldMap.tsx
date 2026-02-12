@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   ComposableMap,
@@ -17,19 +17,10 @@ const WorldMap = () => {
   const navigate = useNavigate();
   const [hovered, setHovered] = useState<Expedition | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     setTooltipPos({ x: e.clientX, y: e.clientY });
   };
-
-  const handleZoomIn = useCallback(() => {
-    setZoom((z) => Math.min(z * 1.5, 8));
-  }, []);
-
-  const handleZoomOut = useCallback(() => {
-    setZoom((z) => Math.max(z / 1.5, 1));
-  }, []);
 
   return (
     <section id="map" className="py-24 lg:py-32 bg-background">
@@ -54,24 +45,6 @@ const WorldMap = () => {
           className="relative border border-border bg-card overflow-hidden"
           onMouseMove={handleMouseMove}
         >
-          {/* Zoom controls */}
-          <div className="absolute top-4 right-4 z-10 flex flex-col gap-1">
-            <button
-              onClick={handleZoomIn}
-              className="w-8 h-8 bg-background/80 backdrop-blur-sm border border-border text-foreground flex items-center justify-center text-sm hover:bg-secondary transition-colors"
-              aria-label="Zoom in"
-            >
-              +
-            </button>
-            <button
-              onClick={handleZoomOut}
-              className="w-8 h-8 bg-background/80 backdrop-blur-sm border border-border text-foreground flex items-center justify-center text-sm hover:bg-secondary transition-colors"
-              aria-label="Zoom out"
-            >
-              −
-            </button>
-          </div>
-
           <ComposableMap
             projection="geoMercator"
             projectionConfig={{
@@ -81,8 +54,7 @@ const WorldMap = () => {
             style={{ width: "100%", height: "400px" }}
           >
             <ZoomableGroup
-              zoom={zoom}
-              onMoveEnd={({ zoom: newZoom }) => setZoom(newZoom)}
+              center={[45, 30]}
               minZoom={1}
               maxZoom={8}
             >
@@ -115,26 +87,25 @@ const WorldMap = () => {
                 >
                   {/* Outer glow ring */}
                   <circle
-                    r={12 / zoom}
+                    r={12}
                     fill="hsla(0, 0%, 96%, 0.06)"
                     className="cursor-pointer"
                   />
                   {/* Mid ring */}
                   <circle
-                    r={7 / zoom}
+                    r={7}
                     fill="hsla(0, 0%, 96%, 0.12)"
                     className="cursor-pointer"
                   />
                   {/* Core dot */}
                   <circle
-                    r={3.5 / zoom}
+                    r={3.5}
                     fill="hsl(0, 0%, 96%)"
                     className="cursor-pointer"
-                    style={{ transition: "r 0.2s" }}
                   />
                   {/* Invisible hit area */}
                   <circle
-                    r={14 / zoom}
+                    r={14}
                     fill="transparent"
                     className="cursor-pointer"
                   />
