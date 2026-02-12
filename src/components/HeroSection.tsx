@@ -1,13 +1,50 @@
+import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
+import { expeditions } from "@/data/expeditions";
+
+const heroImages = [
+  heroBg,
+  ...expeditions
+    .filter((e) => e.hero_image_url)
+    .map((e) => e.hero_image_url as string),
+];
 
 const HeroSection = () => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const pickRandom = useCallback(() => {
+    setCurrentIndex((prev) => {
+      let next: number;
+      do {
+        next = Math.floor(Math.random() * heroImages.length);
+      } while (next === prev && heroImages.length > 1);
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(pickRandom, 10000);
+    return () => clearInterval(interval);
+  }, [pickRandom]);
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       {/* Background image with dark overlay */}
       <div className="absolute inset-0">
-        <img src={heroBg} alt="" className="w-full h-full object-cover" />
+        <AnimatePresence mode="popLayout">
+          <motion.img
+            key={currentIndex}
+            src={heroImages[currentIndex]}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.5 }}
+          />
+        </AnimatePresence>
         <div className="absolute inset-0 bg-background/65" />
       </div>
 
