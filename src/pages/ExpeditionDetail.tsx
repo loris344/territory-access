@@ -106,7 +106,7 @@ const ExpeditionDetail = () => {
       <section className="py-16 lg:py-24 bg-secondary">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
           <div className="h-px w-12 bg-accent mb-10" />
-          <h2 className="heading-display text-xl sm:text-2xl mb-12">Mission Structure</h2>
+          <h2 className="heading-display text-xl sm:text-2xl mb-12">Day by Day</h2>
 
           <div className="space-y-8">
             {expedition.itinerary.map((day, i) => (

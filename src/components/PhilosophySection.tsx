@@ -13,17 +13,17 @@ const PhilosophySection = () => {
           <div className="h-px w-12 bg-accent mb-10" />
 
           <h2 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-10">
-            Access. Control. Intensity.
+            Beyond the Ordinary
           </h2>
 
           <div className="space-y-6 body-text text-muted-foreground text-base sm:text-lg max-w-3xl">
-            <p>We do not sell tourism.</p>
+            <p>We don't do conventional travel.</p>
             <p>
-              We provide structured exposure to politically and geographically
-              complex territories.
+              We design immersive expeditions to politically and geographically
+              complex territories — places most travel agencies won't take you.
             </p>
             <p>
-              Small group. High logistical control. Zero artificial staging.
+              Small groups. Expert local guides. Authentic, unfiltered experiences.
             </p>
           </div>
         </motion.div>
