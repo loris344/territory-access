@@ -14,7 +14,194 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      applications: {
+        Row: {
+          created_at: string
+          email: string
+          expedition_id: string
+          first_name: string
+          id: string
+          last_name: string
+          linkedin_url: string | null
+          motivation_text: string
+          nationality: string
+          phone: string
+          physical_condition: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          expedition_id: string
+          first_name: string
+          id?: string
+          last_name: string
+          linkedin_url?: string | null
+          motivation_text: string
+          nationality: string
+          phone: string
+          physical_condition: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          expedition_id?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          linkedin_url?: string | null
+          motivation_text?: string
+          nationality?: string
+          phone?: string
+          physical_condition?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applications_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expedition_days_itinerary: {
+        Row: {
+          day_number: number
+          description: string
+          expedition_id: string
+          id: string
+          title: string
+        }
+        Insert: {
+          day_number: number
+          description: string
+          expedition_id: string
+          id?: string
+          title: string
+        }
+        Update: {
+          day_number?: number
+          description?: string
+          expedition_id?: string
+          id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expedition_days_itinerary_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expedition_exclusions: {
+        Row: {
+          expedition_id: string
+          id: string
+          item_text: string
+        }
+        Insert: {
+          expedition_id: string
+          id?: string
+          item_text: string
+        }
+        Update: {
+          expedition_id?: string
+          id?: string
+          item_text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expedition_exclusions_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expedition_inclusions: {
+        Row: {
+          expedition_id: string
+          id: string
+          item_text: string
+        }
+        Insert: {
+          expedition_id: string
+          id?: string
+          item_text: string
+        }
+        Update: {
+          expedition_id?: string
+          id?: string
+          item_text?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expedition_inclusions_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expeditions: {
+        Row: {
+          created_at: string
+          duration_days: number
+          end_date: string
+          hero_image_url: string | null
+          id: string
+          intensity_level: string
+          location: string
+          long_description: string
+          name: string
+          price_eur: number
+          short_description: string
+          slug: string
+          start_date: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          duration_days: number
+          end_date: string
+          hero_image_url?: string | null
+          id?: string
+          intensity_level: string
+          location: string
+          long_description: string
+          name: string
+          price_eur: number
+          short_description: string
+          slug: string
+          start_date: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          duration_days?: number
+          end_date?: string
+          hero_image_url?: string | null
+          id?: string
+          intensity_level?: string
+          location?: string
+          long_description?: string
+          name?: string
+          price_eur?: number
+          short_description?: string
+          slug?: string
+          start_date?: string
+          status?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
