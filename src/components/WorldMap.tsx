@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useCallback } from "react";
+import { Link } from "react-router-dom";
 import {
   ComposableMap,
   Geographies,
@@ -14,9 +14,19 @@ const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 const WorldMap = () => {
   const expeditions = getActiveExpeditions();
-  const navigate = useNavigate();
+  const [selected, setSelected] = useState<Expedition | null>(null);
   const [hovered, setHovered] = useState<Expedition | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+
+  const handleMarkerClick = useCallback((exp: Expedition) => {
+    // On mobile (touch): first tap selects/shows popup, second tap navigates
+    if (selected?.id === exp.id) {
+      // Already selected — do nothing, user can tap the link in popup
+      return;
+    }
+    setSelected(exp);
+    setHovered(exp);
+  }, [selected]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     setTooltipPos({ x: e.clientX, y: e.clientY });
@@ -82,8 +92,8 @@ const WorldMap = () => {
                   key={exp.id}
                   coordinates={exp.coordinates}
                   onMouseEnter={() => setHovered(exp)}
-                  onMouseLeave={() => setHovered(null)}
-                  onClick={() => navigate(`/expeditions/${exp.slug}`)}
+                  onMouseLeave={() => { if (selected?.id !== exp.id) setHovered(null); }}
+                  onClick={() => handleMarkerClick(exp)}
                 >
                   {/* Outer glow ring */}
                   <circle
@@ -114,59 +124,85 @@ const WorldMap = () => {
             </ZoomableGroup>
           </ComposableMap>
 
-          {/* Tooltip */}
+          {/* Tooltip - desktop: follows cursor, mobile: fixed bottom */}
           <AnimatePresence>
             {hovered && (
-              <motion.div
-                initial={{ opacity: 0, y: 5 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 5 }}
-                transition={{ duration: 0.15 }}
-                className="fixed z-50 pointer-events-none"
-                style={{
-                  left: tooltipPos.x + 16,
-                  top: tooltipPos.y - 10,
-                }}
-              >
-                <div className="border border-border bg-card min-w-[280px] overflow-hidden">
-                  {/* Image */}
-                  <div className="aspect-[16/9] bg-secondary flex items-center justify-center">
-                    {hovered.hero_image_url ? (
-                      <img
-                        src={hovered.hero_image_url}
-                        alt={hovered.name}
-                        className="w-full h-full object-cover"
-                      />
-                    ) : (
-                      <span className="font-heading text-[9px] tracking-[0.2em] uppercase text-muted-foreground">
-                        Photo coming soon
-                      </span>
-                    )}
+              <>
+                {/* Desktop tooltip (follows mouse) */}
+                <motion.div
+                  initial={{ opacity: 0, y: 5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 5 }}
+                  transition={{ duration: 0.15 }}
+                  className="fixed z-50 pointer-events-none hidden md:block"
+                  style={{
+                    left: tooltipPos.x + 16,
+                    top: tooltipPos.y - 10,
+                  }}
+                >
+                  <div className="border border-border bg-card min-w-[280px] overflow-hidden">
+                    <div className="aspect-[16/9] bg-secondary flex items-center justify-center">
+                      {hovered.hero_image_url ? (
+                        <img src={hovered.hero_image_url} alt={hovered.name} className="w-full h-full object-cover" />
+                      ) : (
+                        <span className="font-heading text-[9px] tracking-[0.2em] uppercase text-muted-foreground">Photo coming soon</span>
+                      )}
+                    </div>
+                    <div className="p-4">
+                      <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-1">{hovered.country}</p>
+                      <p className="font-heading text-sm tracking-wider uppercase mb-2">{hovered.name}</p>
+                      <p className="body-text text-xs text-muted-foreground mb-3 line-clamp-2">{hovered.short_description}</p>
+                      <div className="flex items-center gap-3 text-[10px] text-muted-foreground font-heading tracking-wider uppercase">
+                        <span>{hovered.duration_days} days</span>
+                        <span className="text-border">|</span>
+                        <span>{hovered.difficulty_level}</span>
+                        <span className="text-border">|</span>
+                        <span>{hovered.intensity_type}</span>
+                      </div>
+                      <div className="mt-2 text-[10px] text-muted-foreground font-heading tracking-wider">
+                        {new Date(hovered.start_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })} – {new Date(hovered.end_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                      </div>
+                    </div>
                   </div>
+                </motion.div>
 
-                  <div className="p-4">
-                    <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-1">
-                      {hovered.country}
-                    </p>
-                    <p className="font-heading text-sm tracking-wider uppercase mb-2">
-                      {hovered.name}
-                    </p>
-                    <p className="body-text text-xs text-muted-foreground mb-3 line-clamp-2">
-                      {hovered.short_description}
-                    </p>
-                    <div className="flex items-center gap-3 text-[10px] text-muted-foreground font-heading tracking-wider uppercase">
-                      <span>{hovered.duration_days} days</span>
-                      <span className="text-border">|</span>
-                      <span>{hovered.difficulty_level}</span>
-                      <span className="text-border">|</span>
-                      <span>{hovered.intensity_type}</span>
-                    </div>
-                    <div className="mt-2 text-[10px] text-muted-foreground font-heading tracking-wider">
-                      {new Date(hovered.start_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })} – {new Date(hovered.end_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                {/* Mobile popup (fixed bottom of map) */}
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.2 }}
+                  className="absolute bottom-0 left-0 right-0 z-50 md:hidden"
+                >
+                  <div className="border-t border-border bg-card">
+                    <div className="flex gap-3 p-4">
+                      {hovered.hero_image_url && (
+                        <img src={hovered.hero_image_url} alt={hovered.name} className="w-20 h-20 object-cover flex-shrink-0" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-0.5">{hovered.country}</p>
+                        <p className="font-heading text-sm tracking-wider uppercase mb-1">{hovered.name}</p>
+                        <p className="body-text text-xs text-muted-foreground line-clamp-2 mb-2">{hovered.short_description}</p>
+                        <div className="flex items-center gap-2">
+                          <Link
+                            to={`/expeditions/${hovered.slug}`}
+                            className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent hover:text-accent/80 transition-colors"
+                            onClick={() => { setSelected(null); setHovered(null); }}
+                          >
+                            View details →
+                          </Link>
+                          <button
+                            onClick={() => { setSelected(null); setHovered(null); }}
+                            className="ml-auto font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground"
+                          >
+                            Close
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </>
             )}
           </AnimatePresence>
         </div>
