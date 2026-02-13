@@ -157,7 +157,7 @@ const Apply = () => {
             </p>
             <div className="h-px w-8 bg-border mx-auto mb-6" />
             <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60">
-              Ligne Rouge Tours — Selection-based access only
+              Ligne Rouge Tours
             </p>
           </motion.div>
         </div>
