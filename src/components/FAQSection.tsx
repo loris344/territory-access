@@ -9,7 +9,7 @@ import {
 const faqItems = [
   {
     q: "Who can apply for an expedition?",
-    a: "Anyone over 18 in good physical and mental condition. No prior expedition experience is required, but a genuine willingness to step outside your comfort zone is mandatory. Each application is reviewed individually.",
+    a: "Anyone over 18 in good physical and mental condition. No prior expedition experience is required — but a genuine willingness to step into discomfort is non-negotiable. Every application is reviewed individually. We look for mindset, not résumés.",
   },
   {
     q: "Are these destinations safe?",
