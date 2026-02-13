@@ -103,9 +103,14 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
         </h3>
 
         {/* Country + Location */}
-        <p className="font-heading text-xs tracking-[0.1em] uppercase text-muted-foreground mb-4">
+        <p className="font-heading text-xs tracking-[0.1em] uppercase text-muted-foreground mb-1">
           {expedition.country} · {expedition.location}
         </p>
+        {expedition.continent && (
+          <p className="font-heading text-[10px] tracking-[0.1em] uppercase text-muted-foreground/60 mb-4">
+            {expedition.continent}
+          </p>
+        )}
 
         {/* Dates */}
         <div className="flex items-center gap-4 mb-6 text-sm text-muted-foreground body-text">

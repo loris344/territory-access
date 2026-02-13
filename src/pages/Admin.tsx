@@ -110,9 +110,12 @@ const Admin = () => {
       .from("expedition-images")
       .getPublicUrl(path);
 
+    // Add cache-busting param to force browsers to reload the new image
+    const imageUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+
     const { error: updateError } = await supabase
       .from("expeditions")
-      .update({ hero_image_url: urlData.publicUrl })
+      .update({ hero_image_url: imageUrl })
       .eq("id", expId);
 
     if (updateError) {
@@ -138,6 +141,7 @@ const Admin = () => {
   const statusOptions = ["open", "limited", "closed", "cancelled", "postponed"];
   const intensityLevelOptions = ["Easy", "Medium", "Hard", "Extreme"];
   const intensityTypeOptions = ["mountain", "desert", "psychological", "isolation", "polar", "jungle", "nomadic", "political", "historical", "post-conflict", "altitude"];
+  const continentOptions = ["Europe", "Asia", "Africa", "Americas", "Oceania", "Middle East", "Central Asia", "Caucasus"];
 
   if (loading) {
     return (
@@ -211,6 +215,19 @@ const Admin = () => {
                         onChange={(e) => setEditData({ ...editData, country: e.target.value })}
                         className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
                       />
+                    </div>
+                    <div>
+                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Continent</label>
+                      <select
+                        value={editData.continent || ""}
+                        onChange={(e) => setEditData({ ...editData, continent: e.target.value })}
+                        className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
+                      >
+                        <option value="">Select continent</option>
+                        {continentOptions.map((c) => (
+                          <option key={c} value={c}>{c}</option>
+                        ))}
+                      </select>
                     </div>
                     <div>
                       <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Price (USD)</label>
@@ -370,7 +387,7 @@ const Admin = () => {
                       <div>
                         <h3 className="font-heading text-sm tracking-wider">{exp.name}</h3>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {exp.location} · {exp.duration_days} days · ${(exp as any).price_usd?.toLocaleString() || "N/A"}
+                          {exp.continent && <span className="text-accent">{exp.continent}</span>}{exp.continent && " · "}{exp.country} · {exp.location} · {exp.duration_days} days
                         </p>
                       </div>
                       <span className={`font-heading text-[10px] tracking-wider uppercase px-2 py-0.5 flex-shrink-0 ${

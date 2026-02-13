@@ -161,6 +161,7 @@ export type Database = {
       expeditions: {
         Row: {
           capacity_max: number
+          continent: string
           coordinates: Json | null
           country: string
           created_at: string
@@ -186,6 +187,7 @@ export type Database = {
         }
         Insert: {
           capacity_max?: number
+          continent?: string
           coordinates?: Json | null
           country?: string
           created_at?: string
@@ -211,6 +213,7 @@ export type Database = {
         }
         Update: {
           capacity_max?: number
+          continent?: string
           coordinates?: Json | null
           country?: string
           created_at?: string
