@@ -96,10 +96,10 @@ const TestimonialsSection = () => {
             <div className="h-px w-12 bg-accent" />
           </div>
           <h2 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-4">
-            What our travelers say
+            They crossed the line.
           </h2>
           <p className="body-text text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
-            Authentic reviews from those who dared to cross the line.
+            Real stories from those who came back different.
           </p>
         </motion.div>
       </div>
