@@ -14,7 +14,7 @@ const statusLabels = {
   closed: "CLOSED",
 };
 
-const ExpeditionCard = ({ expedition }: { expedition: Expedition }) => {
+const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedition; hidePrice?: boolean }) => {
   return (
     <Link
       to={`/expeditions/${expedition.slug}`}
@@ -71,10 +71,12 @@ const ExpeditionCard = ({ expedition }: { expedition: Expedition }) => {
         </p>
 
         {/* Price & CTA */}
-        <div className="flex items-center justify-between pt-6 border-t border-border">
-          <span className="font-heading text-xl tracking-wider">
-            ${expedition.price_usd.toLocaleString("en-US")}
-          </span>
+        <div className={`flex items-center ${hidePrice ? "justify-end" : "justify-between"} pt-6 border-t border-border`}>
+          {!hidePrice && (
+            <span className="font-heading text-xl tracking-wider">
+              ${expedition.price_usd.toLocaleString("en-US")}
+            </span>
+          )}
           <span className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground group-hover:text-foreground transition-colors">
             View details →
           </span>
