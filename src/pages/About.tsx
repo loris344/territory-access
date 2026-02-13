@@ -37,7 +37,7 @@ const teamMembers = [
   {
     name: "Loris",
     role: "Founder & Expedition Leader",
-    bio: "Passionate about extreme travel and geopolitics. Has explored over 15 countries including conflict zones, disputed territories, and restricted-access regions before founding Ligne Rouge Tours.",
+    bio: "Passionate about extreme travel and geopolitics. Has explored over 38 countries including conflict zones, disputed territories, and restricted-access regions before founding Ligne Rouge Tours.",
     image: founderImg,
     email: "loris@lignerougetours.com",
   },
@@ -97,23 +97,22 @@ const About = () => {
       {/* Who We Are */}
       <section className="pt-28 pb-16 lg:pt-36 lg:pb-24">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <div className="h-px w-12 bg-accent mb-10" />
-            <h1 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-8">
-              Who We Are
-            </h1>
+            <h1 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-8">Who We Are</h1>
             <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
-              Ligne Rouge Tours is not a travel agency. We are an expedition company that operates in territories most operators refuse to approach — conflict zones, politically sensitive regions, extreme environments, and unrecognized states.
+              Ligne Rouge Tours is not a travel agency. We are an expedition company that operates in territories most
+              operators refuse to approach — conflict zones, politically sensitive regions, extreme environments, and
+              unrecognized states.
             </p>
             <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
-              We design each expedition as a structured immersion: controlled, intense, and deliberately uncomfortable. Our clients are not tourists. They are professionals, entrepreneurs, and individuals who refuse to observe the world from a distance.
+              We design each expedition as a structured immersion: controlled, intense, and deliberately uncomfortable.
+              Our clients are not tourists. They are professionals, entrepreneurs, and individuals who refuse to observe
+              the world from a distance.
             </p>
             <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed">
-              Every expedition is built around local fixers, strict security protocols, and a philosophy that values direct exposure over passive observation. We do not sell vacations. We offer access.
+              Every expedition is built around local fixers, strict security protocols, and a philosophy that values
+              direct exposure over passive observation. We do not sell vacations. We offer access.
             </p>
           </motion.div>
         </div>
@@ -142,9 +141,7 @@ const About = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="font-heading text-sm tracking-[0.1em] uppercase mb-1">
-                    {member.name}
-                  </h3>
+                  <h3 className="font-heading text-sm tracking-[0.1em] uppercase mb-1">{member.name}</h3>
                   <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-3">
                     {member.role}
                   </p>
@@ -154,9 +151,7 @@ const About = () => {
                   >
                     {member.email}
                   </a>
-                  <p className="body-text text-sm text-muted-foreground">
-                    {member.bio}
-                  </p>
+                  <p className="body-text text-sm text-muted-foreground">{member.bio}</p>
                 </div>
               </motion.div>
             ))}
@@ -168,9 +163,7 @@ const About = () => {
       <section className="py-16 lg:py-24">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
           <div className="h-px w-12 bg-accent mb-10" />
-          <h2 className="heading-display text-xl sm:text-2xl mb-12">
-            Frequently Asked Questions
-          </h2>
+          <h2 className="heading-display text-xl sm:text-2xl mb-12">Frequently Asked Questions</h2>
           <div className="space-y-8">
             {faqItems.map((item, i) => (
               <motion.div
@@ -181,12 +174,8 @@ const About = () => {
                 transition={{ duration: 0.4, delay: i * 0.05 }}
                 className="border-l-2 border-border pl-6 hover:border-accent transition-colors"
               >
-                <h3 className="font-heading text-sm tracking-[0.05em] uppercase mb-3">
-                  {item.q}
-                </h3>
-                <p className="body-text text-sm text-muted-foreground">
-                  {item.a}
-                </p>
+                <h3 className="font-heading text-sm tracking-[0.05em] uppercase mb-3">{item.q}</h3>
+                <p className="body-text text-sm text-muted-foreground">{item.a}</p>
               </motion.div>
             ))}
           </div>
