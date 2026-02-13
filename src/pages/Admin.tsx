@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 
 type Expedition = Tables<"expeditions"> & {
   country?: string;
@@ -320,6 +321,9 @@ const Admin = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Applications */}
+        <ApplicationsPanel />
+
         {/* Hero Images Manager */}
         <div className="mb-8 border border-border bg-card p-4 sm:p-6">
           <button
