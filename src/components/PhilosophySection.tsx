@@ -27,7 +27,7 @@ const PhilosophySection = () => {
               Small groups. Trusted local fixers. No scripts, no safety nets, no spectators.
             </p>
             <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent/80 pt-2">
-              We don't take everyone. We choose who we travel with.
+              Each expedition is limited to a small number of participants — carefully selected.
             </p>
           </div>
         </motion.div>
