@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ChevronDown, ChevronUp, Mail, Phone, MapPin, User, FileText } from "lucide-react";
+import { ChevronDown, ChevronUp, Mail, Phone, MapPin, User, FileText, Trash2 } from "lucide-react";
 
 type Application = {
   id: string;
@@ -69,6 +69,21 @@ const ApplicationsPanel = () => {
     fetchApplications();
   };
 
+  const deleteApplication = async (id: string) => {
+    if (!confirm("Delete this application?")) return;
+    const { error } = await supabase
+      .from("applications")
+      .delete()
+      .eq("id", id);
+
+    if (error) {
+      toast.error("Failed to delete: " + error.message);
+      return;
+    }
+    toast.success("Application deleted");
+    fetchApplications();
+  };
+
   return (
     <div className="mb-8 border border-border bg-card p-4 sm:p-6">
       <button
@@ -114,7 +129,14 @@ const ApplicationsPanel = () => {
                       })}
                     </p>
                   </div>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={(e) => { e.stopPropagation(); deleteApplication(app.id); }}
+                      className="p-1 text-muted-foreground hover:text-destructive transition-colors"
+                      title="Delete"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
                     {expanded === app.id ? (
                       <ChevronUp className="w-4 h-4 text-muted-foreground" />
                     ) : (

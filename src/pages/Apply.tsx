@@ -153,7 +153,7 @@ const Apply = () => {
               Your application has been registered. Our team will carefully review your profile and assess your eligibility for this expedition.
             </p>
             <p className="body-text text-muted-foreground mb-8">
-              You will receive a response within 72 hours. Please note that submission does not guarantee acceptance — each candidacy is evaluated individually based on motivation, fitness, and group compatibility.
+              Please note that submission does not guarantee acceptance — each candidacy is evaluated individually based on motivation, fitness, and group compatibility.
             </p>
             <div className="h-px w-8 bg-border mx-auto mb-6" />
             <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60">
@@ -298,7 +298,7 @@ const Apply = () => {
 
               <div>
                 <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
-                  Why should we select you for this expedition?
+                  Motivation
                 </label>
                 <textarea
                   name="motivation_text"
