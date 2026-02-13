@@ -95,9 +95,29 @@ const ExpeditionDetail = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero */}
-      <section className="pt-28 pb-16 lg:pt-36 lg:pb-24 bg-secondary">
-        <div className="max-w-5xl mx-auto px-6 lg:px-8">
+      {/* Hero with background carousel */}
+      <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
+        {/* Background images */}
+        {allImages.length > 0 && (
+          <div className="absolute inset-0">
+            <AnimatePresence mode="popLayout">
+              <motion.img
+                key={currentImg}
+                src={allImages[currentImg]}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 1 }}
+              />
+            </AnimatePresence>
+            <div className="absolute inset-0 bg-background/75" />
+          </div>
+        )}
+        {!allImages.length && <div className="absolute inset-0 bg-secondary" />}
+
+        <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -152,53 +172,20 @@ const ExpeditionDetail = () => {
             </div>
           </motion.div>
         </div>
+
+        {/* Carousel navigation */}
+        {allImages.length > 1 && (
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
+            {allImages.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentImg(i)}
+                className={`w-2 h-2 rounded-full transition-all ${i === currentImg ? "bg-foreground scale-125" : "bg-foreground/40"}`}
+              />
+            ))}
+          </div>
+        )}
       </section>
-
-      {/* Image Gallery Carousel */}
-      {allImages.length > 0 && (
-        <section className="relative w-full h-[50vh] sm:h-[60vh] overflow-hidden bg-background">
-          <AnimatePresence mode="popLayout">
-            <motion.img
-              key={currentImg}
-              src={allImages[currentImg]}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 1 }}
-            />
-          </AnimatePresence>
-
-          {allImages.length > 1 && (
-            <>
-              <button
-                onClick={prevImg}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-2 bg-background/60 backdrop-blur-sm border border-border hover:bg-background/80 transition-colors"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </button>
-              <button
-                onClick={nextImg}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-background/60 backdrop-blur-sm border border-border hover:bg-background/80 transition-colors"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </button>
-
-              {/* Dots */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                {allImages.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setCurrentImg(i)}
-                    className={`w-2 h-2 rounded-full transition-all ${i === currentImg ? "bg-foreground scale-125" : "bg-foreground/40"}`}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-        </section>
-      )}
 
       {/* Overview */}
       <section className="py-16 lg:py-24">
