@@ -12,6 +12,7 @@ const testimonials = [
   {
     name: "Lucas",
     destination: "Iran",
+    date: "October 2023",
     image: lucasImg,
     text: "An incredible experience. Iran is a country of unsuspected cultural richness. The organization was flawless, every detail thought through so we could fully enjoy the journey.",
     rating: 5,
@@ -19,6 +20,7 @@ const testimonials = [
   {
     name: "Isaac",
     destination: "Transnistria",
+    date: "March 2024",
     image: isaacImg,
     text: "I would never have dared to go alone. Ligne Rouge made this trip possible and truly unforgettable. A fascinating territory, frozen in time.",
     rating: 5,
@@ -26,6 +28,7 @@ const testimonials = [
   {
     name: "Arnaud",
     destination: "Somaliland",
+    date: "January 2023",
     image: arnaudImg,
     text: "Somaliland completely surprised me. Raw landscapes, authentic encounters. The team on the ground was outstanding — I felt safe at every moment.",
     rating: 5,
@@ -33,6 +36,7 @@ const testimonials = [
   {
     name: "Nolan",
     destination: "Mongolia",
+    date: "July 2024",
     image: nolanImg,
     text: "Endless Mongolian steppes, evenings around the fire with the group… This is the kind of trip that changes you. Thank you Ligne Rouge.",
     rating: 5,
@@ -40,6 +44,7 @@ const testimonials = [
   {
     name: "Anna",
     destination: "Afghanistan",
+    date: "November 2022",
     image: annaImg,
     text: "Traveling to Afghanistan as a woman seemed impossible. Ligne Rouge organized everything with total professionalism and respect. A transformative experience.",
     rating: 5,
@@ -123,6 +128,7 @@ const TestimonialsSection = () => {
                     {t.name}
                   </p>
                   <p className="text-xs text-muted-foreground">
+                    {t.destination} · {t.date}
                     {t.destination}
                   </p>
                 </div>
