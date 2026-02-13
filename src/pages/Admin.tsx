@@ -135,7 +135,9 @@ const Admin = () => {
     fetchExpeditions();
   };
 
-  const statusOptions = ["open", "limited", "closed"];
+  const statusOptions = ["open", "limited", "closed", "cancelled", "postponed"];
+  const intensityLevelOptions = ["Easy", "Medium", "Hard", "Extreme"];
+  const intensityTypeOptions = ["mountain", "desert", "psychological", "isolation", "polar", "jungle", "nomadic", "political", "historical", "post-conflict", "altitude"];
 
   if (loading) {
     return (
@@ -257,9 +259,43 @@ const Admin = () => {
                     </div>
                     <div>
                       <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Intensity Level</label>
-                      <input
-                        value={editData.intensity_level || ""}
+                      <select
+                        value={editData.intensity_level || "Medium"}
                         onChange={(e) => setEditData({ ...editData, intensity_level: e.target.value })}
+                        className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
+                      >
+                        {intensityLevelOptions.map((s) => (
+                          <option key={s} value={s}>{s}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Theme</label>
+                      <select
+                        value={editData.intensity_type || ""}
+                        onChange={(e) => setEditData({ ...editData, intensity_type: e.target.value })}
+                        className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
+                      >
+                        {intensityTypeOptions.map((s) => (
+                          <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Max Capacity</label>
+                      <input
+                        type="number"
+                        value={editData.capacity_max || 12}
+                        onChange={(e) => setEditData({ ...editData, capacity_max: parseInt(e.target.value) })}
+                        className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Spots Taken</label>
+                      <input
+                        type="number"
+                        value={editData.spots_taken || 0}
+                        onChange={(e) => setEditData({ ...editData, spots_taken: parseInt(e.target.value) })}
                         className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
                       />
                     </div>
