@@ -132,6 +132,38 @@ export type Database = {
           },
         ]
       }
+      expedition_gallery: {
+        Row: {
+          created_at: string
+          display_order: number
+          expedition_id: string
+          id: string
+          image_url: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          expedition_id: string
+          id?: string
+          image_url: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          expedition_id?: string
+          id?: string
+          image_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expedition_gallery_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       expedition_inclusions: {
         Row: {
           expedition_id: string
