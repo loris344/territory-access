@@ -5,6 +5,7 @@ import WorldMap from "@/components/WorldMap";
 import ExpeditionsGrid from "@/components/ExpeditionsGrid";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import EthicalSection from "@/components/EthicalSection";
+import FAQSection from "@/components/FAQSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -17,6 +18,7 @@ const Index = () => {
       <ExpeditionsGrid />
       <TestimonialsSection />
       <EthicalSection />
+      <FAQSection />
       <Footer />
     </div>
   );

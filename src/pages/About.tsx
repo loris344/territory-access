@@ -29,7 +29,7 @@ const faqItems = [
   },
   {
     q: "Can I travel alone or must I join a group?",
-    a: "All our expeditions are group-based with a maximum of 8 to 14 participants. Solo travel is not offered. The group dynamic is an integral part of the experience — shared discomfort, shared discovery.",
+    a: "All our scheduled expeditions are group-based with a maximum of 8 to 14 participants. However, private solo expeditions are available upon request and subject to a custom quote. Contact us directly to discuss your project.",
   },
 ];
 
