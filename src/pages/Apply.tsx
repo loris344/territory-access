@@ -51,7 +51,7 @@ const Apply = () => {
     const fetchExpeditions = async () => {
       const { data, error } = await supabase
         .from("expeditions")
-        .select("id, name, slug, price_eur, status")
+        .select("id, name, slug, price_usd, status")
         .neq("status", "closed");
 
       if (data && data.length > 0) {
@@ -59,7 +59,7 @@ const Apply = () => {
           id: e.id,
           name: e.name,
           slug: e.slug,
-          price: e.price_eur,
+          price: e.price_usd,
           status: e.status,
         }));
         setExpeditionOptions(options);
@@ -204,7 +204,7 @@ const Apply = () => {
                   <option value="">Select an expedition</option>
                   {expeditionOptions.map((e) => (
                     <option key={e.id} value={e.id}>
-                      {e.name} — €{e.price.toLocaleString("en-US")}
+                      {e.name} — ${e.price.toLocaleString("en-US")}
                     </option>
                   ))}
                 </select>
