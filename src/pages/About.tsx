@@ -37,7 +37,7 @@ const teamMembers = [
   {
     name: "Loris",
     role: "Founder & Expedition Leader",
-    bio: "Former field analyst turned expedition designer. Has operated in over 40 countries including conflict zones, disputed territories, and restricted-access regions.",
+    bio: "Passionate about extreme travel and geopolitics. Has explored over 15 countries including conflict zones, disputed territories, and restricted-access regions before founding Ligne Rouge Tours.",
     image: founderImg,
     email: "loris@lignerougetours.com",
   },
