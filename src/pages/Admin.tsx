@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit2, Trash2, Upload, Save } from "lucide-react";
+import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Expedition = Tables<"expeditions"> & {
@@ -23,10 +23,14 @@ const Admin = () => {
   const [editing, setEditing] = useState<string | null>(null);
   const [editData, setEditData] = useState<any>({});
   const [uploading, setUploading] = useState(false);
+  const [heroImages, setHeroImages] = useState<any[]>([]);
+  const [heroUploading, setHeroUploading] = useState(false);
+  const [showHeroManager, setShowHeroManager] = useState(false);
 
   useEffect(() => {
     checkAuth();
     fetchExpeditions();
+    fetchHeroImages();
   }, []);
 
   const checkAuth = async () => {
@@ -174,6 +178,63 @@ const Admin = () => {
     }
   };
 
+  const fetchHeroImages = async () => {
+    const { data } = await supabase
+      .from("hero_images")
+      .select("*")
+      .order("display_order", { ascending: true });
+    setHeroImages(data || []);
+  };
+
+  const handleHeroImageUpload = async (file: File) => {
+    setHeroUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `hero-${Date.now()}.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("expedition-images")
+      .upload(path, file, { upsert: true });
+
+    if (uploadError) {
+      toast.error("Upload failed: " + uploadError.message);
+      setHeroUploading(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("expedition-images")
+      .getPublicUrl(path);
+
+    const maxOrder = heroImages.reduce((max, h) => Math.max(max, h.display_order), -1);
+
+    const { error } = await supabase
+      .from("hero_images")
+      .insert({ image_url: `${urlData.publicUrl}?t=${Date.now()}`, display_order: maxOrder + 1 });
+
+    if (error) {
+      toast.error("Failed to save: " + error.message);
+    } else {
+      toast.success("Hero image added!");
+      fetchHeroImages();
+    }
+    setHeroUploading(false);
+  };
+
+  const deleteHeroImage = async (id: string) => {
+    const { error } = await supabase.from("hero_images").delete().eq("id", id);
+    if (error) {
+      toast.error("Failed to delete");
+    } else {
+      toast.success("Image removed");
+      fetchHeroImages();
+    }
+  };
+
+  const toggleHeroImageActive = async (id: string, current: boolean) => {
+    await supabase.from("hero_images").update({ is_active: !current }).eq("id", id);
+    fetchHeroImages();
+  };
+
   const statusOptions = ["open", "limited", "closed", "cancelled", "postponed"];
   const intensityLevelOptions = ["Easy", "Medium", "Hard", "Extreme"];
   const intensityTypeOptions = ["mountain", "desert", "psychological", "isolation", "polar", "jungle", "nomadic", "political", "historical", "post-conflict", "altitude"];
@@ -203,6 +264,62 @@ const Admin = () => {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Hero Images Manager */}
+        <div className="mb-8 border border-border bg-card p-4 sm:p-6">
+          <button
+            onClick={() => setShowHeroManager(!showHeroManager)}
+            className="flex items-center gap-2 font-heading text-sm tracking-wider uppercase w-full text-left"
+          >
+            <Image className="w-4 h-4" />
+            Hero Background Images ({heroImages.length})
+            <span className="text-muted-foreground text-xs ml-auto">{showHeroManager ? "▲" : "▼"}</span>
+          </button>
+
+          {showHeroManager && (
+            <div className="mt-4 space-y-4">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                {heroImages.map((img) => (
+                  <div key={img.id} className="relative group border border-border overflow-hidden">
+                    <img src={img.image_url} alt="" className={`w-full h-24 object-cover ${!img.is_active ? "opacity-40" : ""}`} />
+                    <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                      <button
+                        onClick={() => toggleHeroImageActive(img.id, img.is_active)}
+                        className="p-1.5 bg-background border border-border text-[9px] font-heading tracking-wider uppercase"
+                      >
+                        {img.is_active ? "Disable" : "Enable"}
+                      </button>
+                      <button
+                        onClick={() => deleteHeroImage(img.id)}
+                        className="p-1.5 bg-background border border-destructive text-destructive"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+
+                {/* Upload button */}
+                <label className="border border-dashed border-border h-24 flex flex-col items-center justify-center cursor-pointer hover:border-foreground transition-colors">
+                  <Upload className="w-4 h-4 text-muted-foreground mb-1" />
+                  <span className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">
+                    {heroUploading ? "Uploading..." : "Add image"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    disabled={heroUploading}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) handleHeroImageUpload(file);
+                    }}
+                  />
+                </label>
+              </div>
+            </div>
+          )}
+        </div>
+
         <div className="flex items-center justify-between mb-8">
           <h2 className="font-heading text-sm tracking-wider uppercase text-muted-foreground">
             {expeditions.length} Expeditions

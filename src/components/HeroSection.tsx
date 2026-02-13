@@ -1,18 +1,26 @@
 import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { supabase } from "@/integrations/supabase/client";
 import heroBg from "@/assets/hero-bg.jpg";
-import { useActiveExpeditions } from "@/hooks/use-expeditions";
 
 const HeroSection = () => {
-  const { data: expeditions } = useActiveExpeditions();
-  const heroImages = [
-    heroBg,
-    ...(expeditions || [])
-      .filter((e) => e.hero_image_url)
-      .map((e) => e.hero_image_url as string),
-  ];
+  const [heroImages, setHeroImages] = useState<string[]>([heroBg]);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const fetchHeroImages = async () => {
+      const { data } = await supabase
+        .from("hero_images")
+        .select("image_url")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
+      if (data && data.length > 0) {
+        setHeroImages(data.map((d) => d.image_url));
+      }
+    };
+    fetchHeroImages();
+  }, []);
 
   const pickRandom = useCallback(() => {
     setCurrentIndex((prev) => {
@@ -22,7 +30,7 @@ const HeroSection = () => {
       } while (next === prev && heroImages.length > 1);
       return next;
     });
-  }, []);
+  }, [heroImages.length]);
 
   useEffect(() => {
     const interval = setInterval(pickRandom, 10000);
