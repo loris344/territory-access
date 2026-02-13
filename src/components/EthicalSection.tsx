@@ -2,10 +2,10 @@ import { motion } from "framer-motion";
 
 const EthicalSection = () => {
   const points = [
-    "No active war zones.",
-    "No illegal access.",
-    "No staged or degrading experiences.",
-    "Respect for local communities at all times.",
+    "No active war zones. We push limits — not laws.",
+    "No illegal access. Every route is negotiated, never forced.",
+    "No staged or degrading experiences. What you see is real — or we don't go.",
+    "Respect for local communities. Always. Without exception.",
   ];
 
   return (
