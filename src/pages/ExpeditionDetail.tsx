@@ -70,7 +70,7 @@ const ExpeditionDetail = () => {
   // Auto-advance every 8 seconds
   useEffect(() => {
     if (allImages.length <= 1) return;
-    const interval = setInterval(nextImg, 8000);
+    const interval = setInterval(nextImg, 6000);
     return () => clearInterval(interval);
   }, [nextImg, allImages.length]);
 
@@ -124,17 +124,18 @@ const ExpeditionDetail = () => {
         {!allImages.length && <div className="absolute inset-0 bg-secondary" />}
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <Link to="/#expeditions" className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors mb-8 inline-block">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+            <Link
+              to="/#expeditions"
+              className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors mb-8 inline-block"
+            >
               ← All expeditions
             </Link>
 
             <div className="flex items-center gap-4 mb-6">
-              <span className={`font-heading text-[10px] tracking-[0.15em] uppercase px-3 py-1 ${statusStyles[expedition.status]}`}>
+              <span
+                className={`font-heading text-[10px] tracking-[0.15em] uppercase px-3 py-1 ${statusStyles[expedition.status]}`}
+              >
                 {statusLabels[expedition.status]}
               </span>
               <span className="font-heading text-xs tracking-wider text-muted-foreground">
@@ -142,9 +143,7 @@ const ExpeditionDetail = () => {
               </span>
             </div>
 
-            <h1 className="heading-display text-3xl sm:text-4xl md:text-5xl mb-4">
-              {expedition.name}
-            </h1>
+            <h1 className="heading-display text-3xl sm:text-4xl md:text-5xl mb-4">{expedition.name}</h1>
 
             <p className="font-heading text-sm tracking-[0.1em] uppercase text-muted-foreground mb-2">
               {expedition.country} · {expedition.location}
@@ -160,19 +159,32 @@ const ExpeditionDetail = () => {
                 <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Dates</p>
                 <p className="font-heading text-sm">
                   {new Date(expedition.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} –{" "}
-                  {new Date(expedition.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
+                  {new Date(expedition.end_date).toLocaleDateString("en-US", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
                 </p>
               </div>
               <div>
-                <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Duration</p>
+                <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">
+                  Duration
+                </p>
                 <p className="font-heading text-sm">{expedition.duration_days} days</p>
               </div>
               <div>
-                <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Price per person</p>
-                <p className="font-heading text-sm">${expedition.price_usd.toLocaleString("en-US")} <span className="text-xs text-muted-foreground">/ pers.</span></p>
+                <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">
+                  Price per person
+                </p>
+                <p className="font-heading text-sm">
+                  ${expedition.price_usd.toLocaleString("en-US")}{" "}
+                  <span className="text-xs text-muted-foreground">/ pers.</span>
+                </p>
               </div>
               <div>
-                <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Intensity</p>
+                <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">
+                  Intensity
+                </p>
                 <p className="font-heading text-sm">{expedition.intensity_level}</p>
               </div>
             </div>
@@ -238,12 +250,8 @@ const ExpeditionDetail = () => {
                 <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-accent-red mb-2">
                   Day {day.day_number}
                 </p>
-                <h3 className="font-heading text-sm tracking-[0.05em] uppercase mb-2">
-                  {day.title}
-                </h3>
-                <p className="body-text text-sm text-muted-foreground">
-                  {day.description}
-                </p>
+                <h3 className="font-heading text-sm tracking-[0.05em] uppercase mb-2">{day.title}</h3>
+                <p className="body-text text-sm text-muted-foreground">{day.description}</p>
               </motion.div>
             ))}
           </div>
