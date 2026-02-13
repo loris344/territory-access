@@ -298,7 +298,7 @@ const Apply = () => {
 
               <div>
                 <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
-                  Motivation
+                  What do you expect from this tour?
                 </label>
                 <textarea
                   name="motivation_text"
@@ -307,7 +307,7 @@ const Apply = () => {
                   required
                   rows={5}
                   className={inputClass + " resize-none"}
-                  placeholder="What drives you to this destination? What do you expect to confront?"
+                  placeholder="What draws you to this destination? What are you looking to experience?"
                 />
                 {errorText("motivation_text")}
               </div>
