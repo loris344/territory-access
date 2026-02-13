@@ -162,8 +162,8 @@ const ExpeditionDetail = () => {
                 <p className="font-heading text-sm">{expedition.duration_days} days</p>
               </div>
               <div>
-                <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Price</p>
-                <p className="font-heading text-sm">${expedition.price_usd.toLocaleString("en-US")}</p>
+                <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Price per person</p>
+                <p className="font-heading text-sm">${expedition.price_usd.toLocaleString("en-US")} <span className="text-xs text-muted-foreground">/ pers.</span></p>
               </div>
               <div>
                 <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Intensity</p>
