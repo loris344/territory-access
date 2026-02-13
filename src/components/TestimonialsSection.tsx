@@ -129,7 +129,6 @@ const TestimonialsSection = () => {
                   </p>
                   <p className="text-xs text-muted-foreground">
                     {t.destination} · {t.date}
-                    {t.destination}
                   </p>
                 </div>
               </div>
