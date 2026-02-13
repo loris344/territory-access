@@ -17,16 +17,16 @@ const WorldMap = () => {
   const [selected, setSelected] = useState<Expedition | null>(null);
   const [hovered, setHovered] = useState<Expedition | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
+  const [fixedTooltipPos, setFixedTooltipPos] = useState({ x: 0, y: 0 });
 
   const handleMarkerClick = useCallback((exp: Expedition) => {
-    // On mobile (touch): first tap selects/shows popup, second tap navigates
     if (selected?.id === exp.id) {
-      // Already selected — do nothing, user can tap the link in popup
       return;
     }
     setSelected(exp);
     setHovered(exp);
-  }, [selected]);
+    setFixedTooltipPos({ ...tooltipPos });
+  }, [selected, tooltipPos]);
 
   const handleMouseMove = (e: React.MouseEvent) => {
     setTooltipPos({ x: e.clientX, y: e.clientY });
@@ -134,10 +134,10 @@ const WorldMap = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 5 }}
                   transition={{ duration: 0.15 }}
-                  className="fixed z-50 pointer-events-none hidden md:block"
+                  className={`fixed z-50 hidden md:block ${selected?.id === hovered.id ? 'pointer-events-auto' : 'pointer-events-none'}`}
                   style={{
-                    left: tooltipPos.x + 16,
-                    top: tooltipPos.y - 10,
+                    left: (selected?.id === hovered.id ? fixedTooltipPos.x : tooltipPos.x) + 16,
+                    top: (selected?.id === hovered.id ? fixedTooltipPos.y : tooltipPos.y) - 10,
                   }}
                 >
                   <div className="border border-border bg-card min-w-[280px] overflow-hidden">
@@ -162,6 +162,23 @@ const WorldMap = () => {
                       <div className="mt-2 text-[10px] text-muted-foreground font-heading tracking-wider">
                         {new Date(hovered.start_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })} – {new Date(hovered.end_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
                       </div>
+                      {selected?.id === hovered.id && (
+                        <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
+                          <Link
+                            to={`/expeditions/${hovered.slug}`}
+                            className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent hover:text-accent/80 transition-colors"
+                            onClick={() => { setSelected(null); setHovered(null); }}
+                          >
+                            View details →
+                          </Link>
+                          <button
+                            onClick={() => { setSelected(null); setHovered(null); }}
+                            className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            Close
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </motion.div>
