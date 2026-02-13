@@ -115,7 +115,7 @@ const Apply = () => {
     }
 
     setLoading(true);
-    const { data: insertedApp, error } = await supabase.from("applications").insert({
+    const { error } = await supabase.from("applications").insert({
       expedition_id: result.data.expedition_id,
       first_name: result.data.first_name,
       last_name: result.data.last_name,
@@ -126,19 +126,12 @@ const Apply = () => {
       physical_condition: `[${result.data.participants} participant(s)] ${result.data.physical_condition}`,
       motivation_text: result.data.motivation_text,
       status: "pending",
-    }).select("id").single();
+    });
     setLoading(false);
 
     if (error) {
       setSubmitError("An error occurred. Please try again later.");
       return;
-    }
-
-    // Send email notification (fire and forget)
-    if (insertedApp?.id) {
-      supabase.functions.invoke("notify-application", {
-        body: { application_id: insertedApp.id },
-      }).catch(console.error);
     }
 
     setSubmitted(true);
