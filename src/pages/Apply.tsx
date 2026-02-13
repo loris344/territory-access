@@ -14,6 +14,7 @@ const applicationSchema = z.object({
   email: z.string().trim().email("Invalid email").max(255, "Max 255 characters"),
   phone: z.string().trim().min(1, "Required").max(30, "Max 30 characters"),
   nationality: z.string().trim().min(1, "Required").max(100, "Max 100 characters"),
+  participants: z.number().min(1, "At least 1").max(14, "Max 14 participants"),
   physical_condition: z.string().trim().min(1, "Required").max(2000, "Max 2000 characters"),
   motivation_text: z.string().trim().min(1, "Required").max(5000, "Max 5000 characters"),
 });
@@ -37,19 +38,18 @@ const Apply = () => {
     email: "",
     phone: "",
     nationality: "",
+    participants: "1",
     physical_condition: "",
     motivation_text: "",
   });
 
-  // Scroll to top on mount
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Fetch expeditions from DB, fallback to local data
   useEffect(() => {
     const fetchExpeditions = async () => {
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from("expeditions")
         .select("id, name, slug, price_usd, status")
         .neq("status", "closed");
@@ -63,11 +63,9 @@ const Apply = () => {
           status: e.status,
         }));
         setExpeditionOptions(options);
-        // Preselect if slug matches
         const match = options.find((o) => o.slug === preselectedSlug);
         if (match) setForm((f) => ({ ...f, expedition_id: match.id }));
       } else {
-        // Fallback to local data (IDs won't work for DB insert but form is usable)
         const options = localExpeditions
           .filter((e) => e.status !== "closed")
           .map((e) => ({
@@ -88,7 +86,6 @@ const Apply = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
-    // Clear field error on change
     if (errors[name]) {
       setErrors((prev) => {
         const next = { ...prev };
@@ -103,8 +100,10 @@ const Apply = () => {
     setSubmitError("");
     setErrors({});
 
-    // Validate
-    const result = applicationSchema.safeParse(form);
+    const result = applicationSchema.safeParse({
+      ...form,
+      participants: parseInt(form.participants) || 0,
+    });
     if (!result.success) {
       const fieldErrors: Record<string, string> = {};
       result.error.errors.forEach((err) => {
@@ -124,7 +123,7 @@ const Apply = () => {
       phone: result.data.phone,
       nationality: result.data.nationality,
       linkedin_url: null,
-      physical_condition: result.data.physical_condition,
+      physical_condition: `[${result.data.participants} participant(s)] ${result.data.physical_condition}`,
       motivation_text: result.data.motivation_text,
       status: "pending",
     });
@@ -150,8 +149,15 @@ const Apply = () => {
           >
             <div className="h-px w-12 bg-accent mx-auto mb-8" />
             <h1 className="heading-display text-2xl sm:text-3xl mb-6">Application Received</h1>
-            <p className="body-text text-muted-foreground">
-              Our team reviews within 72 hours.
+            <p className="body-text text-muted-foreground mb-4">
+              Your application has been registered. Our team will carefully review your profile and assess your eligibility for this expedition.
+            </p>
+            <p className="body-text text-muted-foreground mb-8">
+              You will receive a response within 72 hours. Please note that submission does not guarantee acceptance — each candidacy is evaluated individually based on motivation, fitness, and group compatibility.
+            </p>
+            <div className="h-px w-8 bg-border mx-auto mb-6" />
+            <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60">
+              Ligne Rouge Tours — Selection-based access only
             </p>
           </motion.div>
         </div>
@@ -177,9 +183,12 @@ const Apply = () => {
             transition={{ duration: 0.8 }}
           >
             <div className="h-px w-12 bg-accent mb-10" />
-            <h1 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-4">Apply</h1>
-            <p className="body-text text-muted-foreground mb-12">
-              Participation is subject to review. Selection is confirmed after internal validation.
+            <h1 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-4">Application</h1>
+            <p className="body-text text-muted-foreground mb-3">
+              Participation in our expeditions is not open to all. Each application undergoes a thorough internal review to ensure alignment with the demands of the destination and the cohesion of the group.
+            </p>
+            <p className="body-text text-muted-foreground/60 text-sm mb-12">
+              Incomplete or insufficiently motivated applications will not be considered.
             </p>
 
             {submitError && (
@@ -245,7 +254,7 @@ const Apply = () => {
                 </div>
               </div>
 
-              <div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
                   <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
                     Nationality
@@ -253,11 +262,27 @@ const Apply = () => {
                   <input type="text" name="nationality" value={form.nationality} onChange={handleChange} required className={inputClass} />
                   {errorText("nationality")}
                 </div>
+                <div>
+                  <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
+                    Number of participants
+                  </label>
+                  <input
+                    type="number"
+                    name="participants"
+                    value={form.participants}
+                    onChange={handleChange}
+                    required
+                    min={1}
+                    max={14}
+                    className={inputClass}
+                  />
+                  {errorText("participants")}
+                </div>
               </div>
 
               <div>
                 <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
-                  Physical condition
+                  Physical condition & relevant experience
                 </label>
                 <textarea
                   name="physical_condition"
@@ -266,14 +291,14 @@ const Apply = () => {
                   required
                   rows={3}
                   className={inputClass + " resize-none"}
-                  placeholder="Describe your physical condition and relevant experience"
+                  placeholder="Current fitness level, sports practice, altitude experience, medical conditions..."
                 />
                 {errorText("physical_condition")}
               </div>
 
               <div>
                 <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
-                  Why do you want to join this expedition?
+                  Why should we select you for this expedition?
                 </label>
                 <textarea
                   name="motivation_text"
@@ -282,6 +307,7 @@ const Apply = () => {
                   required
                   rows={5}
                   className={inputClass + " resize-none"}
+                  placeholder="What drives you to this destination? What do you expect to confront?"
                 />
                 {errorText("motivation_text")}
               </div>
@@ -293,6 +319,10 @@ const Apply = () => {
               >
                 {loading ? "Submitting…" : "Submit Application"}
               </button>
+
+              <p className="text-center font-heading text-[9px] tracking-[0.15em] uppercase text-muted-foreground/40 mt-4">
+                Submitting an application does not guarantee acceptance
+              </p>
             </form>
           </motion.div>
         </div>
