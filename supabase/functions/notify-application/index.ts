@@ -29,7 +29,7 @@ Deno.serve(async (req) => {
 
     const { data: app, error: fetchError } = await supabase
       .from("applications")
-      .select("*, expeditions(name)")
+      .select("*, expeditions!applications_expedition_id_fkey(name)")
       .eq("id", application_id)
       .single();
 

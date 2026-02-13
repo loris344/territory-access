@@ -38,7 +38,7 @@ const ApplicationsPanel = () => {
   const fetchApplications = async () => {
     const { data, error } = await supabase
       .from("applications")
-      .select("*, expeditions(name)")
+      .select("*, expeditions!applications_expedition_id_fkey(name)")
       .order("created_at", { ascending: false });
 
     if (error) {
