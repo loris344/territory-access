@@ -22,7 +22,7 @@ export interface Expedition {
   difficulty_level: string;
   short_description: string;
   long_description: string;
-  status: "open" | "limited" | "closed";
+  status: "open" | "limited" | "closed" | "cancelled" | "postponed";
   expedition_status: string;
   hero_image_url?: string;
   itinerary: ExpeditionDay[];
