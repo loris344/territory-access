@@ -149,7 +149,7 @@ const WorldMap = () => {
                       )}
                     </div>
                     <div className="p-4">
-                      <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-1">{hovered.country}</p>
+                      <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-1">{hovered.continent && `${hovered.continent} · `}{hovered.country}</p>
                       <p className="font-heading text-sm tracking-wider uppercase mb-2">{hovered.name}</p>
                       <p className="body-text text-xs text-muted-foreground mb-3 line-clamp-2">{hovered.short_description}</p>
                       <div className="flex items-center gap-3 text-[10px] text-muted-foreground font-heading tracking-wider uppercase">
@@ -197,7 +197,7 @@ const WorldMap = () => {
                         <img src={hovered.hero_image_url} alt={hovered.name} className="w-20 h-20 object-cover flex-shrink-0" />
                       )}
                       <div className="flex-1 min-w-0">
-                        <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-0.5">{hovered.country}</p>
+                        <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-0.5">{hovered.continent && `${hovered.continent} · `}{hovered.country}</p>
                         <p className="font-heading text-sm tracking-wider uppercase mb-1">{hovered.name}</p>
                         <p className="body-text text-xs text-muted-foreground line-clamp-2 mb-2">{hovered.short_description}</p>
                         <div className="flex items-center gap-2">

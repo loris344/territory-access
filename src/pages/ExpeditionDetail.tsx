@@ -67,9 +67,14 @@ const ExpeditionDetail = () => {
               {expedition.name}
             </h1>
 
-            <p className="font-heading text-sm tracking-[0.1em] uppercase text-muted-foreground mb-8">
-              {expedition.location}
+            <p className="font-heading text-sm tracking-[0.1em] uppercase text-muted-foreground mb-2">
+              {expedition.country} · {expedition.location}
             </p>
+            {expedition.continent && (
+              <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground/60 mb-8">
+                {expedition.continent}
+              </p>
+            )}
 
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-border pt-8">
               <div>
