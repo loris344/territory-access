@@ -3,6 +3,12 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import founderImg from "@/assets/founder.png";
+import gaetanImg from "@/assets/gaetan.png";
+import aymericImg from "@/assets/aymeric.jpg";
+import rayaneImg from "@/assets/rayane.jpg";
+import rymImg from "@/assets/rym.jpg";
+import leaImg from "@/assets/lea.jpg";
+import vitalyImg from "@/assets/vitaly.jpg";
 
 const faqItems = [
   {
@@ -29,10 +35,46 @@ const faqItems = [
 
 const teamMembers = [
   {
-    name: "Florian Music",
+    name: "Loris",
     role: "Founder & Expedition Leader",
     bio: "Former field analyst turned expedition designer. Has operated in over 40 countries including conflict zones, disputed territories, and restricted-access regions.",
     image: founderImg,
+  },
+  {
+    name: "Gaëtan",
+    role: "Operations & Logistics Coordinator",
+    bio: "Handles the operational backbone of every expedition — from route planning to on-ground logistics across complex territories.",
+    image: gaetanImg,
+  },
+  {
+    name: "Aymeric",
+    role: "Field Operations Analyst",
+    bio: "Specializes in risk assessment and field intelligence. Ensures every expedition meets strict security standards before departure.",
+    image: aymericImg,
+  },
+  {
+    name: "Rayane",
+    role: "Expedition Guide & Fixer Liaison",
+    bio: "Coordinates with local fixers and guides across North Africa and the Middle East. Expert in navigating culturally sensitive environments.",
+    image: rayaneImg,
+  },
+  {
+    name: "Vitaly",
+    role: "Strategic Partnerships & Development",
+    bio: "Builds relationships with local operators and institutional partners to open access to restricted and emerging destinations.",
+    image: vitalyImg,
+  },
+  {
+    name: "Rym",
+    role: "Marketing & Brand Strategy",
+    bio: "Shapes the brand's visual identity and narrative. Drives awareness through content strategy and digital campaigns.",
+    image: rymImg,
+  },
+  {
+    name: "Léa",
+    role: "Communications & Community Manager",
+    bio: "Manages client relations, social media presence, and community engagement. The first point of contact for aspiring expedition members.",
+    image: leaImg,
   },
 ];
 
