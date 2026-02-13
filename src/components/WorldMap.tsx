@@ -141,7 +141,7 @@ const WorldMap = () => {
                     top: (selected?.id === hovered.id ? fixedTooltipPos.y : tooltipPos.y) - 10,
                   }}
                 >
-                  <div className="border border-border bg-card min-w-[280px] overflow-hidden">
+                  <div className="border border-border bg-card w-[280px] overflow-hidden">
                     <div className="aspect-[16/9] bg-secondary flex items-center justify-center">
                       {hovered.hero_image_url ? (
                         <img src={hovered.hero_image_url} alt={hovered.name} className="w-full h-full object-cover" />
