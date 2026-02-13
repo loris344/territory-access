@@ -182,6 +182,7 @@ export type Database = {
           spots_taken: number
           start_date: string
           status: string
+          storytelling: string | null
         }
         Insert: {
           capacity_max?: number
@@ -206,6 +207,7 @@ export type Database = {
           spots_taken?: number
           start_date: string
           status?: string
+          storytelling?: string | null
         }
         Update: {
           capacity_max?: number
@@ -230,6 +232,7 @@ export type Database = {
           spots_taken?: number
           start_date?: string
           status?: string
+          storytelling?: string | null
         }
         Relationships: []
       }

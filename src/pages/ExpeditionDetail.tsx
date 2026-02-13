@@ -107,6 +107,21 @@ const ExpeditionDetail = () => {
         </div>
       </section>
 
+      {/* Storytelling */}
+      {expedition.storytelling && (
+        <section className="py-16 lg:py-24 border-t border-border">
+          <div className="max-w-4xl mx-auto px-6 lg:px-8">
+            <div className="h-px w-12 bg-accent mb-10" />
+            <h2 className="heading-display text-xl sm:text-2xl mb-8">The Story</h2>
+            <div className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed space-y-6">
+              {expedition.storytelling.split("\n\n").map((paragraph, i) => (
+                <p key={i}>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* Itinerary */}
       <section className="py-16 lg:py-24 bg-secondary">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
