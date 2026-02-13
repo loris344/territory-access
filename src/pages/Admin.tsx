@@ -318,6 +318,17 @@ const Admin = () => {
                       className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
                     />
                   </div>
+                  <div>
+                    <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Storytelling</label>
+                    <p className="text-[10px] text-muted-foreground mb-1">Narrative text shown on the detail page. Use double line breaks to separate paragraphs.</p>
+                    <textarea
+                      value={editData.storytelling || ""}
+                      onChange={(e) => setEditData({ ...editData, storytelling: e.target.value })}
+                      rows={8}
+                      placeholder="Tell the story of this expedition... Why this place? What makes it unique? What will participants experience?"
+                      className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
+                    />
+                  </div>
                   <div className="flex gap-3">
                     <button onClick={saveEdit} className="flex items-center gap-2 font-heading text-xs tracking-wider uppercase px-6 py-3 bg-accent text-accent-foreground hover:bg-accent/90 transition-all">
                       <Save className="w-3.5 h-3.5" /> Save
