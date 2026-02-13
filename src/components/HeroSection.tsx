@@ -2,16 +2,16 @@ import { useState, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
-import { expeditions } from "@/data/expeditions";
-
-const heroImages = [
-  heroBg,
-  ...expeditions
-    .filter((e) => e.hero_image_url)
-    .map((e) => e.hero_image_url as string),
-];
+import { useActiveExpeditions } from "@/hooks/use-expeditions";
 
 const HeroSection = () => {
+  const { data: expeditions } = useActiveExpeditions();
+  const heroImages = [
+    heroBg,
+    ...(expeditions || [])
+      .filter((e) => e.hero_image_url)
+      .map((e) => e.hero_image_url as string),
+  ];
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const pickRandom = useCallback(() => {

@@ -8,12 +8,13 @@ import {
   ZoomableGroup,
 } from "react-simple-maps";
 import { motion, AnimatePresence } from "framer-motion";
-import { getActiveExpeditions, type Expedition } from "@/data/expeditions";
+import { useActiveExpeditions } from "@/hooks/use-expeditions";
+import type { Expedition } from "@/data/expeditions";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
 const WorldMap = () => {
-  const expeditions = getActiveExpeditions();
+  const { data: expeditions } = useActiveExpeditions();
   const [selected, setSelected] = useState<Expedition | null>(null);
   const [hovered, setHovered] = useState<Expedition | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
