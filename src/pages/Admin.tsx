@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X } from "lucide-react";
+import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
 type Expedition = Tables<"expeditions"> & {
@@ -26,6 +26,8 @@ const Admin = () => {
   const [heroImages, setHeroImages] = useState<any[]>([]);
   const [heroUploading, setHeroUploading] = useState(false);
   const [showHeroManager, setShowHeroManager] = useState(false);
+  const [galleryImages, setGalleryImages] = useState<any[]>([]);
+  const [galleryUploading, setGalleryUploading] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -70,6 +72,7 @@ const Admin = () => {
   const startEdit = (exp: any) => {
     setEditing(exp.id);
     setEditData({ ...exp });
+    fetchGalleryImages(exp.id);
   };
 
   const cancelEdit = () => {
@@ -233,6 +236,59 @@ const Admin = () => {
   const toggleHeroImageActive = async (id: string, current: boolean) => {
     await supabase.from("hero_images").update({ is_active: !current }).eq("id", id);
     fetchHeroImages();
+  };
+
+  const fetchGalleryImages = async (expId: string) => {
+    const { data } = await supabase
+      .from("expedition_gallery")
+      .select("*")
+      .eq("expedition_id", expId)
+      .order("display_order", { ascending: true });
+    setGalleryImages(data || []);
+  };
+
+  const handleGalleryUpload = async (expId: string, file: File) => {
+    setGalleryUploading(true);
+    const ext = file.name.split(".").pop();
+    const path = `gallery-${expId}-${Date.now()}.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from("expedition-images")
+      .upload(path, file, { upsert: true });
+
+    if (uploadError) {
+      toast.error("Upload failed: " + uploadError.message);
+      setGalleryUploading(false);
+      return;
+    }
+
+    const { data: urlData } = supabase.storage
+      .from("expedition-images")
+      .getPublicUrl(path);
+
+    const maxOrder = galleryImages.reduce((max, g) => Math.max(max, g.display_order), -1);
+
+    const { error } = await supabase
+      .from("expedition_gallery")
+      .insert({ expedition_id: expId, image_url: `${urlData.publicUrl}?t=${Date.now()}`, display_order: maxOrder + 1 });
+
+    if (error) {
+      toast.error("Failed to save: " + error.message);
+    } else {
+      toast.success("Gallery image added!");
+      fetchGalleryImages(expId);
+    }
+    setGalleryUploading(false);
+  };
+
+  const deleteGalleryImage = async (id: string, expId: string) => {
+    const { error } = await supabase.from("expedition_gallery").delete().eq("id", id);
+    if (error) {
+      toast.error("Failed to delete");
+    } else {
+      toast.success("Image removed");
+      fetchGalleryImages(expId);
+    }
   };
 
   const statusOptions = ["open", "limited", "closed", "cancelled", "postponed"];
@@ -505,6 +561,42 @@ const Admin = () => {
                       className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
                     />
                   </div>
+                  {/* Gallery Images */}
+                  <div className="border border-border p-4">
+                    <h4 className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground mb-3 flex items-center gap-2">
+                      <Images className="w-3.5 h-3.5" /> Gallery Images ({galleryImages.length})
+                    </h4>
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                      {galleryImages.map((img) => (
+                        <div key={img.id} className="relative group border border-border overflow-hidden">
+                          <img src={img.image_url} alt="" className="w-full h-20 object-cover" />
+                          <button
+                            onClick={() => deleteGalleryImage(img.id, editData.id)}
+                            className="absolute top-1 right-1 p-1 bg-background/80 border border-destructive text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                      <label className="border border-dashed border-border h-20 flex flex-col items-center justify-center cursor-pointer hover:border-foreground transition-colors">
+                        <Upload className="w-4 h-4 text-muted-foreground mb-1" />
+                        <span className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">
+                          {galleryUploading ? "Uploading..." : "Add"}
+                        </span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          disabled={galleryUploading}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) handleGalleryUpload(editData.id, file);
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+
                   <div className="flex gap-3">
                     <button onClick={saveEdit} className="flex items-center gap-2 font-heading text-xs tracking-wider uppercase px-6 py-3 bg-accent text-accent-foreground hover:bg-accent/90 transition-all">
                       <Save className="w-3.5 h-3.5" /> Save
