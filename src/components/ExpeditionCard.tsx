@@ -129,6 +129,7 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
           {!hidePrice && (
             <span className="font-heading text-xl tracking-wider">
               ${expedition.price_usd.toLocaleString("en-US")}
+              <span className="text-xs text-muted-foreground ml-1">/ pers.</span>
             </span>
           )}
           <span className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground group-hover:text-foreground transition-colors">
