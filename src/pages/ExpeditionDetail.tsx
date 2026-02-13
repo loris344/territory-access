@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { getExpeditionBySlug } from "@/data/expeditions";
+import { useExpeditionBySlug } from "@/hooks/use-expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -18,11 +18,20 @@ const statusLabels = {
 
 const ExpeditionDetail = () => {
   const { slug } = useParams<{ slug: string }>();
-  const expedition = slug ? getExpeditionBySlug(slug) : undefined;
+  const { data: expedition, isLoading } = useExpeditionBySlug(slug);
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [slug]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <Navbar />
+        <p className="font-heading text-sm tracking-wider uppercase text-muted-foreground pt-20">Loading...</p>
+      </div>
+    );
+  }
 
   if (!expedition) {
     return (

@@ -1,10 +1,19 @@
 import { motion } from "framer-motion";
-import { getActiveExpeditions } from "@/data/expeditions";
+import { useActiveExpeditions } from "@/hooks/use-expeditions";
 import ExpeditionCard from "./ExpeditionCard";
 
 const ExpeditionsGrid = () => {
-  const expeditions = getActiveExpeditions();
+  const { data: expeditions, isLoading } = useActiveExpeditions();
 
+  if (isLoading) {
+    return (
+      <section id="expeditions" className="py-16 sm:py-24 lg:py-32 bg-secondary">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="font-heading text-sm tracking-wider uppercase text-muted-foreground text-center">Loading expeditions...</p>
+        </div>
+      </section>
+    );
+  }
   return (
     <section id="expeditions" className="py-16 sm:py-24 lg:py-32 bg-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
