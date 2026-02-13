@@ -19,9 +19,12 @@ const EthicalSection = () => {
         >
           <div className="h-px w-12 bg-accent mb-10" />
 
-          <h2 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-10">
+          <h2 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-6">
             Our Commitments
           </h2>
+          <p className="body-text text-muted-foreground text-base sm:text-lg max-w-3xl mb-10">
+            We go where others won't — but never at any cost. Every expedition is built on a framework of strict ethical principles. This is what separates exploration from exploitation.
+          </p>
 
           <ul className="space-y-4">
             {points.map((point, i) => (
