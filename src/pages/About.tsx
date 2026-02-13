@@ -39,42 +39,49 @@ const teamMembers = [
     role: "Founder & Expedition Leader",
     bio: "Former field analyst turned expedition designer. Has operated in over 40 countries including conflict zones, disputed territories, and restricted-access regions.",
     image: founderImg,
+    email: "loris@lignerougetours.com",
   },
   {
     name: "Gaëtan",
     role: "Operations & Logistics Coordinator",
     bio: "Handles the operational backbone of every expedition — from route planning to on-ground logistics across complex territories.",
     image: gaetanImg,
+    email: "gaetan@lignerougetours.com",
   },
   {
     name: "Aymeric",
     role: "Field Operations Analyst",
     bio: "Specializes in risk assessment and field intelligence. Ensures every expedition meets strict security standards before departure.",
     image: aymericImg,
+    email: "aymeric@lignerougetours.com",
   },
   {
     name: "Rayane",
     role: "Expedition Guide & Fixer Liaison",
     bio: "Coordinates with local fixers and guides across North Africa and the Middle East. Expert in navigating culturally sensitive environments.",
     image: rayaneImg,
+    email: "rayane@lignerougetours.com",
   },
   {
     name: "Vitaly",
     role: "Strategic Partnerships & Development",
     bio: "Builds relationships with local operators and institutional partners to open access to restricted and emerging destinations.",
     image: vitalyImg,
+    email: "vitaly@lignerougetours.com",
   },
   {
     name: "Rym",
     role: "Marketing & Brand Strategy",
     bio: "Shapes the brand's visual identity and narrative. Drives awareness through content strategy and digital campaigns.",
     image: rymImg,
+    email: "rym@lignerougetours.com",
   },
   {
     name: "Léa",
     role: "Communications & Community Manager",
     bio: "Manages client relations, social media presence, and community engagement. The first point of contact for aspiring expedition members.",
     image: leaImg,
+    email: "lea@lignerougetours.com",
   },
 ];
 
@@ -131,16 +138,22 @@ const About = () => {
                   <img
                     src={member.image}
                     alt={member.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover brightness-90 contrast-105 grayscale-[15%]"
                   />
                 </div>
                 <div>
                   <h3 className="font-heading text-sm tracking-[0.1em] uppercase mb-1">
                     {member.name}
                   </h3>
-                  <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-4">
+                  <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-3">
                     {member.role}
                   </p>
+                  <a
+                    href={`mailto:${member.email}`}
+                    className="body-text text-[11px] text-muted-foreground hover:text-accent-red transition-colors block mb-3"
+                  >
+                    {member.email}
+                  </a>
                   <p className="body-text text-sm text-muted-foreground">
                     {member.bio}
                   </p>
