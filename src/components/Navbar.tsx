@@ -1,9 +1,23 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import logoDark from "@/assets/logo-dark.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const scrollToExpeditions = () => {
+    setIsOpen(false);
+    if (location.pathname === "/") {
+      document.getElementById("expeditions")?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      navigate("/");
+      setTimeout(() => {
+        document.getElementById("expeditions")?.scrollIntoView({ behavior: "smooth" });
+      }, 300);
+    }
+  };
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border">
@@ -15,12 +29,12 @@ const Navbar = () => {
 
           {/* Desktop */}
           <div className="hidden md:flex items-center gap-10">
-            <Link
-              to="/#expeditions"
+            <button
+              onClick={scrollToExpeditions}
               className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors"
             >
               Expeditions
-            </Link>
+            </button>
           </div>
 
           {/* Mobile toggle */}
@@ -42,13 +56,12 @@ const Navbar = () => {
         {/* Mobile menu */}
         {isOpen && (
           <div className="md:hidden border-t border-border py-6 flex flex-col gap-6">
-            <Link
-              to="/#expeditions"
-              onClick={() => setIsOpen(false)}
-              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground"
+            <button
+              onClick={scrollToExpeditions}
+              className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground text-left"
             >
               Expeditions
-            </Link>
+            </button>
           </div>
         )}
       </div>
