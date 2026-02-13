@@ -135,13 +135,14 @@ const WorldMap = () => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 5 }}
                   transition={{ duration: 0.15 }}
-                  className={`fixed z-50 hidden md:block ${selected?.id === hovered.id ? 'pointer-events-auto' : 'pointer-events-none'}`}
+                  className={`fixed z-50 hidden md:block w-[280px] ${selected?.id === hovered.id ? 'pointer-events-auto' : 'pointer-events-none'}`}
                   style={{
                     left: (selected?.id === hovered.id ? fixedTooltipPos.x : tooltipPos.x) + 16,
                     top: (selected?.id === hovered.id ? fixedTooltipPos.y : tooltipPos.y) - 10,
+                    maxWidth: 280,
                   }}
                 >
-                  <div className="border border-border bg-card w-[280px] overflow-hidden">
+                  <div className="border border-border bg-card w-full overflow-hidden">
                     <div className="aspect-[16/9] bg-secondary flex items-center justify-center">
                       {hovered.hero_image_url ? (
                         <img src={hovered.hero_image_url} alt={hovered.name} className="w-full h-full object-cover" />
