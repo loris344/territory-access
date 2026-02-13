@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images } from "lucide-react";
+import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 
@@ -248,38 +248,57 @@ const Admin = () => {
     setGalleryImages(data || []);
   };
 
-  const handleGalleryUpload = async (expId: string, file: File) => {
+  const handleGalleryUpload = async (expId: string, files: FileList | File[]) => {
     setGalleryUploading(true);
-    const ext = file.name.split(".").pop();
-    const path = `gallery-${expId}-${Date.now()}.${ext}`;
+    const fileArray = Array.from(files);
+    let currentMax = galleryImages.reduce((max, g) => Math.max(max, g.display_order), -1);
 
-    const { error: uploadError } = await supabase.storage
-      .from("expedition-images")
-      .upload(path, file, { upsert: true });
+    for (const file of fileArray) {
+      const ext = file.name.split(".").pop();
+      const path = `gallery-${expId}-${Date.now()}-${Math.random().toString(36).slice(2, 6)}.${ext}`;
 
-    if (uploadError) {
-      toast.error("Upload failed: " + uploadError.message);
-      setGalleryUploading(false);
-      return;
+      const { error: uploadError } = await supabase.storage
+        .from("expedition-images")
+        .upload(path, file, { upsert: true });
+
+      if (uploadError) {
+        toast.error(`Upload failed for ${file.name}: ${uploadError.message}`);
+        continue;
+      }
+
+      const { data: urlData } = supabase.storage
+        .from("expedition-images")
+        .getPublicUrl(path);
+
+      currentMax += 1;
+
+      const { error } = await supabase
+        .from("expedition_gallery")
+        .insert({ expedition_id: expId, image_url: `${urlData.publicUrl}?t=${Date.now()}`, display_order: currentMax });
+
+      if (error) {
+        toast.error(`Failed to save ${file.name}: ${error.message}`);
+      }
     }
 
-    const { data: urlData } = supabase.storage
-      .from("expedition-images")
-      .getPublicUrl(path);
-
-    const maxOrder = galleryImages.reduce((max, g) => Math.max(max, g.display_order), -1);
-
-    const { error } = await supabase
-      .from("expedition_gallery")
-      .insert({ expedition_id: expId, image_url: `${urlData.publicUrl}?t=${Date.now()}`, display_order: maxOrder + 1 });
-
-    if (error) {
-      toast.error("Failed to save: " + error.message);
-    } else {
-      toast.success("Gallery image added!");
-      fetchGalleryImages(expId);
-    }
+    toast.success(`${fileArray.length} image(s) uploaded!`);
+    fetchGalleryImages(expId);
     setGalleryUploading(false);
+  };
+
+  const moveGalleryImage = async (index: number, direction: "left" | "right", expId: string) => {
+    const swapIndex = direction === "left" ? index - 1 : index + 1;
+    if (swapIndex < 0 || swapIndex >= galleryImages.length) return;
+
+    const a = galleryImages[index];
+    const b = galleryImages[swapIndex];
+
+    await Promise.all([
+      supabase.from("expedition_gallery").update({ display_order: b.display_order }).eq("id", a.id),
+      supabase.from("expedition_gallery").update({ display_order: a.display_order }).eq("id", b.id),
+    ]);
+
+    fetchGalleryImages(expId);
   };
 
   const deleteGalleryImage = async (id: string, expId: string) => {
@@ -571,15 +590,33 @@ const Admin = () => {
                       <Images className="w-3.5 h-3.5" /> Gallery Images ({galleryImages.length})
                     </h4>
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                      {galleryImages.map((img) => (
+                      {galleryImages.map((img, idx) => (
                         <div key={img.id} className="relative group border border-border overflow-hidden">
                           <img src={img.image_url} alt="" className="w-full h-20 object-cover" />
-                          <button
-                            onClick={() => deleteGalleryImage(img.id, editData.id)}
-                            className="absolute top-1 right-1 p-1 bg-background/80 border border-destructive text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
+                          <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
+                            {idx > 0 && (
+                              <button
+                                onClick={() => moveGalleryImage(idx, "left", editData.id)}
+                                className="p-1 bg-background/80 border border-border"
+                              >
+                                <ChevronLeft className="w-3 h-3" />
+                              </button>
+                            )}
+                            <button
+                              onClick={() => deleteGalleryImage(img.id, editData.id)}
+                              className="p-1 bg-background/80 border border-destructive text-destructive"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                            {idx < galleryImages.length - 1 && (
+                              <button
+                                onClick={() => moveGalleryImage(idx, "right", editData.id)}
+                                className="p-1 bg-background/80 border border-border"
+                              >
+                                <ChevronRight className="w-3 h-3" />
+                              </button>
+                            )}
+                          </div>
                         </div>
                       ))}
                       <label className="border border-dashed border-border h-20 flex flex-col items-center justify-center cursor-pointer hover:border-foreground transition-colors">
@@ -590,11 +627,12 @@ const Admin = () => {
                         <input
                           type="file"
                           accept="image/*"
+                          multiple
                           className="hidden"
                           disabled={galleryUploading}
                           onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) handleGalleryUpload(editData.id, file);
+                            const files = e.target.files;
+                            if (files && files.length > 0) handleGalleryUpload(editData.id, files);
                           }}
                         />
                       </label>

@@ -43,11 +43,17 @@ const ExpeditionDetail = () => {
     fetchGallery();
   }, [expedition]);
 
-  // Combine hero_image_url + gallery
+  // Combine hero_image_url + gallery, deduplicating hero from gallery
   const allImages = expedition
     ? [
         ...(expedition.hero_image_url ? [expedition.hero_image_url] : []),
-        ...galleryImages,
+        ...galleryImages.filter((url) => {
+          if (!expedition.hero_image_url) return true;
+          // Compare URLs ignoring cache-busting query params
+          const heroBase = expedition.hero_image_url.split("?")[0];
+          const galleryBase = url.split("?")[0];
+          return galleryBase !== heroBase;
+        }),
       ]
     : [];
 
@@ -112,7 +118,7 @@ const ExpeditionDetail = () => {
                 transition={{ duration: 1 }}
               />
             </AnimatePresence>
-            <div className="absolute inset-0 bg-background/75" />
+            <div className="absolute inset-0 bg-background/55" />
           </div>
         )}
         {!allImages.length && <div className="absolute inset-0 bg-secondary" />}
