@@ -12,10 +12,10 @@ const applicationSchema = z.object({
   first_name: z.string().trim().min(1, "Required").max(100, "Max 100 characters"),
   last_name: z.string().trim().min(1, "Required").max(100, "Max 100 characters"),
   email: z.string().trim().email("Invalid email").max(255, "Max 255 characters"),
-  phone: z.string().trim().min(5, "Invalid phone number").max(30, "Max 30 characters"),
+  phone: z.string().trim().min(1, "Required").max(30, "Max 30 characters"),
   nationality: z.string().trim().min(1, "Required").max(100, "Max 100 characters"),
-  physical_condition: z.string().trim().min(10, "Min 10 characters").max(2000, "Max 2000 characters"),
-  motivation_text: z.string().trim().min(20, "Min 20 characters").max(5000, "Max 5000 characters"),
+  physical_condition: z.string().trim().min(1, "Required").max(2000, "Max 2000 characters"),
+  motivation_text: z.string().trim().min(1, "Required").max(5000, "Max 5000 characters"),
 });
 
 type ExpeditionOption = { id: string; name: string; slug: string; price: number; status: string };

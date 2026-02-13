@@ -138,6 +138,42 @@ const Admin = () => {
     fetchExpeditions();
   };
 
+  const createExpedition = async () => {
+    const slug = `new-expedition-${Date.now()}`;
+    const today = new Date().toISOString().split("T")[0];
+    const { data, error } = await supabase
+      .from("expeditions")
+      .insert({
+        name: "New Expedition",
+        slug,
+        location: "Location",
+        country: "",
+        intensity_level: "Medium",
+        intensity_type: "mountain",
+        difficulty_level: "medium",
+        short_description: "Short description",
+        long_description: "Full description",
+        duration_days: 7,
+        start_date: today,
+        end_date: today,
+        price_eur: 0,
+        price_usd: 0,
+        status: "closed",
+      })
+      .select()
+      .single();
+
+    if (error) {
+      toast.error("Failed to create: " + error.message);
+      return;
+    }
+    toast.success("Expedition created! Edit it below.");
+    fetchExpeditions();
+    if (data) {
+      startEdit(data);
+    }
+  };
+
   const statusOptions = ["open", "limited", "closed", "cancelled", "postponed"];
   const intensityLevelOptions = ["Easy", "Medium", "Hard", "Extreme"];
   const intensityTypeOptions = ["mountain", "desert", "psychological", "isolation", "polar", "jungle", "nomadic", "political", "historical", "post-conflict", "altitude"];
@@ -171,6 +207,12 @@ const Admin = () => {
           <h2 className="font-heading text-sm tracking-wider uppercase text-muted-foreground">
             {expeditions.length} Expeditions
           </h2>
+          <button
+            onClick={createExpedition}
+            className="flex items-center gap-2 font-heading text-xs tracking-wider uppercase px-5 py-2.5 bg-accent text-accent-foreground hover:bg-accent/90 transition-all"
+          >
+            <Plus className="w-4 h-4" /> Add Expedition
+          </button>
         </div>
 
         <div className="space-y-4">
