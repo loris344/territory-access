@@ -30,7 +30,7 @@ const ExpeditionsGrid = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: i * 0.1 }}
             >
-              <ExpeditionCard expedition={expedition} />
+              <ExpeditionCard expedition={expedition} hidePrice />
             </motion.div>
           ))}
         </div>
