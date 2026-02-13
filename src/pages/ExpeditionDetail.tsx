@@ -70,7 +70,7 @@ const ExpeditionDetail = () => {
   // Auto-advance every 8 seconds
   useEffect(() => {
     if (allImages.length <= 1) return;
-    const interval = setInterval(nextImg, 6000);
+    const interval = setInterval(nextImg, 8000);
     return () => clearInterval(interval);
   }, [nextImg, allImages.length]);
 
@@ -221,7 +221,7 @@ const ExpeditionDetail = () => {
         <section className="py-16 lg:py-24 border-t border-border">
           <div className="max-w-4xl mx-auto px-6 lg:px-8">
             <div className="h-px w-12 bg-accent mb-10" />
-            <h2 className="heading-display text-xl sm:text-2xl mb-8">The Story</h2>
+            <h2 className="heading-display text-xl sm:text-2xl mb-8">The Territory</h2>
             <div className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed space-y-6">
               {expedition.storytelling.split("\n\n").map((paragraph, i) => (
                 <p key={i}>{paragraph}</p>
