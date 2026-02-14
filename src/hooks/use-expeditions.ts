@@ -76,6 +76,6 @@ export function useActiveExpeditions() {
   const { data: expeditions, ...rest } = useExpeditions();
   return {
     ...rest,
-    data: expeditions?.filter((e) => e.status !== "closed") || [],
+    data: expeditions?.filter((e) => e.status !== "cancelled" && e.status !== "postponed") || [],
   };
 }
