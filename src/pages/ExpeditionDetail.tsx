@@ -207,6 +207,25 @@ const ExpeditionDetail = () => {
                 })()}
               </div>
             </div>
+
+            {/* Top CTA */}
+            <div className="mt-8">
+              {expedition.status !== "closed" && expedition.status !== "cancelled" && expedition.status !== "postponed" ? (
+                <Link
+                  to={`/apply?expedition=${expedition.slug}`}
+                  className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300"
+                >
+                  Apply for this expedition
+                </Link>
+              ) : expedition.status === "closed" ? (
+                <button
+                  onClick={() => setWaitlistOpen(true)}
+                  className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all duration-300"
+                >
+                  Join the Waitlist
+                </button>
+              ) : null}
+            </div>
           </motion.div>
         </div>
 
