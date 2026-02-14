@@ -201,7 +201,7 @@ const ExpeditionDetail = () => {
                   const remaining = expedition.capacity_max - expedition.spots_taken;
                   return (
                     <p className={`font-heading text-sm ${remaining <= 3 && remaining > 0 ? "text-accent-red" : ""}`}>
-                      {remaining <= 0 ? "Full" : `${remaining} / ${expedition.capacity_max}`}
+                      {remaining <= 0 ? "Full" : `${remaining}`}
                     </p>
                   );
                 })()}
