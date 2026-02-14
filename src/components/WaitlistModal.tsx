@@ -9,9 +9,11 @@ interface WaitlistModalProps {
   onClose: () => void;
   expeditionId: string;
   expeditionName: string;
+  expeditionDateId?: string;
+  dateLabel?: string;
 }
 
-const WaitlistModal = ({ open, onClose, expeditionId, expeditionName }: WaitlistModalProps) => {
+const WaitlistModal = ({ open, onClose, expeditionId, expeditionName, expeditionDateId, dateLabel }: WaitlistModalProps) => {
   const [form, setForm] = useState({
     first_name: "",
     last_name: "",
@@ -31,12 +33,13 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName }: Waitlist
     setSubmitting(true);
     const { error } = await supabase.from("waitlist").insert({
       expedition_id: expeditionId,
+      expedition_date_id: expeditionDateId || null,
       first_name: form.first_name.trim(),
       last_name: form.last_name.trim(),
       email: form.email.trim(),
       nationality: form.nationality.trim(),
       number_of_people: form.number_of_people,
-    });
+    } as any);
     setSubmitting(false);
     if (error) {
       toast.error("Failed to join waitlist");
@@ -95,9 +98,15 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName }: Waitlist
               <>
                 <div className="h-px w-12 bg-accent mb-6" />
                 <h3 className="heading-display text-lg mb-2">Join the Waitlist</h3>
-                <p className="body-text text-sm text-muted-foreground mb-6">
+                <p className="body-text text-sm text-muted-foreground mb-1">
                   {expeditionName}
                 </p>
+                {dateLabel && (
+                  <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent mb-6">
+                    {dateLabel}
+                  </p>
+                )}
+                {!dateLabel && <div className="mb-6" />}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-3">

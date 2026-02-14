@@ -39,6 +39,19 @@ Deno.serve(async (req) => {
 
     const expeditionName = app.expeditions?.name || "Unknown";
 
+    // Fetch date info if linked
+    let dateLabel = "";
+    if (app.expedition_date_id) {
+      const { data: dateData } = await supabase
+        .from("expedition_dates")
+        .select("start_date, end_date")
+        .eq("id", app.expedition_date_id)
+        .single();
+      if (dateData) {
+        dateLabel = `${dateData.start_date} → ${dateData.end_date}`;
+      }
+    }
+
     const emailHtml = `
       <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
         <div style="border-bottom: 1px solid #e5e5e5; padding-bottom: 20px; margin-bottom: 24px;">
@@ -47,7 +60,7 @@ Deno.serve(async (req) => {
           </h1>
         </div>
         <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
-          <tr><td style="padding: 8px 0; color: #888; width: 140px;">Expedition</td><td style="padding: 8px 0; font-weight: 600;">${expeditionName}</td></tr>
+          <tr><td style="padding: 8px 0; color: #888; width: 140px;">Expedition</td><td style="padding: 8px 0; font-weight: 600;">${expeditionName}${dateLabel ? ` (${dateLabel})` : ""}</td></tr>
           <tr><td style="padding: 8px 0; color: #888;">Name</td><td style="padding: 8px 0;">${app.first_name} ${app.last_name}</td></tr>
           <tr><td style="padding: 8px 0; color: #888;">Email</td><td style="padding: 8px 0;"><a href="mailto:${app.email}" style="color: #1a1a1a;">${app.email}</a></td></tr>
           <tr><td style="padding: 8px 0; color: #888;">Phone</td><td style="padding: 8px 0;">${app.phone}</td></tr>

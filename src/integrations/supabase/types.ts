@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          expedition_date_id: string | null
           expedition_id: string
           first_name: string
           id: string
@@ -32,6 +33,7 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
+          expedition_date_id?: string | null
           expedition_id: string
           first_name: string
           id?: string
@@ -46,6 +48,7 @@ export type Database = {
         Update: {
           created_at?: string
           email?: string
+          expedition_date_id?: string | null
           expedition_id?: string
           first_name?: string
           id?: string
@@ -58,6 +61,13 @@ export type Database = {
           status?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "applications_expedition_date_id_fkey"
+            columns: ["expedition_date_id"]
+            isOneToOne: false
+            referencedRelation: "expedition_dates"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "applications_expedition_id_fkey"
             columns: ["expedition_id"]
@@ -361,6 +371,7 @@ export type Database = {
         Row: {
           created_at: string
           email: string
+          expedition_date_id: string | null
           expedition_id: string
           first_name: string
           id: string
@@ -371,6 +382,7 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
+          expedition_date_id?: string | null
           expedition_id: string
           first_name: string
           id?: string
@@ -381,6 +393,7 @@ export type Database = {
         Update: {
           created_at?: string
           email?: string
+          expedition_date_id?: string | null
           expedition_id?: string
           first_name?: string
           id?: string
@@ -389,6 +402,13 @@ export type Database = {
           number_of_people?: number
         }
         Relationships: [
+          {
+            foreignKeyName: "waitlist_expedition_date_id_fkey"
+            columns: ["expedition_date_id"]
+            isOneToOne: false
+            referencedRelation: "expedition_dates"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "waitlist_expedition_id_fkey"
             columns: ["expedition_id"]
