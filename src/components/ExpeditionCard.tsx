@@ -92,23 +92,14 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
           </span>
         </div>
 
-        {/* Theme + spots */}
-        <div className="flex items-center justify-between mb-4">
+        {/* Theme */}
+        <div className="flex items-center mb-4">
           <div className="flex items-center gap-1.5 text-muted-foreground">
             {intensityIcons[expedition.intensity_type] || <Compass className="w-3.5 h-3.5" />}
             <span className="font-heading text-[10px] tracking-[0.1em] uppercase">
               {intensityLabels[expedition.intensity_type] || expedition.intensity_type}
             </span>
           </div>
-          {displayStatus === "open" || displayStatus === "limited" ? (
-            <span className={`font-heading text-[10px] tracking-wider ${spotsLeft <= 3 ? "text-accent-red" : "text-muted-foreground"}`}>
-              {spotsLeft} SPOT{spotsLeft !== 1 ? "S" : ""} LEFT
-            </span>
-          ) : displayStatus === "closed" ? (
-            <span className="font-heading text-[10px] tracking-wider text-foreground/70">
-              WAITLIST OPEN
-            </span>
-          ) : null}
         </div>
 
         {/* Name */}
