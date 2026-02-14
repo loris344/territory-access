@@ -541,7 +541,7 @@ const Admin = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Max Capacity</label>
+                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Total Spots Available</label>
                       <input
                         type="number"
                         value={editData.capacity_max || 12}
