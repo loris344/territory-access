@@ -6,6 +6,7 @@ import ExpeditionsGrid from "@/components/ExpeditionsGrid";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import EthicalSection from "@/components/EthicalSection";
 import FAQSection from "@/components/FAQSection";
+import ContactBubbles from "@/components/ContactBubbles";
 import Footer from "@/components/Footer";
 
 const Index = () => {
@@ -19,6 +20,7 @@ const Index = () => {
       <TestimonialsSection />
       <EthicalSection />
       <FAQSection />
+      <ContactBubbles />
       <Footer />
     </div>
   );
