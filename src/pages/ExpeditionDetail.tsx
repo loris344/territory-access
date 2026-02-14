@@ -105,25 +105,6 @@ const ExpeditionDetail = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Cancellation / Postponed banner */}
-      {(expedition.status === "cancelled" || expedition.status === "postponed") && (
-        <div className={`border-b-2 ${expedition.status === "cancelled" ? "bg-destructive/15 border-destructive" : "bg-muted border-muted-foreground/30"}`}>
-          <div className="max-w-5xl mx-auto px-6 lg:px-8 py-6 lg:py-8">
-            <div className="flex items-center gap-3 mb-2">
-              <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
-              <span className={`font-heading text-sm tracking-[0.15em] uppercase font-bold ${expedition.status === "cancelled" ? "text-destructive" : "text-muted-foreground"}`}>
-                {expedition.status === "cancelled" ? "Expedition Cancelled" : "Expedition Postponed"}
-              </span>
-            </div>
-            {expedition.cancellation_reason && (
-              <p className="body-text text-base text-foreground/80 pl-5 border-l-2 border-destructive/50 ml-0.5">
-                {expedition.cancellation_reason}
-              </p>
-            )}
-          </div>
-        </div>
-      )}
-
       {/* Hero with background carousel */}
       <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
         {/* Background images */}
@@ -227,6 +208,25 @@ const ExpeditionDetail = () => {
           </div>
         )}
       </section>
+
+      {/* Cancellation / Postponed notice */}
+      {(expedition.status === "cancelled" || expedition.status === "postponed") && (
+        <div className="border-b border-border">
+          <div className="max-w-4xl mx-auto px-6 lg:px-8 py-5 flex items-start gap-4">
+            <span className={`inline-block w-1.5 h-1.5 mt-1.5 flex-shrink-0 ${expedition.status === "cancelled" ? "bg-destructive" : "bg-muted-foreground"}`} />
+            <div>
+              <span className={`font-heading text-[10px] tracking-[0.15em] uppercase ${expedition.status === "cancelled" ? "text-destructive" : "text-muted-foreground"}`}>
+                {expedition.status === "cancelled" ? "Expedition Cancelled" : "Expedition Postponed"}
+              </span>
+              {expedition.cancellation_reason && (
+                <p className="body-text text-sm text-muted-foreground mt-1">
+                  {expedition.cancellation_reason}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Overview */}
       <section className="py-16 lg:py-24">
