@@ -80,6 +80,7 @@ Deno.serve(async (req) => {
       </div>
     `;
 
+    // Email to admin
     const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -95,10 +96,54 @@ Deno.serve(async (req) => {
     });
 
     const resendData = await resendRes.json();
-
     if (!resendRes.ok) {
       console.error("Resend error:", resendData);
       throw new Error(`Resend API error: ${resendRes.status}`);
+    }
+
+    // Confirmation email to the applicant
+    const confirmHtml = `
+      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
+        <div style="border-bottom: 1px solid #e5e5e5; padding-bottom: 20px; margin-bottom: 24px;">
+          <h1 style="font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 400; margin: 0;">
+            Ligne Rouge Tours
+          </h1>
+        </div>
+        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
+          Hi ${app.first_name},
+        </p>
+        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
+          We've received your application for <strong>${expeditionName}</strong>${dateLabel ? ` (${dateLabel})` : ""}. Our team will carefully review it and get back to you shortly.
+        </p>
+        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
+          In the meantime, feel free to reach out if you have any questions.
+        </p>
+        <p style="font-size: 14px; line-height: 1.8; margin: 0;">
+          — The Ligne Rouge Tours Team
+        </p>
+        <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e5e5; text-align: center;">
+          <p style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #aaa;">lignerougetours.com</p>
+        </div>
+      </div>
+    `;
+
+    const confirmRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Ligne Rouge Tours <noreply@lignerougetours.com>",
+        to: [app.email],
+        subject: `Application Received — ${expeditionName}`,
+        html: confirmHtml,
+      }),
+    });
+
+    const confirmData = await confirmRes.json();
+    if (!confirmRes.ok) {
+      console.error("Confirmation email error:", confirmData);
     }
 
     return new Response(JSON.stringify({ success: true }), {

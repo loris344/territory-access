@@ -70,6 +70,7 @@ Deno.serve(async (req) => {
       </div>
     `;
 
+    // Email to admin
     const resendRes = await fetch("https://api.resend.com/emails", {
       method: "POST",
       headers: {
@@ -88,6 +89,51 @@ Deno.serve(async (req) => {
     if (!resendRes.ok) {
       console.error("Resend error:", resendData);
       throw new Error(`Resend API error: ${resendRes.status}`);
+    }
+
+    // Confirmation email to the person
+    const confirmHtml = `
+      <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
+        <div style="border-bottom: 1px solid #e5e5e5; padding-bottom: 20px; margin-bottom: 24px;">
+          <h1 style="font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 400; margin: 0;">
+            Ligne Rouge Tours
+          </h1>
+        </div>
+        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
+          Hi ${entry.first_name},
+        </p>
+        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
+          Thank you for joining the waitlist for <strong>${expeditionName}</strong>${dateLabel ? ` (${dateLabel})` : ""}. We've noted your interest for ${entry.number_of_people} ${entry.number_of_people > 1 ? "people" : "person"}.
+        </p>
+        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
+          We'll reach out to you as soon as a spot becomes available.
+        </p>
+        <p style="font-size: 14px; line-height: 1.8; margin: 0;">
+          — The Ligne Rouge Tours Team
+        </p>
+        <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e5e5; text-align: center;">
+          <p style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #aaa;">lignerougetours.com</p>
+        </div>
+      </div>
+    `;
+
+    const confirmRes = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${RESEND_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        from: "Ligne Rouge Tours <noreply@lignerougetours.com>",
+        to: [entry.email],
+        subject: `Waitlist Confirmation — ${expeditionName}`,
+        html: confirmHtml,
+      }),
+    });
+
+    const confirmData = await confirmRes.json();
+    if (!confirmRes.ok) {
+      console.error("Confirmation email error:", confirmData);
     }
 
     return new Response(JSON.stringify({ success: true }), {
