@@ -9,11 +9,11 @@ import {
 const faqItems = [
   {
     q: "Who can apply for an expedition?",
-    a: "Anyone over 18 in good physical and mental condition. No prior expedition experience is required — but a genuine willingness to step into discomfort is non-negotiable. Every application is reviewed individually. We look for mindset, not résumés.",
+    a: "Anyone over 18 in good physical and mental condition. No prior expedition experience is required, but a genuine willingness to step into discomfort is non-negotiable. Every application is reviewed individually. We look for mindset, not résumés.",
   },
   {
     q: "Are these destinations safe?",
-    a: "We operate in territories that carry inherent risks. We mitigate those risks through meticulous planning, trusted local fixers, and strict operational protocols. However, we cannot eliminate all dangers — and we do not pretend to. You travel at your own risk with full awareness.",
+    a: "We operate in territories that carry inherent risks. We mitigate those risks through meticulous planning, trusted local fixers, and strict operational protocols. However, we cannot eliminate all dangers, and we do not pretend to. You travel at your own risk with full awareness.",
   },
   {
     q: "What is the selection process?",

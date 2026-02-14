@@ -19,7 +19,7 @@ const PhilosophySection = () => {
           <div className="space-y-6 body-text text-muted-foreground text-base sm:text-lg max-w-3xl">
             <p>We don't sell vacations. We craft confrontations with the real.</p>
             <p>
-              Every expedition is designed around tension — the kind that transforms you.
+              Every expedition is designed around tension, the kind that transforms you.
               Politically complex territories, geographically extreme landscapes,
               cultures that challenge everything you think you know.
             </p>
@@ -27,7 +27,7 @@ const PhilosophySection = () => {
               Small groups. Trusted local fixers. No scripts, no safety nets, no spectators.
             </p>
             <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent/80 pt-2">
-              Each expedition is limited to a small number of participants — carefully selected.
+              Each expedition is limited to a small number of participants, carefully selected.
             </p>
           </div>
         </motion.div>

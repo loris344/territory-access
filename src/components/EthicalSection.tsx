@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 
 const EthicalSection = () => {
   const points = [
-    "No active war zones. We push limits — not laws.",
+    "No active war zones. We push limits, not laws.",
     "No illegal access. Every route is negotiated, never forced.",
-    "No staged or degrading experiences. What you see is real — or we don't go.",
+    "No staged or degrading experiences. What you see is real, or we don't go.",
     "Respect for local communities. Always. Without exception.",
   ];
 
@@ -23,7 +23,7 @@ const EthicalSection = () => {
             Our Commitments
           </h2>
           <p className="body-text text-muted-foreground text-base sm:text-lg max-w-3xl mb-10">
-            We go where others won't — but never at any cost. Every expedition is built on a framework of strict ethical principles. This is what separates exploration from exploitation.
+            We go where others won't, but never at any cost. Every expedition is built on a framework of strict ethical principles. This is what separates exploration from exploitation.
           </p>
 
           <ul className="space-y-4">
