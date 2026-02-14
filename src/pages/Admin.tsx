@@ -7,6 +7,64 @@ import type { Tables } from "@/integrations/supabase/types";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 import WaitlistPanel from "@/components/admin/WaitlistPanel";
 
+
+const DateRow = ({ dateRow, expId, onUpdate, onDelete, statusOptions }: {
+  dateRow: any;
+  expId: string;
+  onUpdate: (id: string, field: string, value: any, expId: string) => void;
+  onDelete: (id: string, expId: string) => void;
+  statusOptions: string[];
+}) => {
+  const [local, setLocal] = useState({
+    start_date: dateRow.start_date,
+    end_date: dateRow.end_date,
+    capacity_max: dateRow.capacity_max,
+    spots_taken: dateRow.spots_taken,
+  });
+
+  useEffect(() => {
+    setLocal({
+      start_date: dateRow.start_date,
+      end_date: dateRow.end_date,
+      capacity_max: dateRow.capacity_max,
+      spots_taken: dateRow.spots_taken,
+    });
+  }, [dateRow]);
+
+  const handleBlur = (field: string, value: any) => {
+    if (value !== dateRow[field]) {
+      onUpdate(dateRow.id, field, field === "capacity_max" || field === "spots_taken" ? parseInt(value) : value, expId);
+    }
+  };
+
+  return (
+    <div className="flex flex-wrap items-center gap-3 border border-border p-3 bg-background">
+      <div className="flex items-center gap-2">
+        <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">From</label>
+        <input type="date" value={local.start_date} onChange={(e) => setLocal({ ...local, start_date: e.target.value })} onBlur={() => handleBlur("start_date", local.start_date)} className="px-2 py-1 bg-background border border-border text-foreground text-xs" />
+      </div>
+      <div className="flex items-center gap-2">
+        <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">To</label>
+        <input type="date" value={local.end_date} onChange={(e) => setLocal({ ...local, end_date: e.target.value })} onBlur={() => handleBlur("end_date", local.end_date)} className="px-2 py-1 bg-background border border-border text-foreground text-xs" />
+      </div>
+      <div className="flex items-center gap-2">
+        <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">Spots</label>
+        <input type="number" value={local.capacity_max} onChange={(e) => setLocal({ ...local, capacity_max: e.target.value })} onBlur={() => handleBlur("capacity_max", local.capacity_max)} className="w-16 px-2 py-1 bg-background border border-border text-foreground text-xs" />
+      </div>
+      <div className="flex items-center gap-2">
+        <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">Taken</label>
+        <input type="number" value={local.spots_taken} onChange={(e) => setLocal({ ...local, spots_taken: e.target.value })} onBlur={() => handleBlur("spots_taken", local.spots_taken)} className="w-16 px-2 py-1 bg-background border border-border text-foreground text-xs" />
+      </div>
+      <select value={dateRow.status} onChange={(e) => onUpdate(dateRow.id, "status", e.target.value, expId)} className="px-2 py-1 bg-background border border-border text-foreground text-xs">
+        {statusOptions.map((s: string) => (<option key={s} value={s}>{s.toUpperCase()}</option>))}
+      </select>
+      <button onClick={() => onDelete(dateRow.id, expId)} className="p-1 border border-border hover:border-destructive hover:text-destructive transition-colors ml-auto">
+        <X className="w-3 h-3" />
+      </button>
+    </div>
+  );
+};
+
 type Expedition = Tables<"expeditions"> & {
   country?: string;
   coordinates?: number[];
@@ -713,59 +771,7 @@ const Admin = () => {
                     </h4>
                     <div className="space-y-3">
                       {expeditionDates.map((d) => (
-                        <div key={d.id} className="flex flex-wrap items-center gap-3 border border-border p-3 bg-background">
-                          <div className="flex items-center gap-2">
-                            <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">From</label>
-                            <input
-                              type="date"
-                              value={d.start_date}
-                              onChange={(e) => updateExpeditionDate(d.id, "start_date", e.target.value, editData.id)}
-                              className="px-2 py-1 bg-background border border-border text-foreground text-xs"
-                            />
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">To</label>
-                            <input
-                              type="date"
-                              value={d.end_date}
-                              onChange={(e) => updateExpeditionDate(d.id, "end_date", e.target.value, editData.id)}
-                              className="px-2 py-1 bg-background border border-border text-foreground text-xs"
-                            />
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">Spots</label>
-                            <input
-                              type="number"
-                              value={d.capacity_max}
-                              onChange={(e) => updateExpeditionDate(d.id, "capacity_max", parseInt(e.target.value), editData.id)}
-                              className="w-16 px-2 py-1 bg-background border border-border text-foreground text-xs"
-                            />
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">Taken</label>
-                            <input
-                              type="number"
-                              value={d.spots_taken}
-                              onChange={(e) => updateExpeditionDate(d.id, "spots_taken", parseInt(e.target.value), editData.id)}
-                              className="w-16 px-2 py-1 bg-background border border-border text-foreground text-xs"
-                            />
-                          </div>
-                          <select
-                            value={d.status}
-                            onChange={(e) => updateExpeditionDate(d.id, "status", e.target.value, editData.id)}
-                            className="px-2 py-1 bg-background border border-border text-foreground text-xs"
-                          >
-                            {statusOptions.map((s) => (
-                              <option key={s} value={s}>{s.toUpperCase()}</option>
-                            ))}
-                          </select>
-                          <button
-                            onClick={() => deleteExpeditionDate(d.id, editData.id)}
-                            className="p-1 border border-border hover:border-destructive hover:text-destructive transition-colors ml-auto"
-                          >
-                            <X className="w-3 h-3" />
-                          </button>
-                        </div>
+                        <DateRow key={d.id} dateRow={d} expId={editData.id} onUpdate={updateExpeditionDate} onDelete={deleteExpeditionDate} statusOptions={statusOptions} />
                       ))}
                       <button
                         onClick={() => addExpeditionDate(editData.id)}
