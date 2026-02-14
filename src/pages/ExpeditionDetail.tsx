@@ -107,15 +107,18 @@ const ExpeditionDetail = () => {
 
       {/* Cancellation / Postponed banner */}
       {(expedition.status === "cancelled" || expedition.status === "postponed") && (
-        <div className={`border-b ${expedition.status === "cancelled" ? "bg-destructive/10 border-destructive/30" : "bg-muted border-border"}`}>
-          <div className="max-w-5xl mx-auto px-6 lg:px-8 py-4 flex items-center gap-3">
-            <span className={`font-heading text-xs tracking-[0.15em] uppercase ${expedition.status === "cancelled" ? "text-destructive" : "text-muted-foreground"}`}>
-              {expedition.status === "cancelled" ? "Expedition Cancelled" : "Expedition Postponed"}
-            </span>
-            {(expedition as any).cancellation_reason && (
-              <span className="text-sm text-muted-foreground">
-                — {(expedition as any).cancellation_reason}
+        <div className={`border-b-2 ${expedition.status === "cancelled" ? "bg-destructive/15 border-destructive" : "bg-muted border-muted-foreground/30"}`}>
+          <div className="max-w-5xl mx-auto px-6 lg:px-8 py-6 lg:py-8">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="w-2 h-2 rounded-full bg-destructive animate-pulse" />
+              <span className={`font-heading text-sm tracking-[0.15em] uppercase font-bold ${expedition.status === "cancelled" ? "text-destructive" : "text-muted-foreground"}`}>
+                {expedition.status === "cancelled" ? "Expedition Cancelled" : "Expedition Postponed"}
               </span>
+            </div>
+            {expedition.cancellation_reason && (
+              <p className="body-text text-base text-foreground/80 pl-5 border-l-2 border-destructive/50 ml-0.5">
+                {expedition.cancellation_reason}
+              </p>
             )}
           </div>
         </div>
