@@ -30,7 +30,7 @@ const testimonials = [
     destination: "Somaliland",
     date: "January 2023",
     image: arnaudImg,
-    text: "Somaliland completely surprised me. Raw landscapes, authentic encounters. The team on the ground was outstanding — I felt safe at every moment.",
+    text: "Somaliland completely surprised me. Raw landscapes, authentic encounters. The team on the ground was outstanding, I felt safe at every moment.",
     rating: 5,
   },
   {

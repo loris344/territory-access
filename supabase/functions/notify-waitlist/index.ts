@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
       <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
         <div style="border-bottom: 1px solid #e5e5e5; padding-bottom: 20px; margin-bottom: 24px;">
           <h1 style="font-size: 16px; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 400; margin: 0;">
-            New Waitlist Entry — Ligne Rouge Tours
+            New Waitlist Entry - Ligne Rouge Tours
           </h1>
         </div>
         <table style="width: 100%; border-collapse: collapse; font-size: 14px;">
@@ -65,7 +65,7 @@ Deno.serve(async (req) => {
           <tr><td style="padding: 8px 0; color: #888;">People</td><td style="padding: 8px 0;">${entry.number_of_people}</td></tr>
         </table>
         <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e5e5; text-align: center;">
-          <p style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #aaa;">Ligne Rouge Tours — Waitlist System</p>
+          <p style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #aaa;">Ligne Rouge Tours - Waitlist System</p>
         </div>
       </div>
     `;
@@ -80,7 +80,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "Ligne Rouge Tours <noreply@lignerougetours.com>",
         to: ["contact@lignerougetours.com"],
-        subject: `Waitlist — ${entry.first_name} ${entry.last_name} — ${expeditionName}`,
+        subject: `Waitlist - ${entry.first_name} ${entry.last_name} - ${expeditionName}`,
         html: emailHtml,
       }),
     });
@@ -109,7 +109,7 @@ Deno.serve(async (req) => {
           We'll reach out to you as soon as a spot becomes available.
         </p>
         <p style="font-size: 14px; line-height: 1.8; margin: 0;">
-          — The Ligne Rouge Tours Team
+          The Ligne Rouge Tours Team
         </p>
         <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e5e5; text-align: center;">
           <p style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #aaa;">lignerougetours.com</p>
@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "Ligne Rouge Tours <noreply@lignerougetours.com>",
         to: [entry.email],
-        subject: `Waitlist Confirmation — ${expeditionName}`,
+        subject: `Waitlist Confirmation - ${expeditionName}`,
         html: confirmHtml,
       }),
     });

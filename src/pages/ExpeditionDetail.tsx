@@ -237,7 +237,7 @@ const ExpeditionDetail = () => {
               </div>
             )}
 
-            {/* Top CTA — only if no dates (legacy) */}
+            {/* Top CTA - only if no dates (legacy) */}
             {(expedition.dates || []).length === 0 && (
               <div className="mt-8">
                 {expedition.status !== "closed" && expedition.status !== "cancelled" && expedition.status !== "postponed" ? (

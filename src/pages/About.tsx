@@ -17,7 +17,7 @@ const faqItems = [
   },
   {
     q: "Are these destinations safe?",
-    a: "We operate in territories that carry inherent risks. We mitigate those risks through meticulous planning, trusted local fixers, and strict operational protocols. However, we cannot eliminate all dangers — and we do not pretend to. You travel at your own risk with full awareness.",
+    a: "We operate in territories that carry inherent risks. We mitigate those risks through meticulous planning, trusted local fixers, and strict operational protocols. However, we cannot eliminate all dangers, and we do not pretend to. You travel at your own risk with full awareness.",
   },
   {
     q: "What is the selection process?",
@@ -44,7 +44,7 @@ const teamMembers = [
   {
     name: "Gaëtan",
     role: "Operations & Logistics Coordinator",
-    bio: "Handles the operational backbone of every expedition — from route planning to on-ground logistics across complex territories.",
+    bio: "Handles the operational backbone of every expedition, from route planning to on-ground logistics across complex territories.",
     image: gaetanImg,
     email: "gaetan@lignerougetours.com",
   },
@@ -102,7 +102,7 @@ const About = () => {
             <h1 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-8">Who We Are</h1>
             <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
               Ligne Rouge Tours is not a travel agency. We are an expedition company that operates in territories most
-              operators refuse to approach — conflict zones, politically sensitive regions, extreme environments, and
+              operators refuse to approach: conflict zones, politically sensitive regions, extreme environments, and
               unrecognized states.
             </p>
             <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
