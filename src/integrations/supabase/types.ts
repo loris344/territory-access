@@ -192,6 +192,7 @@ export type Database = {
       }
       expeditions: {
         Row: {
+          cancellation_reason: string | null
           capacity_max: number
           continent: string
           coordinates: Json | null
@@ -218,6 +219,7 @@ export type Database = {
           storytelling: string | null
         }
         Insert: {
+          cancellation_reason?: string | null
           capacity_max?: number
           continent?: string
           coordinates?: Json | null
@@ -244,6 +246,7 @@ export type Database = {
           storytelling?: string | null
         }
         Update: {
+          cancellation_reason?: string | null
           capacity_max?: number
           continent?: string
           coordinates?: Json | null

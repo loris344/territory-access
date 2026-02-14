@@ -41,6 +41,7 @@ async function fetchExpeditions(): Promise<Expedition[]> {
     short_description: exp.short_description,
     long_description: exp.long_description,
     storytelling: exp.storytelling || undefined,
+    cancellation_reason: (exp as any).cancellation_reason || undefined,
     status: exp.status as Expedition["status"],
     expedition_status: exp.expedition_status,
     hero_image_url: exp.hero_image_url || undefined,
