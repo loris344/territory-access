@@ -52,7 +52,7 @@ const DateRow = ({ dateRow, expId, onUpdate, onDelete, statusOptions }: {
         <input type="number" value={local.capacity_max} onChange={(e) => setLocal({ ...local, capacity_max: e.target.value })} onBlur={() => handleBlur("capacity_max", local.capacity_max)} className="w-16 px-2 py-1 bg-background border border-border text-foreground text-xs" />
       </div>
       <div className="flex items-center gap-2">
-        <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">Taken</label>
+        <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">Booked</label>
         <input type="number" value={local.spots_taken} onChange={(e) => setLocal({ ...local, spots_taken: e.target.value })} onBlur={() => handleBlur("spots_taken", local.spots_taken)} className="w-16 px-2 py-1 bg-background border border-border text-foreground text-xs" />
       </div>
       <select value={dateRow.status} onChange={(e) => onUpdate(dateRow.id, "status", e.target.value, expId)} className="px-2 py-1 bg-background border border-border text-foreground text-xs">
@@ -587,33 +587,7 @@ const Admin = () => {
                         className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
                       />
                     </div>
-                    <div>
-                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Price (EUR)</label>
-                      <input
-                        type="number"
-                        value={editData.price_eur || 0}
-                        onChange={(e) => setEditData({ ...editData, price_eur: parseInt(e.target.value) })}
-                        className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Start Date</label>
-                      <input
-                        type="date"
-                        value={editData.start_date || ""}
-                        onChange={(e) => setEditData({ ...editData, start_date: e.target.value })}
-                        className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">End Date</label>
-                      <input
-                        type="date"
-                        value={editData.end_date || ""}
-                        onChange={(e) => setEditData({ ...editData, end_date: e.target.value })}
-                        className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
-                      />
-                    </div>
+                    
                     <div>
                       <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Duration (days)</label>
                       <input
@@ -647,24 +621,7 @@ const Admin = () => {
                         ))}
                       </select>
                     </div>
-                    <div>
-                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Total Spots Available</label>
-                      <input
-                        type="number"
-                        value={editData.capacity_max || 12}
-                        onChange={(e) => setEditData({ ...editData, capacity_max: parseInt(e.target.value) })}
-                        className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
-                      />
-                    </div>
-                    <div>
-                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Spots Taken</label>
-                      <input
-                        type="number"
-                        value={editData.spots_taken || 0}
-                        onChange={(e) => setEditData({ ...editData, spots_taken: parseInt(e.target.value) })}
-                        className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
-                      />
-                    </div>
+                    
                   </div>
                   <div>
                     <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Short Description</label>
