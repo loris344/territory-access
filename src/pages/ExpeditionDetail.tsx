@@ -110,7 +110,7 @@ const ExpeditionDetail = () => {
       <Navbar />
 
       {/* Hero with background carousel */}
-      <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
+      <section className="relative pt-20 pb-12 sm:pt-28 sm:pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
         {/* Background images */}
         {allImages.length > 0 && (
           <div className="absolute inset-0">
