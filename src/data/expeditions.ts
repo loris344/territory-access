@@ -25,6 +25,7 @@ export interface Expedition {
   long_description: string;
   storytelling?: string;
   status: "open" | "limited" | "closed" | "cancelled" | "postponed";
+  cancellation_reason?: string;
   expedition_status: string;
   hero_image_url?: string;
   itinerary: ExpeditionDay[];

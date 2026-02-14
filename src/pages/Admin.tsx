@@ -573,8 +573,22 @@ const Admin = () => {
                       className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
                     />
                   </div>
-                  <div>
-                    <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Storytelling</label>
+                   {(editData.status === "cancelled" || editData.status === "postponed") && (
+                     <div>
+                       <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">
+                         {editData.status === "cancelled" ? "Cancellation Reason" : "Postponement Reason"}
+                       </label>
+                       <textarea
+                         value={editData.cancellation_reason || ""}
+                         onChange={(e) => setEditData({ ...editData, cancellation_reason: e.target.value })}
+                         rows={2}
+                         placeholder={`Why is this expedition ${editData.status}?`}
+                         className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
+                       />
+                     </div>
+                   )}
+                   <div>
+                     <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Storytelling</label>
                     <p className="text-[10px] text-muted-foreground mb-1">Narrative text shown on the detail page. Use double line breaks to separate paragraphs.</p>
                     <textarea
                       value={editData.storytelling || ""}

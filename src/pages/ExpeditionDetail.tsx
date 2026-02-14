@@ -7,15 +7,19 @@ import { useExpeditionBySlug } from "@/hooks/use-expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const statusStyles = {
+const statusStyles: Record<string, string> = {
   open: "bg-foreground/10 text-foreground border border-foreground/20",
   limited: "bg-accent/10 text-accent-red border border-accent/30",
   closed: "bg-muted text-muted-foreground border border-border",
+  cancelled: "bg-destructive/10 text-destructive border border-destructive/30",
+  postponed: "bg-muted text-muted-foreground border border-border",
 };
-const statusLabels = {
+const statusLabels: Record<string, string> = {
   open: "OPEN",
   limited: "LIMITED ACCESS",
   closed: "CLOSED",
+  cancelled: "CANCELLED",
+  postponed: "POSTPONED",
 };
 
 const ExpeditionDetail = () => {
@@ -100,6 +104,22 @@ const ExpeditionDetail = () => {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
+
+      {/* Cancellation / Postponed banner */}
+      {(expedition.status === "cancelled" || expedition.status === "postponed") && (
+        <div className={`border-b ${expedition.status === "cancelled" ? "bg-destructive/10 border-destructive/30" : "bg-muted border-border"}`}>
+          <div className="max-w-5xl mx-auto px-6 lg:px-8 py-4 flex items-center gap-3">
+            <span className={`font-heading text-xs tracking-[0.15em] uppercase ${expedition.status === "cancelled" ? "text-destructive" : "text-muted-foreground"}`}>
+              {expedition.status === "cancelled" ? "Expedition Cancelled" : "Expedition Postponed"}
+            </span>
+            {(expedition as any).cancellation_reason && (
+              <span className="text-sm text-muted-foreground">
+                — {(expedition as any).cancellation_reason}
+              </span>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Hero with background carousel */}
       <section className="relative pt-28 pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
@@ -300,7 +320,7 @@ const ExpeditionDetail = () => {
           <p className="body-text text-muted-foreground mb-8 max-w-lg mx-auto">
             Participation is subject to review. Selection is confirmed after internal validation.
           </p>
-          {expedition.status !== "closed" ? (
+          {expedition.status !== "closed" && expedition.status !== "cancelled" && expedition.status !== "postponed" ? (
             <Link
               to={`/apply?expedition=${expedition.slug}`}
               className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300"
