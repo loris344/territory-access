@@ -29,6 +29,8 @@ const ExpeditionDetail = () => {
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [currentImg, setCurrentImg] = useState(0);
   const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [waitlistDateId, setWaitlistDateId] = useState<string | undefined>();
+  const [waitlistDateLabel, setWaitlistDateLabel] = useState<string>("");
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -195,22 +197,39 @@ const ExpeditionDetail = () => {
               <div className="mt-8 border-t border-border pt-8">
                 <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-4">Departure Dates</p>
                 <div className="space-y-3">
-                  {(expedition.dates || []).map((d) => {
+              {(expedition.dates || []).map((d) => {
                     const remaining = d.capacity_max - d.spots_taken;
+                    const dateLabel = `${new Date(d.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} – ${new Date(d.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}`;
+                    const isActionable = d.status === "open" || d.status === "limited";
+                    const isClosed = d.status === "closed";
                     return (
-                      <div key={d.id} className="flex items-center justify-between gap-4 py-2 border-b border-border/50 last:border-0">
-                        <div className="flex items-center gap-4">
-                          <span className="font-heading text-sm">
-                            {new Date(d.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} –{" "}
-                            {new Date(d.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
-                          </span>
+                      <div key={d.id} className="flex items-center justify-between gap-4 py-3 border-b border-border/50 last:border-0">
+                        <div className="flex items-center gap-4 flex-wrap">
+                          <span className="font-heading text-sm">{dateLabel}</span>
                           <span className={`font-heading text-[10px] tracking-[0.15em] uppercase px-2 py-0.5 ${statusStyles[d.status]}`}>
                             {statusLabels[d.status]}
                           </span>
+                          <span className={`font-heading text-xs ${remaining <= 3 && remaining > 0 ? "text-accent-red" : "text-muted-foreground"}`}>
+                            {remaining <= 0 ? "Full" : `${remaining} spot${remaining > 1 ? "s" : ""}`}
+                          </span>
                         </div>
-                        <span className={`font-heading text-xs ${remaining <= 3 && remaining > 0 ? "text-accent-red" : "text-muted-foreground"}`}>
-                          {remaining <= 0 ? "Full" : `${remaining} spot${remaining > 1 ? "s" : ""}`}
-                        </span>
+                        <div className="flex-shrink-0">
+                          {isActionable ? (
+                            <Link
+                              to={`/apply?expedition=${expedition.slug}&date=${d.id}`}
+                              className="font-heading text-[10px] tracking-[0.15em] uppercase px-4 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-all"
+                            >
+                              Apply
+                            </Link>
+                          ) : isClosed ? (
+                            <button
+                              onClick={() => { setWaitlistDateId(d.id); setWaitlistDateLabel(dateLabel); setWaitlistOpen(true); }}
+                              className="font-heading text-[10px] tracking-[0.15em] uppercase px-4 py-2 bg-foreground text-background hover:bg-foreground/90 transition-all"
+                            >
+                              Waitlist
+                            </button>
+                          ) : null}
+                        </div>
                       </div>
                     );
                   })}
@@ -218,24 +237,26 @@ const ExpeditionDetail = () => {
               </div>
             )}
 
-            {/* Top CTA */}
-            <div className="mt-8">
-              {expedition.status !== "closed" && expedition.status !== "cancelled" && expedition.status !== "postponed" ? (
-                <Link
-                  to={`/apply?expedition=${expedition.slug}`}
-                  className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300"
-                >
-                  Apply for this expedition
-                </Link>
-              ) : expedition.status === "closed" ? (
-                <button
-                  onClick={() => setWaitlistOpen(true)}
-                  className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all duration-300"
-                >
-                  Join the Waitlist
-                </button>
-              ) : null}
-            </div>
+            {/* Top CTA — only if no dates (legacy) */}
+            {(expedition.dates || []).length === 0 && (
+              <div className="mt-8">
+                {expedition.status !== "closed" && expedition.status !== "cancelled" && expedition.status !== "postponed" ? (
+                  <Link
+                    to={`/apply?expedition=${expedition.slug}`}
+                    className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300"
+                  >
+                    Apply for this expedition
+                  </Link>
+                ) : expedition.status === "closed" ? (
+                  <button
+                    onClick={() => setWaitlistOpen(true)}
+                    className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all duration-300"
+                  >
+                    Join the Waitlist
+                  </button>
+                ) : null}
+              </div>
+            )}
           </motion.div>
         </div>
 
@@ -367,7 +388,11 @@ const ExpeditionDetail = () => {
           <p className="body-text text-muted-foreground mb-8 max-w-lg mx-auto">
             Participation is subject to review. Selection is confirmed after internal validation.
           </p>
-          {expedition.status !== "closed" && expedition.status !== "cancelled" && expedition.status !== "postponed" ? (
+          {(expedition.dates || []).length > 0 ? (
+            <p className="body-text text-sm text-muted-foreground">
+              Select a departure date above to apply or join the waitlist.
+            </p>
+          ) : expedition.status !== "closed" && expedition.status !== "cancelled" && expedition.status !== "postponed" ? (
             <Link
               to={`/apply?expedition=${expedition.slug}`}
               className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300"
@@ -391,14 +416,14 @@ const ExpeditionDetail = () => {
 
       <Footer />
 
-      {expedition.status === "closed" && (
-        <WaitlistModal
-          open={waitlistOpen}
-          onClose={() => setWaitlistOpen(false)}
-          expeditionId={expedition.id}
-          expeditionName={expedition.name}
-        />
-      )}
+      <WaitlistModal
+        open={waitlistOpen}
+        onClose={() => { setWaitlistOpen(false); setWaitlistDateId(undefined); setWaitlistDateLabel(""); }}
+        expeditionId={expedition.id}
+        expeditionName={expedition.name}
+        expeditionDateId={waitlistDateId}
+        dateLabel={waitlistDateLabel}
+      />
     </div>
   );
 };

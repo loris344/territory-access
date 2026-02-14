@@ -24,12 +24,14 @@ type ExpeditionOption = { id: string; name: string; slug: string; price: number;
 const Apply = () => {
   const [searchParams] = useSearchParams();
   const preselectedSlug = searchParams.get("expedition") || "";
+  const preselectedDateId = searchParams.get("date") || "";
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState("");
   const [expeditionOptions, setExpeditionOptions] = useState<ExpeditionOption[]>([]);
+  const [selectedDateLabel, setSelectedDateLabel] = useState("");
 
   const [form, setForm] = useState({
     expedition_id: "",
@@ -79,9 +81,23 @@ const Apply = () => {
         const match = options.find((o) => o.slug === preselectedSlug);
         if (match) setForm((f) => ({ ...f, expedition_id: match.id }));
       }
+
+      // Fetch date label if date ID is provided
+      if (preselectedDateId) {
+        const { data: dateData } = await supabase
+          .from("expedition_dates")
+          .select("start_date, end_date")
+          .eq("id", preselectedDateId)
+          .single();
+        if (dateData) {
+          setSelectedDateLabel(
+            `${new Date(dateData.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} – ${new Date(dateData.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}`
+          );
+        }
+      }
     };
     fetchExpeditions();
-  }, [preselectedSlug]);
+  }, [preselectedSlug, preselectedDateId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -117,6 +133,7 @@ const Apply = () => {
     setLoading(true);
     const { error } = await supabase.from("applications").insert({
       expedition_id: result.data.expedition_id,
+      expedition_date_id: preselectedDateId || null,
       first_name: result.data.first_name,
       last_name: result.data.last_name,
       email: result.data.email,
@@ -126,7 +143,7 @@ const Apply = () => {
       physical_condition: `[${result.data.participants} participant(s)] ${result.data.physical_condition}`,
       motivation_text: result.data.motivation_text,
       status: "pending",
-    });
+    } as any);
     setLoading(false);
 
     if (error) {
@@ -187,9 +204,15 @@ const Apply = () => {
             <p className="body-text text-muted-foreground mb-3">
               Participation in our expeditions is not open to all. Each application undergoes a thorough internal review to ensure alignment with the demands of the destination and the cohesion of the group.
             </p>
-            <p className="body-text text-muted-foreground/60 text-sm mb-12">
+            <p className="body-text text-muted-foreground/60 text-sm mb-2">
               Incomplete or insufficiently motivated applications will not be considered.
             </p>
+            {selectedDateLabel && (
+              <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent mb-12">
+                Selected date: {selectedDateLabel}
+              </p>
+            )}
+            {!selectedDateLabel && <div className="mb-12" />}
 
             {submitError && (
               <div className="border border-destructive/50 bg-destructive/10 text-destructive text-sm px-4 py-3 mb-6">
