@@ -94,6 +94,10 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
             <span className={`font-heading text-[10px] tracking-wider ${spotsLeft <= 3 ? "text-accent-red" : "text-muted-foreground"}`}>
               {spotsLeft} SPOT{spotsLeft !== 1 ? "S" : ""} LEFT
             </span>
+          ) : expedition.status === "closed" ? (
+            <span className="font-heading text-[10px] tracking-wider text-foreground/70">
+              WAITLIST OPEN
+            </span>
           ) : null}
         </div>
 
