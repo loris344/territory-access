@@ -316,6 +316,47 @@ export type Database = {
         }
         Relationships: []
       }
+      waitlist: {
+        Row: {
+          created_at: string
+          email: string
+          expedition_id: string
+          first_name: string
+          id: string
+          last_name: string
+          nationality: string
+          number_of_people: number
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          expedition_id: string
+          first_name: string
+          id?: string
+          last_name: string
+          nationality: string
+          number_of_people?: number
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          expedition_id?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          nationality?: string
+          number_of_people?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "waitlist_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

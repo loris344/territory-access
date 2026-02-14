@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
+import WaitlistPanel from "@/components/admin/WaitlistPanel";
 
 type Expedition = Tables<"expeditions"> & {
   country?: string;
@@ -342,6 +343,9 @@ const Admin = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Applications */}
         <ApplicationsPanel />
+
+        {/* Waitlist */}
+        <WaitlistPanel />
 
         {/* Hero Images Manager */}
         <div className="mb-8 border border-border bg-card p-4 sm:p-6">

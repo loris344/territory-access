@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useExpeditionBySlug } from "@/hooks/use-expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import WaitlistModal from "@/components/WaitlistModal";
 
 const statusStyles: Record<string, string> = {
   open: "bg-foreground/10 text-foreground border border-foreground/20",
@@ -27,6 +28,7 @@ const ExpeditionDetail = () => {
   const { data: expedition, isLoading } = useExpeditionBySlug(slug);
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [currentImg, setCurrentImg] = useState(0);
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -158,7 +160,7 @@ const ExpeditionDetail = () => {
               </p>
             )}
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-border pt-8">
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-6 border-t border-border pt-8">
               <div>
                 <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Dates</p>
                 <p className="font-heading text-sm">
@@ -190,6 +192,19 @@ const ExpeditionDetail = () => {
                   Intensity
                 </p>
                 <p className="font-heading text-sm">{expedition.intensity_level}</p>
+              </div>
+              <div>
+                <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">
+                  Spots left
+                </p>
+                {(() => {
+                  const remaining = expedition.capacity_max - expedition.spots_taken;
+                  return (
+                    <p className={`font-heading text-sm ${remaining <= 3 && remaining > 0 ? "text-accent-red" : ""}`}>
+                      {remaining <= 0 ? "Full" : `${remaining} / ${expedition.capacity_max}`}
+                    </p>
+                  );
+                })()}
               </div>
             </div>
           </motion.div>
@@ -330,6 +345,13 @@ const ExpeditionDetail = () => {
             >
               Apply for this expedition
             </Link>
+          ) : expedition.status === "closed" ? (
+            <button
+              onClick={() => setWaitlistOpen(true)}
+              className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all duration-300"
+            >
+              Join the Waitlist
+            </button>
           ) : (
             <span className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-muted text-muted-foreground cursor-not-allowed">
               Applications closed
@@ -339,6 +361,15 @@ const ExpeditionDetail = () => {
       </section>
 
       <Footer />
+
+      {expedition.status === "closed" && (
+        <WaitlistModal
+          open={waitlistOpen}
+          onClose={() => setWaitlistOpen(false)}
+          expeditionId={expedition.id}
+          expeditionName={expedition.name}
+        />
+      )}
     </div>
   );
 };
