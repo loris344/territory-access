@@ -2,3 +2,6 @@ project_id = "udqjkewpugdmjyrzqmbk"
 
 [functions.notify-application]
 verify_jwt = false
+
+[functions.notify-waitlist]
+verify_jwt = false
