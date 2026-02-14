@@ -4,6 +4,15 @@ export interface ExpeditionDay {
   description: string;
 }
 
+export interface ExpeditionDate {
+  id: string;
+  start_date: string;
+  end_date: string;
+  capacity_max: number;
+  spots_taken: number;
+  status: "open" | "limited" | "closed" | "cancelled" | "postponed";
+}
+
 export interface Expedition {
   id: string;
   name: string;
@@ -31,6 +40,7 @@ export interface Expedition {
   itinerary: ExpeditionDay[];
   inclusions: string[];
   exclusions: string[];
+  dates?: ExpeditionDate[];
 }
 
 const defaultInclusions = ["All meals", "All drinks (water and soft drinks)", "All ground transport", "English-speaking local tour guide", "Ligne Rouge Tours tour leader", "Visa support documents", "All entry fees to sites", "Airport transfers"];

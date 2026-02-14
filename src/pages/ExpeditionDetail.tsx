@@ -160,18 +160,7 @@ const ExpeditionDetail = () => {
               </p>
             )}
 
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-6 border-t border-border pt-8">
-              <div>
-                <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">Dates</p>
-                <p className="font-heading text-sm">
-                  {new Date(expedition.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} –{" "}
-                  {new Date(expedition.end_date).toLocaleDateString("en-US", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </p>
-              </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-border pt-8">
               <div>
                 <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">
                   Duration
@@ -195,18 +184,39 @@ const ExpeditionDetail = () => {
               </div>
               <div>
                 <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">
-                  Spots left
+                  Sessions
                 </p>
-                {(() => {
-                  const remaining = expedition.capacity_max - expedition.spots_taken;
-                  return (
-                    <p className={`font-heading text-sm ${remaining <= 3 && remaining > 0 ? "text-accent-red" : ""}`}>
-                      {remaining <= 0 ? "Full" : `${remaining}`}
-                    </p>
-                  );
-                })()}
+                <p className="font-heading text-sm">{(expedition.dates || []).length || 1} date{(expedition.dates || []).length > 1 ? "s" : ""}</p>
               </div>
             </div>
+
+            {/* Departure dates */}
+            {(expedition.dates || []).length > 0 && (
+              <div className="mt-8 border-t border-border pt-8">
+                <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-4">Departure Dates</p>
+                <div className="space-y-3">
+                  {(expedition.dates || []).map((d) => {
+                    const remaining = d.capacity_max - d.spots_taken;
+                    return (
+                      <div key={d.id} className="flex items-center justify-between gap-4 py-2 border-b border-border/50 last:border-0">
+                        <div className="flex items-center gap-4">
+                          <span className="font-heading text-sm">
+                            {new Date(d.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} –{" "}
+                            {new Date(d.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
+                          </span>
+                          <span className={`font-heading text-[10px] tracking-[0.15em] uppercase px-2 py-0.5 ${statusStyles[d.status]}`}>
+                            {statusLabels[d.status]}
+                          </span>
+                        </div>
+                        <span className={`font-heading text-xs ${remaining <= 3 && remaining > 0 ? "text-accent-red" : "text-muted-foreground"}`}>
+                          {remaining <= 0 ? "Full" : `${remaining} spot${remaining > 1 ? "s" : ""}`}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
 
             {/* Top CTA */}
             <div className="mt-8">

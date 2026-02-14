@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight } from "lucide-react";
+import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 import WaitlistPanel from "@/components/admin/WaitlistPanel";
@@ -30,6 +30,7 @@ const Admin = () => {
   const [showHeroManager, setShowHeroManager] = useState(false);
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
   const [galleryUploading, setGalleryUploading] = useState(false);
+  const [expeditionDates, setExpeditionDates] = useState<any[]>([]);
 
   useEffect(() => {
     checkAuth();
@@ -75,6 +76,7 @@ const Admin = () => {
     setEditing(exp.id);
     setEditData({ ...exp });
     fetchGalleryImages(exp.id);
+    fetchExpeditionDates(exp.id);
   };
 
   const cancelEdit = () => {
@@ -310,6 +312,53 @@ const Admin = () => {
       toast.success("Image removed");
       fetchGalleryImages(expId);
     }
+  };
+
+  const fetchExpeditionDates = async (expId: string) => {
+    const { data } = await supabase
+      .from("expedition_dates")
+      .select("*")
+      .eq("expedition_id", expId)
+      .order("start_date", { ascending: true });
+    setExpeditionDates(data || []);
+  };
+
+  const addExpeditionDate = async (expId: string) => {
+    const today = new Date().toISOString().split("T")[0];
+    const { error } = await supabase.from("expedition_dates").insert({
+      expedition_id: expId,
+      start_date: today,
+      end_date: today,
+      capacity_max: 12,
+      spots_taken: 0,
+      status: "open",
+    });
+    if (error) {
+      toast.error("Failed to add date: " + error.message);
+      return;
+    }
+    toast.success("Date added");
+    fetchExpeditionDates(expId);
+  };
+
+  const updateExpeditionDate = async (dateId: string, field: string, value: any, expId: string) => {
+    const { error } = await supabase.from("expedition_dates").update({ [field]: value }).eq("id", dateId);
+    if (error) {
+      toast.error("Failed to update: " + error.message);
+      return;
+    }
+    fetchExpeditionDates(expId);
+  };
+
+  const deleteExpeditionDate = async (dateId: string, expId: string) => {
+    if (!confirm("Delete this date?")) return;
+    const { error } = await supabase.from("expedition_dates").delete().eq("id", dateId);
+    if (error) {
+      toast.error("Failed to delete: " + error.message);
+      return;
+    }
+    toast.success("Date removed");
+    fetchExpeditionDates(expId);
   };
 
   const statusOptions = ["open", "limited", "closed", "cancelled", "postponed"];
@@ -657,6 +706,75 @@ const Admin = () => {
                     </div>
                   </div>
 
+                  {/* Departure Dates */}
+                  <div className="border border-border p-4">
+                    <h4 className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground mb-3 flex items-center gap-2">
+                      <Calendar className="w-3.5 h-3.5" /> Departure Dates ({expeditionDates.length})
+                    </h4>
+                    <div className="space-y-3">
+                      {expeditionDates.map((d) => (
+                        <div key={d.id} className="flex flex-wrap items-center gap-3 border border-border p-3 bg-background">
+                          <div className="flex items-center gap-2">
+                            <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">From</label>
+                            <input
+                              type="date"
+                              value={d.start_date}
+                              onChange={(e) => updateExpeditionDate(d.id, "start_date", e.target.value, editData.id)}
+                              className="px-2 py-1 bg-background border border-border text-foreground text-xs"
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">To</label>
+                            <input
+                              type="date"
+                              value={d.end_date}
+                              onChange={(e) => updateExpeditionDate(d.id, "end_date", e.target.value, editData.id)}
+                              className="px-2 py-1 bg-background border border-border text-foreground text-xs"
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">Spots</label>
+                            <input
+                              type="number"
+                              value={d.capacity_max}
+                              onChange={(e) => updateExpeditionDate(d.id, "capacity_max", parseInt(e.target.value), editData.id)}
+                              className="w-16 px-2 py-1 bg-background border border-border text-foreground text-xs"
+                            />
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <label className="font-heading text-[9px] tracking-wider uppercase text-muted-foreground">Taken</label>
+                            <input
+                              type="number"
+                              value={d.spots_taken}
+                              onChange={(e) => updateExpeditionDate(d.id, "spots_taken", parseInt(e.target.value), editData.id)}
+                              className="w-16 px-2 py-1 bg-background border border-border text-foreground text-xs"
+                            />
+                          </div>
+                          <select
+                            value={d.status}
+                            onChange={(e) => updateExpeditionDate(d.id, "status", e.target.value, editData.id)}
+                            className="px-2 py-1 bg-background border border-border text-foreground text-xs"
+                          >
+                            {statusOptions.map((s) => (
+                              <option key={s} value={s}>{s.toUpperCase()}</option>
+                            ))}
+                          </select>
+                          <button
+                            onClick={() => deleteExpeditionDate(d.id, editData.id)}
+                            className="p-1 border border-border hover:border-destructive hover:text-destructive transition-colors ml-auto"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                      <button
+                        onClick={() => addExpeditionDate(editData.id)}
+                        className="flex items-center gap-2 font-heading text-[10px] tracking-wider uppercase text-muted-foreground hover:text-foreground transition-colors border border-dashed border-border px-4 py-2"
+                      >
+                        <Plus className="w-3 h-3" /> Add date
+                      </button>
+                    </div>
+                  </div>
                   <div className="flex gap-3">
                     <button onClick={saveEdit} className="flex items-center gap-2 font-heading text-xs tracking-wider uppercase px-6 py-3 bg-accent text-accent-foreground hover:bg-accent/90 transition-all">
                       <Save className="w-3.5 h-3.5" /> Save

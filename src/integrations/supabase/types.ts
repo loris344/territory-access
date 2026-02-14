@@ -74,6 +74,47 @@ export type Database = {
           },
         ]
       }
+      expedition_dates: {
+        Row: {
+          capacity_max: number
+          created_at: string
+          end_date: string
+          expedition_id: string
+          id: string
+          spots_taken: number
+          start_date: string
+          status: string
+        }
+        Insert: {
+          capacity_max?: number
+          created_at?: string
+          end_date: string
+          expedition_id: string
+          id?: string
+          spots_taken?: number
+          start_date: string
+          status?: string
+        }
+        Update: {
+          capacity_max?: number
+          created_at?: string
+          end_date?: string
+          expedition_id?: string
+          id?: string
+          spots_taken?: number
+          start_date?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expedition_dates_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       expedition_days_itinerary: {
         Row: {
           day_number: number
