@@ -47,7 +47,17 @@ const intensityLabels: Record<string, string> = {
 };
 
 const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedition; hidePrice?: boolean }) => {
-  const spotsLeft = expedition.capacity_max - expedition.spots_taken;
+  const dates = expedition.dates || [];
+  const now = new Date().toISOString().split("T")[0];
+  const upcomingDates = dates.filter((d) => d.end_date >= now && d.status !== "cancelled" && d.status !== "postponed");
+  const nextDate = upcomingDates[0];
+  const otherDatesCount = upcomingDates.length - 1;
+
+  // Use next date's spots info, fallback to expedition-level
+  const spotsLeft = nextDate
+    ? nextDate.capacity_max - nextDate.spots_taken
+    : expedition.capacity_max - expedition.spots_taken;
+  const displayStatus = nextDate ? nextDate.status : expedition.status;
 
   return (
     <Link
@@ -74,8 +84,8 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
       <div className="p-4 sm:p-6 md:p-8">
         {/* Status + duration */}
         <div className="flex items-center justify-between mb-4">
-          <span className={`font-heading text-[10px] tracking-[0.15em] uppercase px-3 py-1 ${statusStyles[expedition.status] || statusStyles.closed}`}>
-            {statusLabels[expedition.status] || expedition.status.toUpperCase()}
+          <span className={`font-heading text-[10px] tracking-[0.15em] uppercase px-3 py-1 ${statusStyles[displayStatus] || statusStyles.closed}`}>
+            {statusLabels[displayStatus] || displayStatus.toUpperCase()}
           </span>
           <span className="font-heading text-xs tracking-wider text-muted-foreground">
             {expedition.duration_days} DAYS
@@ -90,11 +100,11 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
               {intensityLabels[expedition.intensity_type] || expedition.intensity_type}
             </span>
           </div>
-          {expedition.status === "open" || expedition.status === "limited" ? (
+          {displayStatus === "open" || displayStatus === "limited" ? (
             <span className={`font-heading text-[10px] tracking-wider ${spotsLeft <= 3 ? "text-accent-red" : "text-muted-foreground"}`}>
               {spotsLeft} SPOT{spotsLeft !== 1 ? "S" : ""} LEFT
             </span>
-          ) : expedition.status === "closed" ? (
+          ) : displayStatus === "closed" ? (
             <span className="font-heading text-[10px] tracking-wider text-foreground/70">
               WAITLIST OPEN
             </span>
@@ -118,10 +128,22 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
 
         {/* Dates */}
         <div className="flex items-center gap-4 mb-6 text-sm text-muted-foreground body-text">
-          <span>
-            {new Date(expedition.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} –{" "}
-            {new Date(expedition.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
-          </span>
+          {nextDate ? (
+            <span>
+              {new Date(nextDate.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} –{" "}
+              {new Date(nextDate.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
+              {otherDatesCount > 0 && (
+                <span className="text-accent ml-2 font-heading text-[10px] tracking-wider uppercase">
+                  +{otherDatesCount} other date{otherDatesCount > 1 ? "s" : ""}
+                </span>
+              )}
+            </span>
+          ) : (
+            <span>
+              {new Date(expedition.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} –{" "}
+              {new Date(expedition.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}
+            </span>
+          )}
         </div>
 
         <p className="body-text text-sm text-muted-foreground mb-6 line-clamp-2">
