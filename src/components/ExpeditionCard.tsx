@@ -50,14 +50,14 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
   const dates = expedition.dates || [];
   const now = new Date().toISOString().split("T")[0];
   const upcomingDates = dates.filter((d) => d.end_date >= now && d.status !== "cancelled" && d.status !== "postponed");
-  const nextDate = upcomingDates[0];
+  
+  // Prioritize the next AVAILABLE (open/limited) date, fallback to first upcoming
+  const nextAvailable = upcomingDates.find((d) => d.status === "open" || d.status === "limited");
+  const nextDate = nextAvailable || upcomingDates[0];
   const otherDatesCount = upcomingDates.length - 1;
 
-  // Use next date's spots info, fallback to expedition-level
-  const spotsLeft = nextDate
-    ? nextDate.capacity_max - nextDate.spots_taken
-    : expedition.capacity_max - expedition.spots_taken;
-  const displayStatus = nextDate ? nextDate.status : expedition.status;
+  // Display status: if any upcoming date is open/limited, show that; otherwise fallback
+  const displayStatus = nextAvailable ? nextAvailable.status : (nextDate ? nextDate.status : expedition.status);
 
   return (
     <Link
