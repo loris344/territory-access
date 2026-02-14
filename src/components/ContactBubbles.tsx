@@ -5,8 +5,8 @@ import rymImg from "@/assets/rym.jpg";
 
 const people = [
   { img: founderImg, name: "Loris", floatDelay: 0 },
-  { img: leaImg, name: "Léa", floatDelay: 1.2 },
-  { img: rymImg, name: "Rym", floatDelay: 2.4 },
+  { img: leaImg, name: "Léa", floatDelay: 1.5 },
+  { img: rymImg, name: "Rym", floatDelay: 3 },
 ];
 
 const ContactBubbles = () => {
@@ -36,23 +36,16 @@ const ContactBubbles = () => {
                   type: "spring",
                   stiffness: 200,
                 }}
-                animate={{
-                  y: [0, -8, 0, -4, 0],
-                  rotate: [0, 2, -2, 1, 0],
-                }}
                 className="relative -mx-2"
-                style={{
-                  zIndex: 3 - i,
-                  animationDelay: `${person.floatDelay}s`,
-                }}
+                style={{ zIndex: 3 - i }}
               >
                 <motion.div
                   animate={{
-                    y: [0, -10, 0, -5, 0],
-                    rotate: [0, 3, -2, 1, 0],
+                    y: [0, -5, 0, -3, 0],
+                    rotate: [0, 1, -1, 0.5, 0],
                   }}
                   transition={{
-                    duration: 4,
+                    duration: 8,
                     repeat: Infinity,
                     ease: "easeInOut",
                     delay: person.floatDelay,
