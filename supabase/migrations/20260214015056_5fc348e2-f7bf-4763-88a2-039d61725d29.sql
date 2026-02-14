@@ -1,0 +1,2 @@
+ALTER TABLE public.expeditions DROP CONSTRAINT expeditions_status_check;
+ALTER TABLE public.expeditions ADD CONSTRAINT expeditions_status_check CHECK (status IN ('open', 'limited', 'closed', 'cancelled', 'postponed'));
