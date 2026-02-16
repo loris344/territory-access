@@ -7,6 +7,7 @@ import { expeditions as localExpeditions } from "@/data/expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TurnstileWidget from "@/components/TurnstileWidget";
+import SEO from "@/components/SEO";
 
 const applicationSchema = z.object({
   expedition_id: z.string().min(1, "Please select an expedition"),
@@ -225,6 +226,11 @@ const Apply = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Apply"
+        description="Apply for a Ligne Rouge Tours expedition. Participation is by application only, reviewed individually."
+        path="/apply"
+      />
       <Navbar />
 
       <section className="pt-28 pb-16 lg:pt-36 lg:pb-24">
