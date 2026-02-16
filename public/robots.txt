@@ -15,4 +15,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/login
 
-Sitemap: https://lignerouge.lovable.app/sitemap.xml
+Sitemap: https://lignerougetours.com/sitemap.xml
