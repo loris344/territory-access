@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { z } from "zod";
@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { expeditions as localExpeditions } from "@/data/expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import TurnstileWidget from "@/components/TurnstileWidget";
 
 const applicationSchema = z.object({
   expedition_id: z.string().min(1, "Please select an expedition"),
@@ -33,6 +34,8 @@ const Apply = () => {
   const [expeditionOptions, setExpeditionOptions] = useState<ExpeditionOption[]>([]);
   const [selectedDateLabel, setSelectedDateLabel] = useState("");
 
+  const [turnstileToken, setTurnstileToken] = useState("");
+
   const [form, setForm] = useState({
     expedition_id: "",
     first_name: "",
@@ -44,6 +47,14 @@ const Apply = () => {
     physical_condition: "",
     motivation_text: "",
   });
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken("");
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -130,7 +141,31 @@ const Apply = () => {
       return;
     }
 
+    if (!turnstileToken) {
+      setSubmitError("Please complete the security verification.");
+      return;
+    }
+
     setLoading(true);
+
+    // Verify turnstile token server-side
+    try {
+      const { data: verifyData, error: verifyError } = await supabase.functions.invoke("verify-turnstile", {
+        body: { token: turnstileToken },
+      });
+      if (verifyError || !verifyData?.success) {
+        setSubmitError("Security verification failed. Please try again.");
+        setTurnstileToken("");
+        setLoading(false);
+        return;
+      }
+    } catch {
+      setSubmitError("Security verification failed. Please try again.");
+      setTurnstileToken("");
+      setLoading(false);
+      return;
+    }
+
     const { error } = await supabase.from("applications").insert({
       expedition_id: result.data.expedition_id,
       expedition_date_id: preselectedDateId || null,
@@ -335,9 +370,13 @@ const Apply = () => {
                 {errorText("motivation_text")}
               </div>
 
+              <div className="mt-2">
+                <TurnstileWidget onVerify={handleTurnstileVerify} onExpire={handleTurnstileExpire} />
+              </div>
+
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || !turnstileToken}
                 className="w-full font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 mt-4 disabled:opacity-50"
               >
                 {loading ? "Submitting…" : "Submit Application"}

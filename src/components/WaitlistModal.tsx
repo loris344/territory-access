@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import TurnstileWidget from "@/components/TurnstileWidget";
 
 interface WaitlistModalProps {
   open: boolean;
@@ -23,6 +24,15 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName, expedition
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState("");
+
+  const handleTurnstileVerify = useCallback((token: string) => {
+    setTurnstileToken(token);
+  }, []);
+
+  const handleTurnstileExpire = useCallback(() => {
+    setTurnstileToken("");
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -30,7 +40,30 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName, expedition
       toast.error("Please fill in all fields");
       return;
     }
+    if (!turnstileToken) {
+      toast.error("Please complete the security verification");
+      return;
+    }
     setSubmitting(true);
+
+    // Verify turnstile token server-side
+    try {
+      const { data: verifyData, error: verifyError } = await supabase.functions.invoke("verify-turnstile", {
+        body: { token: turnstileToken },
+      });
+      if (verifyError || !verifyData?.success) {
+        toast.error("Security verification failed. Please try again.");
+        setTurnstileToken("");
+        setSubmitting(false);
+        return;
+      }
+    } catch {
+      toast.error("Security verification failed");
+      setTurnstileToken("");
+      setSubmitting(false);
+      return;
+    }
+
     const { error } = await supabase.from("waitlist").insert({
       expedition_id: expeditionId,
       expedition_date_id: expeditionDateId || null,
@@ -52,6 +85,7 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName, expedition
     onClose();
     setTimeout(() => {
       setSubmitted(false);
+      setTurnstileToken("");
       setForm({ first_name: "", last_name: "", email: "", nationality: "", number_of_people: 1 });
     }, 300);
   };
@@ -174,9 +208,13 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName, expedition
                     />
                   </div>
 
+                  <div className="mt-1">
+                    <TurnstileWidget onVerify={handleTurnstileVerify} onExpire={handleTurnstileExpire} />
+                  </div>
+
                   <button
                     type="submit"
-                    disabled={submitting}
+                    disabled={submitting || !turnstileToken}
                     className="w-full font-heading text-xs tracking-[0.15em] uppercase px-6 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all disabled:opacity-50"
                   >
                     {submitting ? "Submitting..." : "Join Waitlist"}
