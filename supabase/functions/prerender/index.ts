@@ -6,7 +6,7 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const SITE_URL = "https://lignerouge.lovable.app";
+const SITE_URL = "https://lignerougetours.com";
 const SITE_NAME = "Ligne Rouge Tours";
 const DEFAULT_TITLE =
   "Ligne Rouge Tours — Expeditions in Territories Others Avoid";
