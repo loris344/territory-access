@@ -15,4 +15,4 @@ Allow: /
 Disallow: /admin
 Disallow: /admin/login
 
-Sitemap: https://lignerougetours.com/sitemap.xml
+Sitemap: https://udqjkewpugdmjyrzqmbk.supabase.co/functions/v1/sitemap
