@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import SEO from "@/components/SEO";
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
@@ -51,6 +52,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <SEO title="Admin Login" noIndex path="/admin/login" />
       <div className="w-full max-w-sm">
         <h1 className="font-heading text-2xl tracking-wider uppercase text-center mb-8">Admin Access</h1>
         <form onSubmit={handleLogin} className="flex flex-col gap-4">

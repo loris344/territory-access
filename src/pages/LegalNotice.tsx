@@ -1,6 +1,7 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { motion } from "framer-motion";
+import SEO from "@/components/SEO";
 
 const sections = [
   {
@@ -84,6 +85,11 @@ const sections = [
 const LegalNotice = () => {
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Legal Notice & Terms"
+        description="Legal notice, terms and conditions, and cancellation policy for Ligne Rouge Tours expeditions."
+        path="/legal"
+      />
       <Navbar />
       <section className="pt-28 pb-16 lg:pt-36 lg:pb-24">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">

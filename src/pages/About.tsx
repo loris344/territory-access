@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
+import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import ContactBubbles from "@/components/ContactBubbles";
 import founderImg from "@/assets/founder.png";
@@ -93,6 +94,11 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Who We Are"
+        description="Meet the Ligne Rouge Tours team. We design structured immersions in conflict zones, disputed territories, and extreme environments."
+        path="/about"
+      />
       <Navbar />
 
       {/* Who We Are */}

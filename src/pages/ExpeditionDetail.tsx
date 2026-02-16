@@ -7,6 +7,7 @@ import { useExpeditionBySlug } from "@/hooks/use-expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WaitlistModal from "@/components/WaitlistModal";
+import SEO from "@/components/SEO";
 
 const statusStyles: Record<string, string> = {
   open: "bg-foreground/10 text-foreground border border-foreground/20",
@@ -107,6 +108,32 @@ const ExpeditionDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title={`${expedition.name} — ${expedition.country}`}
+        description={expedition.short_description}
+        path={`/expeditions/${expedition.slug}`}
+        ogImage={expedition.hero_image_url || undefined}
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "TravelAction",
+          name: expedition.name,
+          description: expedition.short_description,
+          location: {
+            "@type": "Place",
+            name: expedition.location,
+            address: { "@type": "PostalAddress", addressCountry: expedition.country },
+          },
+          offers: {
+            "@type": "Offer",
+            price: expedition.price_usd,
+            priceCurrency: "USD",
+            availability:
+              expedition.status === "open" || expedition.status === "limited"
+                ? "https://schema.org/InStock"
+                : "https://schema.org/SoldOut",
+          },
+        }}
+      />
       <Navbar />
 
       {/* Hero with background carousel */}
