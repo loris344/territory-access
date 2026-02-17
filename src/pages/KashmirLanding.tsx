@@ -317,9 +317,9 @@ const KashmirLanding = () => {
             </Link>
             <Link
               to={`/expeditions/${EXPEDITION.slug}`}
-              className="font-heading text-[9px] tracking-[0.15em] uppercase text-muted-foreground/50 hover:text-muted-foreground transition-colors"
+              className="inline-flex items-center gap-2 font-heading text-[11px] tracking-[0.15em] uppercase px-5 py-2.5 border border-accent/40 text-accent hover:bg-accent hover:text-white transition-all duration-300"
             >
-              Full expedition page
+              Discover the full expedition →
             </Link>
           </div>
         </div>
