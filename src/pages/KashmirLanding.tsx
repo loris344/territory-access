@@ -248,6 +248,9 @@ const KashmirLanding = () => {
         </div>
       </section>
 
+      {/* Gallery auto-scroll carousel */}
+      {galleryImages.length > 0 && <GalleryCarousel images={galleryImages} />}
+
       {/* Transformational promise */}
       <section className="py-16 sm:py-24 border-b border-border">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
@@ -278,9 +281,6 @@ const KashmirLanding = () => {
           </div>
         </div>
       </section>
-
-      {/* Gallery auto-scroll carousel */}
-      {galleryImages.length > 0 && <GalleryCarousel images={galleryImages} />}
 
       {/* Social proof - They crossed the line */}
       <section className="py-16 sm:py-24 border-b border-border">
