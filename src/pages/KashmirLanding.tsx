@@ -5,6 +5,7 @@ import { Shield, Mountain, Users, Clock, Check, MapPin, Quote } from "lucide-rea
 import SEO from "@/components/SEO";
 import WaitlistModal from "@/components/WaitlistModal";
 import logoDark from "@/assets/logo-dark.png";
+import gaetanImg from "@/assets/gaetan.png";
 import trustGroupe from "@/assets/trust-groupe.jpg";
 import trustGroupe2 from "@/assets/trust-groupe2.jpg";
 import trustTony from "@/assets/trust-tony.jpg";
@@ -271,10 +272,10 @@ const KashmirLanding = () => {
           {/* Testimonial quotes */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-14">
             {[
-              { name: "Tony", location: "Kashmir expedition", quote: "Walking along the Line of Control, meeting Kashmiris who live there every day, that changes you. You come back with a story no one else can tell.", img: trustTony },
-              { name: "Mary", location: "Kashmir expedition", quote: "The security briefings, the local contacts, the mountain treks: everything was planned to the detail. I felt safe in places I never imagined visiting.", img: trustMary },
-              { name: "Brittany", location: "Kashmir expedition", quote: "I came for the adventure, I left with a completely different perspective. The team knows this region inside out.", img: trustBrittany },
-            ].map(({ name, location, quote, img }, i) => (
+              { name: "Tony M.", detail: "UK · Expedition 2025", quote: "Walking along the Line of Control, meeting Kashmiris who live there every day, that changes you. You come back with a story no one else can tell.", img: trustTony },
+              { name: "Mary D.", detail: "Journalist · Canada", quote: "The security briefings, the local contacts, the mountain treks: everything was planned to the detail. I felt safe in places I never imagined visiting.", img: trustMary },
+              { name: "Brittany L.", detail: "France · Expedition 2024", quote: "I came for the adventure, I left with a completely different perspective. The team knows this region inside out.", img: trustBrittany },
+            ].map(({ name, detail, quote, img }, i) => (
               <motion.div
                 key={name}
                 initial={{ opacity: 0, y: 20 }}
@@ -289,7 +290,7 @@ const KashmirLanding = () => {
                   <img src={img} alt={name} className="w-10 h-10 object-cover brightness-90 contrast-105 grayscale-[15%]" />
                   <div>
                     <p className="font-heading text-xs tracking-[0.1em] uppercase">{name}</p>
-                    <p className="font-heading text-[9px] tracking-[0.1em] uppercase text-muted-foreground/60">{location}</p>
+                    <p className="font-heading text-[9px] tracking-[0.1em] uppercase text-muted-foreground/60">{detail}</p>
                   </div>
                 </div>
               </motion.div>
@@ -327,6 +328,32 @@ const KashmirLanding = () => {
         </div>
       </section>
 
+      {/* Led by */}
+      <section className="py-16 sm:py-20 border-b border-border">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center gap-6"
+          >
+            <img
+              src={gaetanImg}
+              alt="Gaëtan"
+              className="w-20 h-20 sm:w-24 sm:h-24 object-cover brightness-90 contrast-105 grayscale-[15%]"
+            />
+            <div>
+              <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-accent-red mb-1">Led by</p>
+              <p className="font-heading text-sm sm:text-base tracking-[0.05em] uppercase mb-1">Gaëtan</p>
+              <p className="body-text text-sm text-muted-foreground">
+                Field operations lead. 10+ expeditions in conflict-adjacent regions. Fluent in crisis logistics.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* What's included */}
       <section className="py-16 sm:py-24">
         <div className="max-w-4xl mx-auto px-4 sm:px-6">
@@ -342,6 +369,9 @@ const KashmirLanding = () => {
                   </li>
                 ))}
               </ul>
+              <p className="body-text text-xs text-muted-foreground/50 mt-6 italic">
+                Limited permits · Local security logistics · Restricted access coordination
+              </p>
             </div>
 
             <div>
