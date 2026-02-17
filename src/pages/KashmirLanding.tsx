@@ -296,7 +296,7 @@ const KashmirLanding = () => {
             {[
               { name: "Tony M.", detail: "UK · Expedition 2025", quote: "Walking along the Line of Control, meeting Kashmiris who live there every day, that changes you. You come back with a story no one else can tell.", img: trustTony },
               { name: "Mary D.", detail: "Journalist · Canada", quote: "The security briefings, the local contacts, the mountain treks: everything was planned to the detail. I felt safe in places I never imagined visiting.", img: trustMary },
-              { name: "Brittany L.", detail: "France · Expedition 2024", quote: "I came for the adventure, I left with a completely different perspective. The team knows this region inside out.", img: trustBrittany },
+              { name: "Brittany L.", detail: "USA · Expedition 2024", quote: "I came for the adventure, I left with a completely different perspective. The team knows this region inside out.", img: trustBrittany },
             ].map(({ name, detail, quote, img }, i) => (
               <motion.div
                 key={name}
