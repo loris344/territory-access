@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Shield, Mountain, Users, Clock, Check, MapPin, Quote } from "lucide-react";
 import SEO from "@/components/SEO";
 import WaitlistModal from "@/components/WaitlistModal";
+import { supabase } from "@/integrations/supabase/client";
 import logoDark from "@/assets/logo-dark.png";
 import gaetanImg from "@/assets/gaetan.png";
 import trustGroupe from "@/assets/trust-groupe.jpg";
@@ -48,11 +49,7 @@ const EXPEDITION = {
     "All entry fees",
     "Airport transfers",
   ],
-  gallery: [
-    "https://udqjkewpugdmjyrzqmbk.supabase.co/storage/v1/object/public/expedition-images/gallery-a0000001-0000-0000-0000-000000000010-1770970908765-349l.jpg?t=1770970909636",
-    "https://udqjkewpugdmjyrzqmbk.supabase.co/storage/v1/object/public/expedition-images/gallery-a0000001-0000-0000-0000-000000000010-1771291864993-pu2n.webp?t=1771291866544",
-    "https://udqjkewpugdmjyrzqmbk.supabase.co/storage/v1/object/public/expedition-images/gallery-a0000001-0000-0000-0000-000000000010-1771291473830-9huw.jpg?t=1771291483991",
-  ],
+  gallery: [] as string[], // loaded dynamically from DB
 };
 
 const LIMITED_DATE = EXPEDITION.dates.find((d) => d.status === "limited");
@@ -110,9 +107,34 @@ const KashmirLanding = () => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [waitlistDateId, setWaitlistDateId] = useState<string | undefined>();
   const [waitlistDateLabel, setWaitlistDateLabel] = useState("");
+  const [galleryImages, setGalleryImages] = useState<string[]>([]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    // Fetch gallery images from DB
+    supabase
+      .from("expedition_gallery")
+      .select("image_url")
+      .eq("expedition_id", EXPEDITION.expeditionId)
+      .order("display_order")
+      .then(({ data }) => {
+        const dbImages = (data || []).map((r) => r.image_url);
+        // Interleave: db image, then a trust photo every 2 db images
+        const trustPhotos = [trustGroupe, trustTony, trustBrittany, trustMary, trustGroupe2];
+        const mixed: string[] = [];
+        let trustIdx = 0;
+        for (let i = 0; i < dbImages.length; i++) {
+          mixed.push(dbImages[i]);
+          if ((i + 1) % 2 === 0 && trustIdx < trustPhotos.length) {
+            mixed.push(trustPhotos[trustIdx++]);
+          }
+        }
+        // Append remaining trust photos
+        while (trustIdx < trustPhotos.length) {
+          mixed.push(trustPhotos[trustIdx++]);
+        }
+        setGalleryImages(mixed);
+      });
   }, []);
 
   return (
@@ -258,7 +280,7 @@ const KashmirLanding = () => {
       </section>
 
       {/* Gallery auto-scroll carousel */}
-      <GalleryCarousel images={[...EXPEDITION.gallery, trustGroupe, trustGroupe2, trustTony, trustMary, trustBrittany]} />
+      {galleryImages.length > 0 && <GalleryCarousel images={galleryImages} />}
 
       {/* Social proof - They crossed the line */}
       <section className="py-16 sm:py-24 border-b border-border">
