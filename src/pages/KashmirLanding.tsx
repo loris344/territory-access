@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield, Mountain, Users, Clock, Check, MapPin, Quote } from "lucide-react";
@@ -56,6 +56,54 @@ const EXPEDITION = {
 
 const LIMITED_DATE = EXPEDITION.dates.find((d) => d.status === "limited");
 const APPLY_URL = `/apply?expedition=${EXPEDITION.slug}${LIMITED_DATE ? `&date=${LIMITED_DATE.id}` : ""}`;
+
+const GalleryCarousel = ({ images }: { images: string[] }) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    let animationId: number;
+    let scrollPos = 0;
+    const speed = 0.6;
+    const step = () => {
+      if (!isPaused && container) {
+        scrollPos += speed;
+        if (scrollPos >= container.scrollWidth / 2) scrollPos = 0;
+        container.scrollLeft = scrollPos;
+      }
+      animationId = requestAnimationFrame(step);
+    };
+    animationId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(animationId);
+  }, [isPaused]);
+
+  const doubled = [...images, ...images];
+
+  return (
+    <section
+      className="py-0 overflow-hidden"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
+      <div ref={scrollRef} className="overflow-hidden" style={{ scrollbarWidth: "none" }}>
+        <div className="flex gap-2 w-max">
+          {doubled.map((src, i) => (
+            <div key={i} className="h-[250px] sm:h-[320px] md:h-[380px] flex-shrink-0 overflow-hidden">
+              <img
+                src={src}
+                alt={`Expedition ${i + 1}`}
+                className="h-full w-auto object-cover brightness-90 contrast-105 grayscale-[10%]"
+                loading="lazy"
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
 
 const KashmirLanding = () => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
@@ -177,21 +225,39 @@ const KashmirLanding = () => {
         </div>
       </section>
 
-      {/* Gallery strip */}
-      <section className="py-0">
-        <div className="grid grid-cols-3 gap-0">
-          {EXPEDITION.gallery.map((url, i) => (
-            <div key={i} className="aspect-[16/9] overflow-hidden">
-              <img
-                src={url}
-                alt={`Kashmir expedition ${i + 1}`}
-                className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                loading="lazy"
-              />
-            </div>
-          ))}
+      {/* Transformational promise */}
+      <section className="py-16 sm:py-24 border-b border-border">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="h-px w-12 bg-accent mb-10" />
+          <h2 className="heading-display text-xl sm:text-2xl mb-4">This is not a trip.</h2>
+          <p className="body-text text-sm text-muted-foreground max-w-2xl mb-10">
+            You will walk where few dare to go. You will meet people who live on the edge of a frozen conflict. You will push your limits at altitude, far from comfort zones. And you will return with a story that is yours alone.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[
+              { title: "Push your limits", desc: "High-altitude treks, real terrain, real effort. You will discover what you're capable of." },
+              { title: "A story no one else has", desc: "The Line of Control, Kashmiri villages, military checkpoints: experiences that can't be bought on a booking platform." },
+              { title: "See the world differently", desc: "You won't observe from a distance. You will sit with locals, understand their reality, and feel the tension firsthand." },
+              { title: "Come back transformed", desc: "Every participant leaves Kashmir with a sharper perspective, a deeper confidence, and a sense of having truly lived." },
+            ].map(({ title, desc }, i) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="border-l-2 border-accent/30 pl-5"
+              >
+                <h3 className="font-heading text-xs tracking-[0.1em] uppercase mb-1.5">{title}</h3>
+                <p className="body-text text-sm text-muted-foreground">{desc}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
+
+      {/* Gallery auto-scroll carousel */}
+      <GalleryCarousel images={[...EXPEDITION.gallery, trustGroupe, trustGroupe2, trustTony, trustMary, trustBrittany]} />
 
       {/* Social proof - They crossed the line */}
       <section className="py-16 sm:py-24 border-b border-border">
@@ -230,58 +296,7 @@ const KashmirLanding = () => {
             ))}
           </div>
 
-          {/* Photo grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
-            {[trustGroupe, trustTony, trustBrittany, trustGroupe2].map((src, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="aspect-square overflow-hidden"
-              >
-                <img
-                  src={src}
-                  alt={`Expedition participant ${i + 1}`}
-                  className="w-full h-full object-cover brightness-90 contrast-105 grayscale-[15%] hover:grayscale-0 hover:brightness-100 transition-all duration-500"
-                  loading="lazy"
-                />
-              </motion.div>
-            ))}
-          </div>
 
-        </div>
-      </section>
-
-      {/* Transformational promise */}
-      <section className="py-16 sm:py-24">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="h-px w-12 bg-accent mb-10" />
-          <h2 className="heading-display text-xl sm:text-2xl mb-4">This is not a trip.</h2>
-          <p className="body-text text-sm text-muted-foreground max-w-2xl mb-10">
-            You will walk where few dare to go. You will meet people who live on the edge of a frozen conflict. You will push your limits at altitude, far from comfort zones. And you will return with a story that is yours alone.
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            {[
-              { title: "Push your limits", desc: "High-altitude treks, real terrain, real effort. You will discover what you're capable of." },
-              { title: "A story no one else has", desc: "The Line of Control, Kashmiri villages, military checkpoints: experiences that can't be bought on a booking platform." },
-              { title: "See the world differently", desc: "You won't observe from a distance. You will sit with locals, understand their reality, and feel the tension firsthand." },
-              { title: "Come back transformed", desc: "Every participant leaves Kashmir with a sharper perspective, a deeper confidence, and a sense of having truly lived." },
-            ].map(({ title, desc }, i) => (
-              <motion.div
-                key={title}
-                initial={{ opacity: 0, y: 15 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
-                className="border-l-2 border-accent/30 pl-5"
-              >
-                <h3 className="font-heading text-xs tracking-[0.1em] uppercase mb-1.5">{title}</h3>
-                <p className="body-text text-sm text-muted-foreground">{desc}</p>
-              </motion.div>
-            ))}
-          </div>
         </div>
       </section>
 
