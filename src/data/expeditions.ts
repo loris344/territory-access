@@ -359,8 +359,8 @@ export const expeditions: Expedition[] = [
     intensity_level: "Hard",
     intensity_type: "mountain",
     difficulty_level: "hard",
-    short_description: "7-day militarized mountain region expedition.",
-    long_description: "7-day expedition in Indian Kashmir including high-altitude trekking, observation of militarized zones (civil areas only), and rural immersion.",
+    short_description: "7-day high-security border region expedition.",
+    long_description: "7-day expedition in Indian Kashmir including high-altitude trekking, observation of high-security border zones (civil areas only), and rural immersion.",
     status: "open",
     expedition_status: "upcoming",
     itinerary: [

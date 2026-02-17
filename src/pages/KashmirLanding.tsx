@@ -23,7 +23,7 @@ const EXPEDITION = {
   heroImage:
     "https://udqjkewpugdmjyrzqmbk.supabase.co/storage/v1/object/public/expedition-images/a0000001-0000-0000-0000-000000000010.webp?t=1771291609044",
   shortDescription:
-    "7-day militarized mountain region expedition along one of the most heavily guarded borders in the world.",
+    "7-day high-security border region expedition along one of the most heavily guarded frontiers in the world.",
   expeditionId: "a0000001-0000-0000-0000-000000000010",
   dates: [
     { id: "5aee8b06-2e1c-45d8-bbdb-975133b33a88", label: "Sep 9 - Sep 15, 2026", status: "closed", spots: 0 },
@@ -119,7 +119,7 @@ const KashmirLanding = () => {
     <div className="min-h-screen bg-background">
       <SEO
         title="Kashmir Expedition - Line of Control"
-        description="7-day expedition in Indian Kashmir. Trek the militarized mountains, meet locals under tension, observe the Line of Control. Limited spots."
+        description="7-day expedition in Indian Kashmir. Trek high-security border mountains, meet locals under tension, observe the Line of Control. Limited spots."
         path="/lp/kashmir"
         noIndex
       />
