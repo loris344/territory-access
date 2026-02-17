@@ -12,6 +12,7 @@ import About from "./pages/About";
 import Admin from "./pages/Admin";
 import AdminLogin from "./pages/AdminLogin";
 import NotFound from "./pages/NotFound";
+import KashmirLanding from "./pages/KashmirLanding";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +25,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/lp/kashmir" element={<KashmirLanding />} />
           <Route path="/expeditions/:slug" element={<ExpeditionDetail />} />
           <Route path="/apply" element={<Apply />} />
           <Route path="/legal" element={<LegalNotice />} />
