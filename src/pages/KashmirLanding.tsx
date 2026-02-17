@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Shield, Mountain, Users, Clock, Check, MapPin } from "lucide-react";
+import { Shield, Mountain, Users, Clock, Check, MapPin, Quote } from "lucide-react";
 import SEO from "@/components/SEO";
 import WaitlistModal from "@/components/WaitlistModal";
 import logoDark from "@/assets/logo-dark.png";
+import trustGroupe from "@/assets/trust-groupe.jpg";
+import trustGroupe2 from "@/assets/trust-groupe2.jpg";
+import trustTony from "@/assets/trust-tony.jpg";
+import trustMary from "@/assets/trust-mary.jpg";
+import trustBrittany from "@/assets/trust-brittany.jpg";
 
 const EXPEDITION = {
   name: "Indian Kashmir - Line of Control",
@@ -185,6 +190,74 @@ const KashmirLanding = () => {
               />
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* Social proof - They crossed the line */}
+      <section className="py-16 sm:py-24 border-b border-border">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6">
+          <div className="h-px w-12 bg-accent mb-10" />
+          <h2 className="heading-display text-xl sm:text-2xl mb-3">They crossed the line.</h2>
+          <p className="body-text text-sm text-muted-foreground max-w-2xl mb-12">
+            Real participants. Real expeditions. No actors, no staging — just people who chose to see the world differently.
+          </p>
+
+          {/* Testimonial quotes */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-14">
+            {[
+              { name: "Tony", location: "Kashmir expedition", quote: "I've travelled to 40+ countries. Nothing came close to this level of immersion and preparation.", img: trustTony },
+              { name: "Mary", location: "Previous expedition", quote: "The team's knowledge of the terrain and local context made me feel safe in places I never thought I'd visit.", img: trustMary },
+              { name: "Brittany", location: "Previous expedition", quote: "You don't just observe — you live it. The briefings, the local contacts, everything is meticulously planned.", img: trustBrittany },
+            ].map(({ name, location, quote, img }, i) => (
+              <motion.div
+                key={name}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                className="border border-border p-6"
+              >
+                <Quote className="w-4 h-4 text-accent-red mb-4 opacity-60" />
+                <p className="body-text text-sm text-muted-foreground italic mb-6">"{quote}"</p>
+                <div className="flex items-center gap-3">
+                  <img src={img} alt={name} className="w-10 h-10 object-cover brightness-90 contrast-105 grayscale-[15%]" />
+                  <div>
+                    <p className="font-heading text-xs tracking-[0.1em] uppercase">{name}</p>
+                    <p className="font-heading text-[9px] tracking-[0.1em] uppercase text-muted-foreground/60">{location}</p>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Photo grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+            {[trustGroupe, trustTony, trustBrittany, trustGroupe2].map((src, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: i * 0.08 }}
+                className="aspect-square overflow-hidden"
+              >
+                <img
+                  src={src}
+                  alt={`Expedition participant ${i + 1}`}
+                  className="w-full h-full object-cover brightness-90 contrast-105 grayscale-[15%] hover:grayscale-0 hover:brightness-100 transition-all duration-500"
+                  loading="lazy"
+                />
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground/50">
+            <span>50+ expeditions completed</span>
+            <span className="hidden sm:inline">·</span>
+            <span>15+ destinations</span>
+            <span className="hidden sm:inline">·</span>
+            <span>0 incidents</span>
+          </div>
         </div>
       </section>
 
