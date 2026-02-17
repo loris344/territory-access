@@ -48,7 +48,8 @@ const EXPEDITION = {
   ],
 };
 
-const APPLY_URL = `/apply?expedition=${EXPEDITION.slug}`;
+const LIMITED_DATE = EXPEDITION.dates.find((d) => d.status === "limited");
+const APPLY_URL = `/apply?expedition=${EXPEDITION.slug}${LIMITED_DATE ? `&date=${LIMITED_DATE.id}` : ""}`;
 
 const KashmirLanding = () => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
@@ -305,7 +306,7 @@ const KashmirLanding = () => {
       {/* Minimal footer */}
       <footer className="border-t border-border py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <img src={logoDark} alt="Ligne Rouge Tours" className="h-4 opacity-50" />
+          <img src={logoDark} alt="Ligne Rouge Tours" className="h-10 opacity-50" />
           <div className="flex items-center gap-6">
             <Link
               to="/legal"
