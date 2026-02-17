@@ -199,15 +199,15 @@ const KashmirLanding = () => {
           <div className="h-px w-12 bg-accent mb-10" />
           <h2 className="heading-display text-xl sm:text-2xl mb-3">They crossed the line.</h2>
           <p className="body-text text-sm text-muted-foreground max-w-2xl mb-12">
-            Real participants. Real expeditions. No actors, no staging — just people who chose to see the world differently.
+            Real participants. Real expeditions. No actors, no staging, just people who chose to see the world differently.
           </p>
 
           {/* Testimonial quotes */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-14">
             {[
-              { name: "Tony", location: "Kashmir expedition", quote: "I've travelled to 40+ countries. Nothing came close to this level of immersion and preparation.", img: trustTony },
-              { name: "Mary", location: "Previous expedition", quote: "The team's knowledge of the terrain and local context made me feel safe in places I never thought I'd visit.", img: trustMary },
-              { name: "Brittany", location: "Previous expedition", quote: "You don't just observe — you live it. The briefings, the local contacts, everything is meticulously planned.", img: trustBrittany },
+              { name: "Tony", location: "Kashmir expedition", quote: "Walking along the Line of Control, meeting Kashmiris who live there every day, that changes you. You come back with a story no one else can tell.", img: trustTony },
+              { name: "Mary", location: "Kashmir expedition", quote: "The security briefings, the local contacts, the mountain treks: everything was planned to the detail. I felt safe in places I never imagined visiting.", img: trustMary },
+              { name: "Brittany", location: "Kashmir expedition", quote: "I came for the adventure, I left with a completely different perspective. The team knows this region inside out.", img: trustBrittany },
             ].map(({ name, location, quote, img }, i) => (
               <motion.div
                 key={name}
@@ -251,12 +251,36 @@ const KashmirLanding = () => {
             ))}
           </div>
 
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground/50">
-            <span>50+ expeditions completed</span>
-            <span className="hidden sm:inline">·</span>
-            <span>15+ destinations</span>
-            <span className="hidden sm:inline">·</span>
-            <span>0 incidents</span>
+        </div>
+      </section>
+
+      {/* Transformational promise */}
+      <section className="py-16 sm:py-24">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6">
+          <div className="h-px w-12 bg-accent mb-10" />
+          <h2 className="heading-display text-xl sm:text-2xl mb-4">This is not a trip.</h2>
+          <p className="body-text text-sm text-muted-foreground max-w-2xl mb-10">
+            You will walk where few dare to go. You will meet people who live on the edge of a frozen conflict. You will push your limits at altitude, far from comfort zones. And you will return with a story that is yours alone.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            {[
+              { title: "Push your limits", desc: "High-altitude treks, real terrain, real effort. You will discover what you're capable of." },
+              { title: "A story no one else has", desc: "The Line of Control, Kashmiri villages, military checkpoints: experiences that can't be bought on a booking platform." },
+              { title: "See the world differently", desc: "You won't observe from a distance. You will sit with locals, understand their reality, and feel the tension firsthand." },
+              { title: "Come back transformed", desc: "Every participant leaves Kashmir with a sharper perspective, a deeper confidence, and a sense of having truly lived." },
+            ].map(({ title, desc }, i) => (
+              <motion.div
+                key={title}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: i * 0.08 }}
+                className="border-l-2 border-accent/30 pl-5"
+              >
+                <h3 className="font-heading text-xs tracking-[0.1em] uppercase mb-1.5">{title}</h3>
+                <p className="body-text text-sm text-muted-foreground">{desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
