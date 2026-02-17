@@ -33,6 +33,7 @@ const EXPEDITION = {
     { day: 7, title: "Departure", desc: "Airport transfer." },
   ],
   inclusions: [
+    "Accommodation (hotel or homestay depending on location)",
     "All meals & drinks",
     "All ground transport",
     "English-speaking local guide",
