@@ -298,7 +298,7 @@ const KashmirLanding = () => {
             </Link>
 
             <p className="font-heading text-[9px] tracking-[0.15em] uppercase text-muted-foreground/40 mt-6">
-              No online payment · No booking system · Selection only
+              Selection only
             </p>
           </motion.div>
         </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,6 +19,7 @@ const applicationSchema = z.object({
   participants: z.number().min(1, "At least 1").max(14, "Max 14 participants"),
   physical_condition: z.string().trim().min(1, "Required").max(2000, "Max 2000 characters"),
   motivation_text: z.string().trim().min(1, "Required").max(5000, "Max 5000 characters"),
+  terms_accepted: z.boolean(),
 });
 
 type ExpeditionOption = { id: string; name: string; slug: string; price: number; status: string };
@@ -47,6 +48,7 @@ const Apply = () => {
     participants: "1",
     physical_condition: "",
     motivation_text: "",
+    terms_accepted: false,
   });
 
   const handleTurnstileVerify = useCallback((token: string) => {
@@ -139,6 +141,11 @@ const Apply = () => {
         if (!fieldErrors[field]) fieldErrors[field] = err.message;
       });
       setErrors(fieldErrors);
+      return;
+    }
+
+    if (!result.data.terms_accepted) {
+      setErrors((prev) => ({ ...prev, terms_accepted: "You must accept the Terms & Conditions" }));
       return;
     }
 
@@ -375,6 +382,28 @@ const Apply = () => {
                 />
                 {errorText("motivation_text")}
               </div>
+
+              <div className="flex items-start gap-3 mt-2">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  checked={form.terms_accepted}
+                  onChange={(e) => {
+                    setForm({ ...form, terms_accepted: e.target.checked });
+                    if (errors.terms_accepted) {
+                      setErrors((prev) => { const next = { ...prev }; delete next.terms_accepted; return next; });
+                    }
+                  }}
+                  className="mt-1 h-4 w-4 shrink-0 border border-border accent-accent"
+                />
+                <label htmlFor="terms" className="body-text text-xs text-muted-foreground cursor-pointer">
+                  I have read and understood the{" "}
+                  <Link to="/legal" target="_blank" className="text-accent hover:underline">
+                    Terms & Conditions
+                  </Link>
+                </label>
+              </div>
+              {errorText("terms_accepted")}
 
               <div className="mt-2">
                 <TurnstileWidget onVerify={handleTurnstileVerify} onExpire={handleTurnstileExpire} />

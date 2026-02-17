@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
+import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import TurnstileWidget from "@/components/TurnstileWidget";
@@ -21,6 +22,7 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName, expedition
     email: "",
     nationality: "",
     number_of_people: 1,
+    terms_accepted: false,
   });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -38,6 +40,10 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName, expedition
     e.preventDefault();
     if (!form.first_name || !form.last_name || !form.email || !form.nationality) {
       toast.error("Please fill in all fields");
+      return;
+    }
+    if (!form.terms_accepted) {
+      toast.error("Please accept the Terms & Conditions");
       return;
     }
     if (!turnstileToken) {
@@ -86,7 +92,7 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName, expedition
     setTimeout(() => {
       setSubmitted(false);
       setTurnstileToken("");
-      setForm({ first_name: "", last_name: "", email: "", nationality: "", number_of_people: 1 });
+      setForm({ first_name: "", last_name: "", email: "", nationality: "", number_of_people: 1, terms_accepted: false });
     }, 300);
   };
 
@@ -208,13 +214,29 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName, expedition
                     />
                   </div>
 
+                  <div className="flex items-start gap-3 mt-1">
+                    <input
+                      type="checkbox"
+                      id="waitlist-terms"
+                      checked={form.terms_accepted}
+                      onChange={(e) => setForm({ ...form, terms_accepted: e.target.checked })}
+                      className="mt-0.5 h-4 w-4 shrink-0 border border-border accent-accent"
+                    />
+                    <label htmlFor="waitlist-terms" className="body-text text-[11px] text-muted-foreground cursor-pointer leading-tight">
+                      I have read and understood the{" "}
+                      <Link to="/legal" target="_blank" className="text-accent hover:underline">
+                        Terms & Conditions
+                      </Link>
+                    </label>
+                  </div>
+
                   <div className="mt-1">
                     <TurnstileWidget onVerify={handleTurnstileVerify} onExpire={handleTurnstileExpire} />
                   </div>
 
                   <button
                     type="submit"
-                    disabled={submitting || !turnstileToken}
+                    disabled={submitting || !turnstileToken || !form.terms_accepted}
                     className="w-full font-heading text-xs tracking-[0.15em] uppercase px-6 py-4 bg-foreground text-background hover:bg-foreground/90 transition-all disabled:opacity-50"
                   >
                     {submitting ? "Submitting..." : "Join Waitlist"}
