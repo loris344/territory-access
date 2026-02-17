@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield, Mountain, Users, Clock, Check, MapPin } from "lucide-react";
 import SEO from "@/components/SEO";
+import WaitlistModal from "@/components/WaitlistModal";
 import logoDark from "@/assets/logo-dark.png";
 
 const EXPEDITION = {
@@ -17,9 +18,10 @@ const EXPEDITION = {
     "https://udqjkewpugdmjyrzqmbk.supabase.co/storage/v1/object/public/expedition-images/a0000001-0000-0000-0000-000000000010.webp?t=1771291609044",
   shortDescription:
     "7-day militarized mountain region expedition along one of the most heavily guarded borders in the world.",
+  expeditionId: "a0000001-0000-0000-0000-000000000010",
   dates: [
-    { label: "Sep 9 - Sep 15, 2026", status: "closed", spots: 0 },
-    { label: "Oct 10 - Oct 16, 2026", status: "limited", spots: 3 },
+    { id: "5aee8b06-2e1c-45d8-bbdb-975133b33a88", label: "Sep 9 - Sep 15, 2026", status: "closed", spots: 0 },
+    { id: "3e22d985-b472-4f8a-a4a0-3ece3663d471", label: "Oct 10 - Oct 16, 2026", status: "limited", spots: 3 },
   ],
   itinerary: [
     { day: 1, title: "Srinagar arrival", desc: "Local fixer welcome. Security brief. Dal Lake houseboat setup." },
@@ -49,6 +51,10 @@ const EXPEDITION = {
 const APPLY_URL = `/apply?expedition=${EXPEDITION.slug}`;
 
 const KashmirLanding = () => {
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
+  const [waitlistDateId, setWaitlistDateId] = useState<string | undefined>();
+  const [waitlistDateLabel, setWaitlistDateLabel] = useState("");
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -64,8 +70,10 @@ const KashmirLanding = () => {
 
       {/* Minimal top bar */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <img src={logoDark} alt="Ligne Rouge Tours" className="h-5" />
+        <div className="max-w-7xl mx-auto px-6 lg:px-8 h-17 flex items-center justify-between">
+          <Link to="/" className="flex items-center">
+            <img src={logoDark} alt="Ligne Rouge Tours" className="h-14 sm:h-16 w-auto" />
+          </Link>
           <Link
             to={APPLY_URL}
             className="font-heading text-[10px] tracking-[0.15em] uppercase px-5 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-all"
@@ -237,14 +245,21 @@ const KashmirLanding = () => {
                         {d.status === "closed" ? "Full - Waitlist open" : `${d.spots} spots left`}
                       </p>
                     </div>
-                    {d.status === "limited" && (
+                    {d.status === "limited" ? (
                       <Link
                         to={APPLY_URL}
                         className="font-heading text-[10px] tracking-[0.15em] uppercase px-4 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-all flex-shrink-0"
                       >
                         Apply
                       </Link>
-                    )}
+                    ) : d.status === "closed" ? (
+                      <button
+                        onClick={() => { setWaitlistDateId(d.id); setWaitlistDateLabel(d.label); setWaitlistOpen(true); }}
+                        className="font-heading text-[10px] tracking-[0.15em] uppercase px-4 py-2 bg-foreground text-background hover:bg-foreground/90 transition-all flex-shrink-0"
+                      >
+                        Waitlist
+                      </button>
+                    ) : null}
                   </div>
                 ))}
               </div>
@@ -307,6 +322,15 @@ const KashmirLanding = () => {
           </div>
         </div>
       </footer>
+
+      <WaitlistModal
+        open={waitlistOpen}
+        onClose={() => setWaitlistOpen(false)}
+        expeditionId={EXPEDITION.expeditionId}
+        expeditionName={EXPEDITION.name}
+        expeditionDateId={waitlistDateId}
+        dateLabel={waitlistDateLabel}
+      />
     </div>
   );
 };
