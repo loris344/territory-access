@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar, ExternalLink } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 import WaitlistPanel from "@/components/admin/WaitlistPanel";
