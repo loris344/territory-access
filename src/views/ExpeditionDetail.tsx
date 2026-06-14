@@ -1,5 +1,8 @@
+"use client";
+
 import { useEffect, useState, useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +10,6 @@ import { useExpeditionBySlug } from "@/hooks/use-expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WaitlistModal from "@/components/WaitlistModal";
-import SEO from "@/components/SEO";
 
 const statusStyles: Record<string, string> = {
   open: "bg-foreground/10 text-foreground border border-foreground/20",
@@ -25,7 +27,7 @@ const statusLabels: Record<string, string> = {
 };
 
 const ExpeditionDetail = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const { slug } = useParams() as { slug: string };
   const { data: expedition, isLoading } = useExpeditionBySlug(slug);
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
   const [currentImg, setCurrentImg] = useState(0);
@@ -98,7 +100,7 @@ const ExpeditionDetail = () => {
         <Navbar />
         <div className="text-center pt-20">
           <h1 className="heading-display text-2xl mb-4">Expedition not found</h1>
-          <Link to="/" className="text-accent-red font-heading text-xs tracking-[0.15em] uppercase">
+          <Link href="/" className="text-accent-red font-heading text-xs tracking-[0.15em] uppercase">
             ← Return to base
           </Link>
         </div>
@@ -108,30 +110,29 @@ const ExpeditionDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEO
-        title={`${expedition.name} — ${expedition.country}`}
-        description={expedition.short_description}
-        path={`/expeditions/${expedition.slug}`}
-        ogImage={expedition.hero_image_url || undefined}
-        jsonLd={{
-          "@context": "https://schema.org",
-          "@type": "TravelAction",
-          name: expedition.name,
-          description: expedition.short_description,
-          location: {
-            "@type": "Place",
-            name: expedition.location,
-            address: { "@type": "PostalAddress", addressCountry: expedition.country },
-          },
-          offers: {
-            "@type": "Offer",
-            price: expedition.price_usd,
-            priceCurrency: "USD",
-            availability:
-              expedition.status === "open" || expedition.status === "limited"
-                ? "https://schema.org/InStock"
-                : "https://schema.org/SoldOut",
-          },
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "TravelAction",
+            name: expedition.name,
+            description: expedition.short_description,
+            location: {
+              "@type": "Place",
+              name: expedition.location,
+              address: { "@type": "PostalAddress", addressCountry: expedition.country },
+            },
+            offers: {
+              "@type": "Offer",
+              price: expedition.price_usd,
+              priceCurrency: "USD",
+              availability:
+                expedition.status === "open" || expedition.status === "limited"
+                  ? "https://schema.org/InStock"
+                  : "https://schema.org/SoldOut",
+            },
+          }),
         }}
       />
       <Navbar />
@@ -161,7 +162,7 @@ const ExpeditionDetail = () => {
         <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <Link
-              to="/#expeditions"
+              href="/#expeditions"
               className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors mb-8 inline-block"
             >
               ← All expeditions
@@ -246,7 +247,7 @@ const ExpeditionDetail = () => {
                         <div className="flex-shrink-0">
                           {isActionable ? (
                             <Link
-                              to={`/apply?expedition=${expedition.slug}&date=${d.id}`}
+                              href={`/apply?expedition=${expedition.slug}&date=${d.id}`}
                               className="font-heading text-[10px] tracking-[0.15em] uppercase px-4 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-all"
                             >
                               Apply
@@ -272,7 +273,7 @@ const ExpeditionDetail = () => {
               <div className="mt-8">
                 {expedition.status !== "closed" && expedition.status !== "cancelled" && expedition.status !== "postponed" ? (
                   <Link
-                    to={`/apply?expedition=${expedition.slug}`}
+                    href={`/apply?expedition=${expedition.slug}`}
                     className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300"
                   >
                     Apply for this expedition
@@ -424,7 +425,7 @@ const ExpeditionDetail = () => {
             </p>
           ) : expedition.status !== "closed" && expedition.status !== "cancelled" && expedition.status !== "postponed" ? (
             <Link
-              to={`/apply?expedition=${expedition.slug}`}
+              href={`/apply?expedition=${expedition.slug}`}
               className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300"
             >
               Apply for this expedition

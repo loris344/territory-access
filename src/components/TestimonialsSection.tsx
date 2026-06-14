@@ -1,12 +1,14 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 
-import lucasImg from "@/assets/lucas-iran.png";
-import isaacImg from "@/assets/isaac-transnistria.png";
-import arnaudImg from "@/assets/arnaud-somaliland.png";
-import nolanImg from "@/assets/nolan-mongolia.jpg";
-import annaImg from "@/assets/anna-afghanistan.jpg";
+const lucasImg = "/assets/lucas-iran.png";
+const isaacImg = "/assets/isaac-transnistria.png";
+const arnaudImg = "/assets/arnaud-somaliland.png";
+const nolanImg = "/assets/nolan-mongolia.jpg";
+const annaImg = "/assets/anna-afghanistan.jpg";
 
 const testimonials = [
   {

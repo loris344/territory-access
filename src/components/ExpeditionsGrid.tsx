@@ -1,3 +1,5 @@
+"use client";
+
 import { motion } from "framer-motion";
 import { useActiveExpeditions } from "@/hooks/use-expeditions";
 import { useIsMobile } from "@/hooks/use-mobile";

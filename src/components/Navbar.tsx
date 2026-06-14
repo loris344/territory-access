@@ -1,18 +1,21 @@
+"use client";
+
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import logoDark from "@/assets/logo-dark.png";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
+const logoDark = "/assets/logo-dark.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
+  const pathname = usePathname();
+  const router = useRouter();
 
   const scrollToExpeditions = () => {
     setIsOpen(false);
-    if (location.pathname === "/") {
+    if (pathname === "/") {
       document.getElementById("expeditions")?.scrollIntoView({ behavior: "smooth" });
     } else {
-      navigate("/");
+      router.push("/");
       setTimeout(() => {
         document.getElementById("expeditions")?.scrollIntoView({ behavior: "smooth" });
       }, 300);
@@ -23,7 +26,7 @@ const Navbar = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-17">
-          <Link to="/" className="flex items-center">
+          <Link href="/" className="flex items-center">
             <img src={logoDark} alt="Ligne Rouge Tours" className="h-14 sm:h-16 w-auto" />
           </Link>
 

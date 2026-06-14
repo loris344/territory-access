@@ -1,16 +1,17 @@
+"use client";
+
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
-import SEO from "@/components/SEO";
 import Footer from "@/components/Footer";
 import ContactBubbles from "@/components/ContactBubbles";
-import founderImg from "@/assets/founder.png";
-import gaetanImg from "@/assets/gaetan.png";
-import aymericImg from "@/assets/aymeric.jpg";
-import rayaneImg from "@/assets/rayane.jpg";
-import rymImg from "@/assets/rym.jpg";
-import leaImg from "@/assets/lea.jpg";
-import vitalyImg from "@/assets/vitaly.jpg";
+const founderImg = "/assets/founder.png";
+const gaetanImg = "/assets/gaetan.png";
+const aymericImg = "/assets/aymeric.jpg";
+const rayaneImg = "/assets/rayane.jpg";
+const rymImg = "/assets/rym.jpg";
+const leaImg = "/assets/lea.jpg";
+const vitalyImg = "/assets/vitaly.jpg";
 
 const faqItems = [
   {
@@ -94,11 +95,6 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEO
-        title="Who We Are"
-        description="Meet the Ligne Rouge Tours team. We design structured immersions in conflict zones, disputed territories, and extreme environments."
-        path="/about"
-      />
       <Navbar />
 
       {/* Who We Are */}

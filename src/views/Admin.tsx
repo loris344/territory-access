@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar, ExternalLink } from "lucide-react";
@@ -77,7 +79,7 @@ type Expedition = Tables<"expeditions"> & {
 };
 
 const Admin = () => {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [expeditions, setExpeditions] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState<string | null>(null);
@@ -99,7 +101,7 @@ const Admin = () => {
   const checkAuth = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
-      navigate("/admin/login");
+      router.push("/admin/login");
       return;
     }
     const { data: roles } = await supabase
@@ -108,7 +110,7 @@ const Admin = () => {
       .eq("user_id", user.id)
       .eq("role", "admin");
     if (!roles || roles.length === 0) {
-      navigate("/admin/login");
+      router.push("/admin/login");
     }
   };
 
@@ -127,7 +129,7 @@ const Admin = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate("/admin/login");
+    router.push("/admin/login");
   };
 
   const startEdit = (exp: any) => {

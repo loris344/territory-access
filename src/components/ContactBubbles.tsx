@@ -1,7 +1,9 @@
+"use client";
+
 import { motion } from "framer-motion";
-import founderImg from "@/assets/founder.png";
-import leaImg from "@/assets/lea.jpg";
-import rymImg from "@/assets/rym.jpg";
+const founderImg = "/assets/founder.png";
+const leaImg = "/assets/lea.jpg";
+const rymImg = "/assets/rym.jpg";
 
 const people = [
   { img: founderImg, name: "Loris", floatDelay: 0 },

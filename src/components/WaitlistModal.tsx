@@ -1,7 +1,9 @@
+"use client";
+
 import { useState, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import TurnstileWidget from "@/components/TurnstileWidget";
@@ -224,7 +226,7 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName, expedition
                     />
                     <label htmlFor="waitlist-terms" className="body-text text-[11px] text-muted-foreground cursor-pointer leading-tight">
                       I have read and understood the{" "}
-                      <Link to="/legal" target="_blank" className="text-accent hover:underline">
+                      <Link href="/legal" target="_blank" className="text-accent hover:underline">
                         Terms & Conditions
                       </Link>
                     </label>

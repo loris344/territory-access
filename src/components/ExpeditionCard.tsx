@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import { Mountain, Thermometer, Brain, Tent, Snowflake, TreePine, Compass, Sword, Users } from "lucide-react";
 import type { Expedition } from "@/data/expeditions";
 
@@ -61,7 +63,7 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
 
   return (
     <Link
-      to={`/expeditions/${expedition.slug}`}
+      href={`/expeditions/${expedition.slug}`}
       className="group block border border-border bg-card hover:border-accent/50 transition-all duration-300"
     >
       {/* Hero image */}

@@ -1,5 +1,7 @@
+"use client";
+
 import { useState, useCallback } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import {
   ComposableMap,
   Geographies,
@@ -167,7 +169,7 @@ const WorldMap = () => {
                       {selected?.id === hovered.id && (
                         <div className="mt-3 pt-3 border-t border-border flex items-center justify-between">
                           <Link
-                            to={`/expeditions/${hovered.slug}`}
+                            href={`/expeditions/${hovered.slug}`}
                             className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent hover:text-accent/80 transition-colors"
                             onClick={() => { setSelected(null); setHovered(null); }}
                           >
@@ -204,7 +206,7 @@ const WorldMap = () => {
                         <p className="body-text text-xs text-muted-foreground line-clamp-2 mb-2">{hovered.short_description}</p>
                         <div className="flex items-center gap-2">
                           <Link
-                            to={`/expeditions/${hovered.slug}`}
+                            href={`/expeditions/${hovered.slug}`}
                             className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent hover:text-accent/80 transition-colors"
                             onClick={() => { setSelected(null); setHovered(null); }}
                           >

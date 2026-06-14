@@ -1,4 +1,6 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -32,12 +34,12 @@ const Footer = () => {
             <h4 className="heading-display text-sm mb-4">Navigation</h4>
             <div className="space-y-2 text-sm text-muted-foreground body-text">
               <p>
-                <Link to="/about" className="hover:text-foreground transition-colors">
+                <Link href="/about" className="hover:text-foreground transition-colors">
                   Who We Are
                 </Link>
               </p>
               <p>
-                <Link to="/about#faq" className="hover:text-foreground transition-colors">
+                <Link href="/about#faq" className="hover:text-foreground transition-colors">
                   FAQ
                 </Link>
               </p>
@@ -47,7 +49,7 @@ const Footer = () => {
                 </a>
               </p>
               <p>
-                <Link to="/apply" className="hover:text-foreground transition-colors">
+                <Link href="/apply" className="hover:text-foreground transition-colors">
                   Apply
                 </Link>
               </p>
@@ -57,7 +59,7 @@ const Footer = () => {
             <h4 className="heading-display text-sm mb-4">Legal</h4>
             <div className="space-y-2 text-sm text-muted-foreground body-text">
               <p>
-                <Link to="/legal" className="hover:text-foreground transition-colors">
+                <Link href="/legal" className="hover:text-foreground transition-colors">
                   Legal Notice & Terms
                 </Link>
               </p>
@@ -73,7 +75,7 @@ const Footer = () => {
             Ready to cross the line?
           </p>
           <Link
-            to="/apply"
+            href="/apply"
             className="inline-block font-heading text-[10px] sm:text-xs tracking-[0.15em] uppercase px-8 py-3 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300"
           >
             Apply now

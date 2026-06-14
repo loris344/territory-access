@@ -1,8 +1,10 @@
+"use client";
+
 import { useState, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import heroBg from "@/assets/hero-bg.jpg";
+const heroBg = "/assets/hero-bg.jpg";
 
 const HeroSection = () => {
   const [heroImages, setHeroImages] = useState<string[]>([heroBg]);
@@ -93,7 +95,7 @@ const HeroSection = () => {
               View current expeditions
             </a>
             <Link
-              to="/apply"
+              href="/apply"
               className="font-heading text-[10px] sm:text-xs tracking-[0.15em] uppercase px-6 sm:px-8 py-3 sm:py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 w-full sm:w-auto text-center"
             >
               Apply

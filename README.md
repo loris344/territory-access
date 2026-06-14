@@ -54,11 +54,32 @@ npm run dev
 
 This project is built with:
 
-- Vite
+- Next.js (App Router)
 - TypeScript
 - React
 - shadcn-ui
 - Tailwind CSS
+- Supabase
+
+## Available scripts
+
+```sh
+npm run dev     # start the Next.js dev server
+npm run build   # production build
+npm run start   # serve the production build
+npm run lint    # lint with eslint (next/core-web-vitals)
+npm test        # run the vitest suite
+```
+
+### Environment variables
+
+Create a `.env` (or `.env.local`) with:
+
+```sh
+NEXT_PUBLIC_SUPABASE_URL="https://<project>.supabase.co"
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY="<anon-key>"
+NEXT_PUBLIC_SUPABASE_PROJECT_ID="<project-id>"
+```
 
 ## How can I deploy this project?
 

@@ -1,17 +1,18 @@
+"use client";
+
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { Shield, Mountain, Users, Clock, Check, MapPin, Quote } from "lucide-react";
-import SEO from "@/components/SEO";
 import WaitlistModal from "@/components/WaitlistModal";
 import { supabase } from "@/integrations/supabase/client";
-import logoDark from "@/assets/logo-dark.png";
-import gaetanImg from "@/assets/gaetan.png";
-import trustGroupe from "@/assets/trust-groupe.jpg";
-import trustGroupe2 from "@/assets/trust-groupe2.jpg";
-import trustTony from "@/assets/trust-tony.jpg";
-import trustMary from "@/assets/trust-mary.jpg";
-import trustBrittany from "@/assets/trust-brittany.jpg";
+const logoDark = "/assets/logo-dark.png";
+const gaetanImg = "/assets/gaetan.png";
+const trustGroupe = "/assets/trust-groupe.jpg";
+const trustGroupe2 = "/assets/trust-groupe2.jpg";
+const trustTony = "/assets/trust-tony.jpg";
+const trustMary = "/assets/trust-mary.jpg";
+const trustBrittany = "/assets/trust-brittany.jpg";
 
 const EXPEDITION = {
   name: "Indian Kashmir - Line of Control",
@@ -139,21 +140,14 @@ const KashmirLanding = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEO
-        title="Kashmir Expedition - Line of Control"
-        description="7-day expedition in Indian Kashmir. Trek high-security border mountains, meet locals under tension, observe the Line of Control. Limited spots."
-        path="/lp/kashmir"
-        noIndex
-      />
-
       {/* Minimal top bar */}
       <div className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 h-17 flex items-center justify-between">
-          <Link to="/" className="flex items-center">
+          <Link href="/" className="flex items-center">
             <img src={logoDark} alt="Ligne Rouge Tours" className="h-14 sm:h-16 w-auto" />
           </Link>
           <Link
-            to={APPLY_URL}
+            href={APPLY_URL}
             className="font-heading text-[10px] tracking-[0.15em] uppercase px-5 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-all"
           >
             Apply now
@@ -206,7 +200,7 @@ const KashmirLanding = () => {
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4">
               <Link
-                to={APPLY_URL}
+                href={APPLY_URL}
                 className="font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all w-full sm:w-auto text-center"
               >
                 Apply - ${EXPEDITION.price.toLocaleString("en-US")} / pers.
@@ -413,7 +407,7 @@ const KashmirLanding = () => {
                     </div>
                     {d.status === "limited" ? (
                       <Link
-                        to={APPLY_URL}
+                        href={APPLY_URL}
                         className="font-heading text-[10px] tracking-[0.15em] uppercase px-4 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-all flex-shrink-0"
                       >
                         Apply
@@ -455,7 +449,7 @@ const KashmirLanding = () => {
             </p>
 
             <Link
-              to={APPLY_URL}
+              href={APPLY_URL}
               className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-10 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all"
             >
               Apply for Kashmir - ${EXPEDITION.price.toLocaleString("en-US")} / pers.
@@ -474,13 +468,13 @@ const KashmirLanding = () => {
           <img src={logoDark} alt="Ligne Rouge Tours" className="h-10 opacity-50" />
           <div className="flex items-center gap-6">
             <Link
-              to="/legal"
+              href="/legal"
               className="font-heading text-[9px] tracking-[0.15em] uppercase text-muted-foreground/50 hover:text-muted-foreground transition-colors"
             >
               Legal
             </Link>
             <Link
-              to={`/expeditions/${EXPEDITION.slug}`}
+              href={`/expeditions/${EXPEDITION.slug}`}
               className="inline-flex items-center gap-2 font-heading text-[11px] tracking-[0.15em] uppercase px-5 py-2.5 border border-accent/40 text-accent hover:bg-accent hover:text-white transition-all duration-300"
             >
               Discover the full expedition →

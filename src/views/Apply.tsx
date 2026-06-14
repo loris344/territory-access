@@ -1,5 +1,8 @@
+"use client";
+
 import { useState, useEffect, useCallback } from "react";
-import { useSearchParams, Link } from "react-router-dom";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,7 +10,6 @@ import { expeditions as localExpeditions } from "@/data/expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import TurnstileWidget from "@/components/TurnstileWidget";
-import SEO from "@/components/SEO";
 
 const applicationSchema = z.object({
   expedition_id: z.string().min(1, "Please select an expedition"),
@@ -25,7 +27,7 @@ const applicationSchema = z.object({
 type ExpeditionOption = { id: string; name: string; slug: string; price: number; status: string };
 
 const Apply = () => {
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const preselectedSlug = searchParams.get("expedition") || "";
   const preselectedDateId = searchParams.get("date") || "";
 
@@ -233,11 +235,6 @@ const Apply = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEO
-        title="Apply"
-        description="Apply for a Ligne Rouge Tours expedition. Participation is by application only, reviewed individually."
-        path="/apply"
-      />
       <Navbar />
 
       <section className="pt-28 pb-16 lg:pt-36 lg:pb-24">
@@ -398,7 +395,7 @@ const Apply = () => {
                 />
                 <label htmlFor="terms" className="body-text text-xs text-muted-foreground cursor-pointer">
                   I have read and understood the{" "}
-                  <Link to="/legal" target="_blank" className="text-accent hover:underline">
+                  <Link href="/legal" target="_blank" className="text-accent hover:underline">
                     Terms & Conditions
                   </Link>
                 </label>

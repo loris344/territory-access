@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useRef, useCallback } from "react";
 
 const TURNSTILE_SITE_KEY = "0x4AAAAAACdbUO6-kqbZRbjy";
