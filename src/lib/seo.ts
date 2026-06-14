@@ -5,7 +5,7 @@ export const DEFAULT_TITLE =
   "Ligne Rouge Tours — Expeditions in Territories Others Avoid";
 export const DEFAULT_DESCRIPTION =
   "We organize expeditions in territories others avoid. For those who refuse to observe the world from a distance.";
-export const SITE_URL = "https://lignerouge.lovable.app";
+export const SITE_URL = "https://lignerougetours.com";
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
 
 interface BuildMetadataOptions {
