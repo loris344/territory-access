@@ -1,16 +1,16 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Static export so the site can be served by GitHub Pages (no Node server).
+  output: "export",
+  // GitHub Pages serves directories, so emit /route/index.html for each page.
+  trailingSlash: true,
   reactStrictMode: true,
   eslint: {
-    // Linting is run separately; don't block production builds on lint errors.
     ignoreDuringBuilds: true,
   },
   images: {
-    // Remote expedition / hero images are served from Supabase storage and
-    // rendered with plain <img> tags, but allow next/image too if ever used.
-    remotePatterns: [
-      { protocol: "https", hostname: "**.supabase.co" },
-    ],
+    // next/image optimization is unavailable on a static host.
+    unoptimized: true,
   },
 };
 

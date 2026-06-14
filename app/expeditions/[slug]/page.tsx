@@ -3,6 +3,13 @@ import ExpeditionDetail from "@/views/ExpeditionDetail";
 import { buildMetadata } from "@/lib/seo";
 import { supabase } from "@/integrations/supabase/client";
 
+// Static export (GitHub Pages): pre-render one page per expedition at build time.
+// New expeditions added later need a rebuild to get their own page.
+export async function generateStaticParams() {
+  const { data } = await supabase.from("expeditions").select("slug");
+  return (data || []).map((e) => ({ slug: e.slug as string }));
+}
+
 export async function generateMetadata({
   params,
 }: {
