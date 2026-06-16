@@ -18,6 +18,9 @@ dist-ssr
 next-env.d.ts
 .vercel
 
+# Supabase backup / migration artifacts (148 MB d'images — ne pas committer)
+/supabase-backup/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

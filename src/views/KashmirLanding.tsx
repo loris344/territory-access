@@ -23,7 +23,7 @@ const EXPEDITION = {
   duration: 7,
   intensity: "Hard",
   heroImage:
-    "https://udqjkewpugdmjyrzqmbk.supabase.co/storage/v1/object/public/expedition-images/a0000001-0000-0000-0000-000000000010.webp?t=1771291609044",
+    "https://hyeqshzcujnupxxeocfy.supabase.co/storage/v1/object/public/expedition-images/a0000001-0000-0000-0000-000000000010.webp?t=1771291609044",
   shortDescription:
     "7-day high-security border region expedition along one of the most heavily guarded frontiers in the world.",
   expeditionId: "a0000001-0000-0000-0000-000000000010",

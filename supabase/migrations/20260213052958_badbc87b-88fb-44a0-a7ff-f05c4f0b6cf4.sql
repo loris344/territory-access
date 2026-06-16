@@ -12,7 +12,7 @@ SET search_path = public
 AS $$
 BEGIN
   PERFORM net.http_post(
-    url := 'https://udqjkewpugdmjyrzqmbk.supabase.co/functions/v1/notify-application'::text,
+    url := 'https://hyeqshzcujnupxxeocfy.supabase.co/functions/v1/notify-application'::text,
     body := json_build_object('application_id', NEW.id)::jsonb,
     headers := '{"Content-Type": "application/json"}'::jsonb
   );
