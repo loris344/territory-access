@@ -12,7 +12,7 @@ const DEFAULT_TITLE =
   "Ligne Rouge Tours — Expeditions in Territories Others Avoid";
 const DEFAULT_DESCRIPTION =
   "We organize expeditions in territories others avoid. For those who refuse to observe the world from a distance.";
-const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image-v2.jpg`;
 
 function buildHtml({
   title,

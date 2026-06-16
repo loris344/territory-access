@@ -6,7 +6,7 @@ export const DEFAULT_TITLE =
 export const DEFAULT_DESCRIPTION =
   "We organize expeditions in territories others avoid. For those who refuse to observe the world from a distance.";
 export const SITE_URL = "https://lignerougetours.com";
-export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image.jpg`;
+export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image-v2.jpg`;
 
 interface BuildMetadataOptions {
   title?: string;
