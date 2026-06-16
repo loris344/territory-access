@@ -21,12 +21,9 @@ const TrailerSection = () => {
         >
           <div className="h-px w-12 bg-accent mb-10" />
 
-          <h2 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-6">
+          <h2 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-10">
             See It For Yourself
           </h2>
-          <p className="body-text text-muted-foreground text-base sm:text-lg max-w-3xl mb-10">
-            A glimpse into the territories others avoid.
-          </p>
 
           <div
             className="relative w-full overflow-hidden border border-border bg-black"
