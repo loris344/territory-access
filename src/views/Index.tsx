@@ -2,6 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
+import TrailerSection from "@/components/TrailerSection";
 import PhilosophySection from "@/components/PhilosophySection";
 import WorldMap from "@/components/WorldMap";
 import ExpeditionsGrid from "@/components/ExpeditionsGrid";
@@ -16,6 +17,7 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
+      <TrailerSection />
       <PhilosophySection />
       <WorldMap />
       <ExpeditionsGrid />
