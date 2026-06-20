@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 const heroBg = "/assets/hero-bg.jpg";
@@ -90,16 +89,10 @@ const HeroSection = () => {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <a
               href="#expeditions"
-              className="font-heading text-[10px] sm:text-xs tracking-[0.15em] uppercase px-6 sm:px-8 py-3 sm:py-4 border border-foreground text-foreground hover:bg-foreground hover:text-background transition-all duration-300 w-full sm:w-auto text-center"
+              className="font-heading text-[10px] sm:text-xs tracking-[0.15em] uppercase px-6 sm:px-8 py-3 sm:py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 w-full sm:w-auto text-center"
             >
               View current expeditions
             </a>
-            <Link
-              href="/apply"
-              className="font-heading text-[10px] sm:text-xs tracking-[0.15em] uppercase px-6 sm:px-8 py-3 sm:py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 w-full sm:w-auto text-center"
-            >
-              Apply
-            </Link>
           </div>
         </motion.div>
       </div>

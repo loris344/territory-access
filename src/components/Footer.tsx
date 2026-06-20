@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { CommunityButton } from "./CommunityButton";
 
 const Footer = () => {
   return (
@@ -71,15 +72,18 @@ const Footer = () => {
           </div>
         </div>
         <div className="mt-16 pt-10 border-t border-border text-center">
-          <p className="font-heading text-xs sm:text-sm tracking-[0.15em] uppercase text-muted-foreground mb-4">
+          <p className="font-heading text-xs sm:text-sm tracking-[0.15em] uppercase text-muted-foreground mb-6">
             Ready to cross the line?
           </p>
-          <Link
-            href="/apply"
-            className="inline-block font-heading text-[10px] sm:text-xs tracking-[0.15em] uppercase px-8 py-3 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300"
-          >
-            Apply now
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
+            <Link
+              href="/apply"
+              className="inline-block font-heading text-[10px] sm:text-xs tracking-[0.15em] uppercase px-8 py-3 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300"
+            >
+              Apply now
+            </Link>
+            <CommunityButton />
+          </div>
           <div className="h-px w-12 bg-accent mx-auto mt-10" />
         </div>
       </div>
