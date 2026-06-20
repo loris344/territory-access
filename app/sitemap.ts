@@ -1,13 +1,11 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/seo";
-import { getPublishedPages, normalizeUrl } from "@/lib/magazine";
 import { supabase } from "@/integrations/supabase/client";
 import { expeditions as staticExpeditions } from "@/data/expeditions";
 
 /**
  * Generated sitemap (replaces the old hand-maintained public/sitemap.xml, which
- * went stale and used non-trailing-slash URLs). Lists only LIVE content; it grows
- * on its own each nightly build as scheduled magazine pages publish.
+ * went stale and used non-trailing-slash URLs). Lists only LIVE content.
  */
 export const dynamic = "force-static";
 
@@ -39,12 +37,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: today,
   }));
 
-  const magazineRoutes: MetadataRoute.Sitemap = getPublishedPages().map((p) => ({
-    url: `${SITE_URL}${normalizeUrl(p.url)}`,
-    changeFrequency: "monthly",
-    priority: p.priority === "P0" ? 0.8 : p.priority === "P1" ? 0.7 : 0.6,
-    lastModified: new Date(p.publishAt),
-  }));
-
-  return [...staticRoutes, ...expeditionRoutes, ...magazineRoutes];
+  return [...staticRoutes, ...expeditionRoutes];
 }
