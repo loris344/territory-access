@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { CommunityButton } from "./CommunityButton";
 const logoDark = "/assets/logo-dark.png";
 
 const Navbar = () => {
@@ -31,13 +32,14 @@ const Navbar = () => {
           </Link>
 
           {/* Desktop */}
-          <div className="hidden md:flex items-center gap-10">
+          <div className="hidden md:flex items-center gap-6">
             <button
               onClick={scrollToExpeditions}
               className="font-heading text-xs tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors"
             >
               Expeditions
             </button>
+            <CommunityButton />
           </div>
 
           {/* Mobile toggle */}
@@ -65,6 +67,7 @@ const Navbar = () => {
             >
               Expeditions
             </button>
+            <CommunityButton />
           </div>
         )}
       </div>

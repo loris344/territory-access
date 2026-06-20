@@ -4,6 +4,11 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Daily rebuild so scheduled magazine pages go live on their publishAt date.
+  # 05:00 UTC ≈ 07:00 Europe/Paris. The build re-runs the validator (prebuild) and
+  # only surfaces articles already written + dated — it never edits content.
+  schedule:
+    - cron: "0 5 * * *"
 
 permissions:
   contents: read
