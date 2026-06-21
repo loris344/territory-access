@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Instagram } from "lucide-react";
 import { CommunityButton } from "./CommunityButton";
 
 const Footer = () => {
@@ -83,6 +84,17 @@ const Footer = () => {
               Apply now
             </Link>
             <CommunityButton />
+          </div>
+          <div className="flex justify-center mt-8">
+            <a
+              href="https://www.instagram.com/lignerougetours/"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Follow Ligne Rouge Tours on Instagram"
+              className="text-muted-foreground/60 hover:text-foreground transition-colors"
+            >
+              <Instagram size={18} />
+            </a>
           </div>
           <div className="h-px w-12 bg-accent mx-auto mt-10" />
         </div>
