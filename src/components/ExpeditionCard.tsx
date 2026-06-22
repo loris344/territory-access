@@ -68,25 +68,14 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
       className="group block border border-border bg-card hover:border-accent/50 transition-all duration-300"
     >
       {/* Hero image */}
-      <div className="relative aspect-[16/9] bg-secondary border-b border-border overflow-hidden">
+      <div className="aspect-[16/9] bg-secondary border-b border-border overflow-hidden">
         {expedition.hero_image_url ? (
-          <>
-            {/* Blurred copy fills the frame so non-16:9 images have no dead bars. */}
-            <img
-              src={supabaseImage(expedition.hero_image_url, 400, 40)}
-              alt=""
-              aria-hidden="true"
-              loading="lazy"
-              className="absolute inset-0 w-full h-full object-cover scale-110 blur-2xl opacity-70"
-            />
-            {/* The full image, uncropped, centered on top. */}
-            <img
-              src={supabaseImage(expedition.hero_image_url, 800, 70)}
-              alt={expedition.name}
-              loading="lazy"
-              className="relative w-full h-full object-contain"
-            />
-          </>
+          <img
+            src={supabaseImage(expedition.hero_image_url, 800, 62)}
+            alt={expedition.name}
+            loading="lazy"
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
             <span className="font-heading text-[10px] tracking-[0.2em] uppercase text-muted-foreground">
