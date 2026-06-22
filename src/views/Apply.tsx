@@ -297,7 +297,7 @@ const Apply = () => {
                   <option value="">Select an expedition</option>
                   {expeditionOptions.map((e) => (
                     <option key={e.id} value={e.id}>
-                      {e.name} - ${e.price.toLocaleString("en-US")}
+                      {e.name} - ${e.price.toLocaleString("en-US")} pp
                     </option>
                   ))}
                 </select>

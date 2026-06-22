@@ -55,16 +55,20 @@ $$;
 
 CREATE OR REPLACE FUNCTION public.tg_notify_waitlist()
 RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path TO 'public' AS $$
-DECLARE exp_name text;
+DECLARE exp_name text; price numeric; people int; total numeric;
 BEGIN
-  SELECT name INTO exp_name FROM public.expeditions WHERE id = NEW.expedition_id;
+  SELECT name, price_usd INTO exp_name, price FROM public.expeditions WHERE id = NEW.expedition_id;
+  people := coalesce(NEW.number_of_people, 1);
+  total  := coalesce(price, 0) * people;
   PERFORM public.notify_telegram(
     '🕓 New waitlist entry' || chr(10) ||
-    'Name: '        || coalesce(NEW.first_name, '') || ' ' || coalesce(NEW.last_name, '') || chr(10) ||
-    'Email: '       || coalesce(NEW.email, '-') || chr(10) ||
-    'Expedition: '  || coalesce(exp_name, '-') || chr(10) ||
-    'People: '      || coalesce(NEW.number_of_people::text, '-') || chr(10) ||
-    'Nationality: ' || coalesce(NEW.nationality, '-')
+    'Name: '          || coalesce(NEW.first_name, '') || ' ' || coalesce(NEW.last_name, '') || chr(10) ||
+    'Email: '         || coalesce(NEW.email, '-') || chr(10) ||
+    'Expedition: '    || coalesce(exp_name, '-') || chr(10) ||
+    'People: '        || people || chr(10) ||
+    'Price/person: $' || to_char(coalesce(price, 0), 'FM999,999,990') || chr(10) ||
+    'Total: $'        || to_char(total, 'FM999,999,990') || chr(10) ||
+    'Nationality: '   || coalesce(NEW.nationality, '-')
   );
   RETURN NEW;
 EXCEPTION WHEN OTHERS THEN
@@ -75,16 +79,22 @@ $$;
 
 CREATE OR REPLACE FUNCTION public.tg_notify_application()
 RETURNS trigger LANGUAGE plpgsql SECURITY DEFINER SET search_path TO 'public' AS $$
-DECLARE exp_name text;
+DECLARE exp_name text; price numeric; people int; total numeric;
 BEGIN
-  SELECT name INTO exp_name FROM public.expeditions WHERE id = NEW.expedition_id;
+  SELECT name, price_usd INTO exp_name, price FROM public.expeditions WHERE id = NEW.expedition_id;
+  -- Apply.tsx stores the participant count as a "[N participant(s)]" prefix.
+  people := coalesce(nullif(substring(coalesce(NEW.physical_condition, '') from '^\[(\d+)'), '')::int, 1);
+  total  := coalesce(price, 0) * people;
   PERFORM public.notify_telegram(
     '🚩 New application' || chr(10) ||
-    'Name: '        || coalesce(NEW.first_name, '') || ' ' || coalesce(NEW.last_name, '') || chr(10) ||
-    'Email: '       || coalesce(NEW.email, '-') || chr(10) ||
-    'Phone: '       || coalesce(NEW.phone, '-') || chr(10) ||
-    'Expedition: '  || coalesce(exp_name, '-') || chr(10) ||
-    'Nationality: ' || coalesce(NEW.nationality, '-')
+    'Name: '          || coalesce(NEW.first_name, '') || ' ' || coalesce(NEW.last_name, '') || chr(10) ||
+    'Email: '         || coalesce(NEW.email, '-') || chr(10) ||
+    'Phone: '         || coalesce(NEW.phone, '-') || chr(10) ||
+    'Expedition: '    || coalesce(exp_name, '-') || chr(10) ||
+    'People: '        || people || chr(10) ||
+    'Price/person: $' || to_char(coalesce(price, 0), 'FM999,999,990') || chr(10) ||
+    'Total: $'        || to_char(total, 'FM999,999,990') || chr(10) ||
+    'Nationality: '   || coalesce(NEW.nationality, '-')
   );
   RETURN NEW;
 EXCEPTION WHEN OTHERS THEN
