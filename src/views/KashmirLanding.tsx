@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Shield, Mountain, Users, Clock, Check, MapPin, Quote } from "lucide-react";
 import WaitlistModal from "@/components/WaitlistModal";
 import { supabase } from "@/integrations/supabase/client";
-const logoDark = "/assets/logo-dark.png";
+const logoDark = "/assets/logo-dark.webp";
 const gaetanImg = "/assets/gaetan.webp";
 const trustGroupe = "/assets/trust-groupe.webp";
 const trustGroupe2 = "/assets/trust-groupe2.webp";

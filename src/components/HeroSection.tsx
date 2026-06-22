@@ -43,7 +43,7 @@ const HeroSection = () => {
     <section className="relative min-h-[100svh] flex items-center justify-center overflow-hidden">
       {/* Background image with dark overlay */}
       <div className="absolute inset-0">
-        <AnimatePresence mode="popLayout">
+        <AnimatePresence mode="popLayout" initial={false}>
           <motion.img
             key={currentIndex}
             src={supabaseImage(heroImages[currentIndex], 1920, 60)}
@@ -60,8 +60,10 @@ const HeroSection = () => {
       </div>
 
       <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        {/* initial={false}: render the headline at rest immediately (no JS-gated
+            fade-in) so it is the LCP and paints without waiting for hydration. */}
         <motion.div
-          initial={{ opacity: 0, y: 40 }}
+          initial={false}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: "easeOut" }}
         >
