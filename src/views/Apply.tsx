@@ -73,19 +73,35 @@ const Apply = () => {
         .neq("status", "closed");
 
       if (data && data.length > 0) {
-        const options = data.map((e) => ({
-          id: e.id,
-          name: e.name,
-          slug: e.slug,
-          price: e.price_usd,
-          status: e.status,
-        }));
+        // Hide any expedition whose every date is cancelled (no bookable date left).
+        // Expeditions with no dates at all are kept (status-driven, as before).
+        const { data: datesData } = await supabase
+          .from("expedition_dates")
+          .select("expedition_id, status");
+        const withDates = new Set<string>();
+        const withBookableDate = new Set<string>();
+        (datesData ?? []).forEach((d) => {
+          withDates.add(d.expedition_id);
+          if (d.status !== "cancelled") withBookableDate.add(d.expedition_id);
+        });
+        const hasBookableDates = (id: string) => !withDates.has(id) || withBookableDate.has(id);
+
+        const options = data
+          .filter((e) => hasBookableDates(e.id))
+          .map((e) => ({
+            id: e.id,
+            name: e.name,
+            slug: e.slug,
+            price: e.price_usd,
+            status: e.status,
+          }));
         setExpeditionOptions(options);
         const match = options.find((o) => o.slug === preselectedSlug);
         if (match) setForm((f) => ({ ...f, expedition_id: match.id }));
       } else {
         const options = localExpeditions
           .filter((e) => e.status !== "closed")
+          .filter((e) => !e.dates || e.dates.length === 0 || e.dates.some((d) => d.status !== "cancelled"))
           .map((e) => ({
             id: e.id,
             name: e.name,
