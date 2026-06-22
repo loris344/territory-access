@@ -6,6 +6,22 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+// Shared footer for emails sent to applicants: a real inbox to reach
+// (we also set reply_to) plus an Instagram link with a self-hosted logo.
+const footerHtml = `
+  <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid #e5e5e5; text-align: center;">
+    <p style="font-size: 13px; line-height: 1.7; color: #555; margin: 0 0 16px 0;">
+      Any questions? Just reply to this email, or reach us at<br/>
+      <a href="mailto:contact@lignerougetours.com" style="color: #1a1a1a; font-weight: 600; text-decoration: none;">contact@lignerougetours.com</a>
+    </p>
+    <a href="https://www.instagram.com/lignerougetours/" target="_blank" style="display: inline-block; text-decoration: none;">
+      <img src="https://lignerougetours.com/instagram.png" width="24" height="24" alt="Instagram" style="vertical-align: middle; border: 0;" />
+      <span style="font-size: 13px; color: #555; vertical-align: middle; margin-left: 8px;">@lignerougetours</span>
+    </a>
+    <p style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #aaa; margin: 20px 0 0 0;">lignerougetours.com</p>
+  </div>
+`;
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -90,6 +106,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "Ligne Rouge Tours <noreply@lignerougetours.com>",
         to: ["contact@lignerougetours.com"],
+        reply_to: app.email,
         subject: `New Application - ${app.first_name} ${app.last_name} - ${expeditionName}`,
         html: emailHtml,
       }),
@@ -121,9 +138,7 @@ Deno.serve(async (req) => {
         <p style="font-size: 14px; line-height: 1.8; margin: 0;">
           The Ligne Rouge Tours Team
         </p>
-        <div style="margin-top: 32px; padding-top: 16px; border-top: 1px solid #e5e5e5; text-align: center;">
-          <p style="font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase; color: #aaa;">lignerougetours.com</p>
-        </div>
+        ${footerHtml}
       </div>
     `;
 
@@ -136,6 +151,7 @@ Deno.serve(async (req) => {
       body: JSON.stringify({
         from: "Ligne Rouge Tours <noreply@lignerougetours.com>",
         to: [app.email],
+        reply_to: "contact@lignerougetours.com",
         subject: `Application Received - ${expeditionName}`,
         html: confirmHtml,
       }),
