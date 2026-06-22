@@ -10,6 +10,7 @@ import { useExpeditionBySlug } from "@/hooks/use-expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WaitlistModal from "@/components/WaitlistModal";
+import NotifyDestinationForm from "@/components/NotifyDestinationForm";
 
 const statusStyles: Record<string, string> = {
   open: "bg-foreground/10 text-foreground border border-foreground/20",
@@ -318,6 +319,9 @@ const ExpeditionDetail = () => {
                 <p className="body-text text-sm text-muted-foreground mt-1">
                   {expedition.cancellation_reason}
                 </p>
+              )}
+              {expedition.status === "cancelled" && (
+                <NotifyDestinationForm destination={expedition.name} />
               )}
             </div>
           </div>

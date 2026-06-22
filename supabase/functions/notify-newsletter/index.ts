@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
       throw new Error("RESEND_API_KEY is not configured");
     }
 
-    const { subscriber_id } = await req.json();
+    const { subscriber_id, destination } = await req.json();
     if (!subscriber_id) {
       throw new Error("subscriber_id is required");
     }
@@ -52,7 +52,24 @@ Deno.serve(async (req) => {
       throw new Error("Subscriber not found");
     }
 
-    // Welcome email to the subscriber
+    // Body differs for a destination-interest signup (someone who asked to be
+    // alerted if a cancelled expedition returns) vs a plain newsletter signup.
+    const bodyHtml = destination
+      ? `
+        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
+          Thank you for your interest in <strong>${destination}</strong>.
+        </p>
+        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
+          This expedition isn't running at the moment, but we've noted you down — we'll email you the moment it's back on the calendar. You're also on our list for new expeditions and dates.
+        </p>`
+      : `
+        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
+          Welcome aboard.
+        </p>
+        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
+          You're now on our list. We'll keep you posted on upcoming expeditions, newly opened dates, and stories from the field — no noise, just the essentials.
+        </p>`;
+
     const welcomeHtml = `
       <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
         <div style="border-bottom: 1px solid #e5e5e5; padding-bottom: 20px; margin-bottom: 24px;">
@@ -60,12 +77,7 @@ Deno.serve(async (req) => {
             Ligne Rouge Tours
           </h1>
         </div>
-        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
-          Welcome aboard.
-        </p>
-        <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
-          You're now on our list. We'll keep you posted on upcoming expeditions, newly opened dates, and stories from the field — no noise, just the essentials.
-        </p>
+        ${bodyHtml}
         <p style="font-size: 14px; line-height: 1.8; margin: 0;">
           The Ligne Rouge Tours Team
         </p>
@@ -83,7 +95,9 @@ Deno.serve(async (req) => {
         from: "Ligne Rouge Tours <noreply@lignerougetours.com>",
         to: [sub.email],
         reply_to: "contact@lignerougetours.com",
-        subject: "Welcome to Ligne Rouge Tours",
+        subject: destination
+          ? `We'll keep you posted — ${destination}`
+          : "Welcome to Ligne Rouge Tours",
         html: welcomeHtml,
       }),
     });
