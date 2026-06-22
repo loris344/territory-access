@@ -10,7 +10,6 @@ import { useExpeditionBySlug } from "@/hooks/use-expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WaitlistModal from "@/components/WaitlistModal";
-import { supabaseImage } from "@/lib/image";
 
 const statusStyles: Record<string, string> = {
   open: "bg-foreground/10 text-foreground border border-foreground/20",
@@ -146,7 +145,7 @@ const ExpeditionDetail = () => {
             <AnimatePresence mode="popLayout">
               <motion.img
                 key={currentImg}
-                src={supabaseImage(allImages[currentImg], 1600, 65)}
+                src={allImages[currentImg]}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
                 initial={{ opacity: 0 }}

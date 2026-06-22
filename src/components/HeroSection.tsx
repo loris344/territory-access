@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-import { supabaseImage } from "@/lib/image";
 const heroBg = "/assets/hero-bg.webp";
 
 const HeroSection = () => {
@@ -46,7 +45,7 @@ const HeroSection = () => {
         <AnimatePresence mode="popLayout" initial={false}>
           <motion.img
             key={currentIndex}
-            src={supabaseImage(heroImages[currentIndex], 1920, 60)}
+            src={heroImages[currentIndex]}
             alt=""
             fetchPriority="high"
             className="absolute inset-0 w-full h-full object-cover object-center"
