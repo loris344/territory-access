@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { CommunityButton } from "./CommunityButton";
 const logoDark = "/assets/logo-dark.png";
 
 const Navbar = () => {
@@ -39,7 +38,6 @@ const Navbar = () => {
             >
               Expeditions
             </button>
-            <CommunityButton />
           </div>
 
           {/* Mobile toggle */}
@@ -67,7 +65,6 @@ const Navbar = () => {
             >
               Expeditions
             </button>
-            <CommunityButton />
           </div>
         )}
       </div>

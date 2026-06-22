@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Instagram } from "lucide-react";
 import { CommunityButton } from "./CommunityButton";
+import { NewsletterForm } from "./NewsletterForm";
 
 const Footer = () => {
   return (
@@ -85,6 +86,10 @@ const Footer = () => {
             </Link>
             <CommunityButton />
           </div>
+          <p className="font-heading text-[10px] sm:text-xs tracking-[0.2em] uppercase text-muted-foreground/70 mt-10 mb-4">
+            Or join the newsletter
+          </p>
+          <NewsletterForm source="footer" />
           <div className="flex justify-center mt-8">
             <a
               href="https://www.instagram.com/lignerougetours/"
