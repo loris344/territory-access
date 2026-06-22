@@ -27,7 +27,7 @@ const ExpeditionsGrid = () => {
 
   if (isLoading) {
     return (
-      <section id="expeditions" className="py-16 sm:py-24 lg:py-32 bg-secondary">
+      <section id="expeditions" className="scroll-mt-20 py-16 sm:py-24 lg:py-32 bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="font-heading text-sm tracking-wider uppercase text-muted-foreground text-center">Loading expeditions...</p>
         </div>
@@ -36,7 +36,7 @@ const ExpeditionsGrid = () => {
   }
 
   return (
-    <section id="expeditions" className="py-16 sm:py-24 lg:py-32 bg-secondary">
+    <section id="expeditions" className="scroll-mt-20 py-16 sm:py-24 lg:py-32 bg-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
