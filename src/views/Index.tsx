@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import TrailerSection from "@/components/TrailerSection";
@@ -14,6 +15,40 @@ import ContactBubbles from "@/components/ContactBubbles";
 import Footer from "@/components/Footer";
 
 const Index = () => {
+  // Deep-links like /#expeditions: the browser scrolls to the anchor before the
+  // hero image / world map / expeditions data above it finish loading, so the
+  // target shifts down and we land too high. Re-assert the scroll for a short
+  // window while layout settles, but bail the instant the user takes over.
+  useEffect(() => {
+    const id = window.location.hash.slice(1);
+    if (!id) return;
+
+    let done = false;
+    const stop = () => {
+      done = true;
+      window.removeEventListener("wheel", stop);
+      window.removeEventListener("touchstart", stop);
+      window.removeEventListener("keydown", stop);
+    };
+    window.addEventListener("wheel", stop, { passive: true });
+    window.addEventListener("touchstart", stop, { passive: true });
+    window.addEventListener("keydown", stop);
+
+    const start = Date.now();
+    const tick = () => {
+      if (done) return;
+      document.getElementById(id)?.scrollIntoView({ behavior: "auto", block: "start" });
+      if (Date.now() - start < 1500) {
+        requestAnimationFrame(tick);
+      } else {
+        stop();
+      }
+    };
+    requestAnimationFrame(tick);
+
+    return stop;
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
