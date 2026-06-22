@@ -34,10 +34,17 @@ const Index = () => {
     window.addEventListener("touchstart", stop, { passive: true });
     window.addEventListener("keydown", stop);
 
+    // Land a bit lower than the section's very top. Tweak this single value:
+    // larger = lower, smaller = higher.
+    const EXTRA_OFFSET = 120;
     const start = Date.now();
     const tick = () => {
       if (done) return;
-      document.getElementById(id)?.scrollIntoView({ behavior: "auto", block: "start" });
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "auto", block: "start" });
+        if (EXTRA_OFFSET) window.scrollBy(0, EXTRA_OFFSET);
+      }
       if (Date.now() - start < 1500) {
         requestAnimationFrame(tick);
       } else {
