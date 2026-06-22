@@ -76,6 +76,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Preload the LCP hero image so it paints as early as possible. */}
+        <link rel="preload" as="image" href="/assets/hero-bg.webp" fetchPriority="high" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}

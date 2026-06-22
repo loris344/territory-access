@@ -72,6 +72,7 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
           <img
             src={expedition.hero_image_url}
             alt={expedition.name}
+            loading="lazy"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (

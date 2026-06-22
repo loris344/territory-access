@@ -7,12 +7,12 @@ import { Shield, Mountain, Users, Clock, Check, MapPin, Quote } from "lucide-rea
 import WaitlistModal from "@/components/WaitlistModal";
 import { supabase } from "@/integrations/supabase/client";
 const logoDark = "/assets/logo-dark.png";
-const gaetanImg = "/assets/gaetan.png";
-const trustGroupe = "/assets/trust-groupe.jpg";
-const trustGroupe2 = "/assets/trust-groupe2.jpg";
-const trustTony = "/assets/trust-tony.jpg";
-const trustMary = "/assets/trust-mary.jpg";
-const trustBrittany = "/assets/trust-brittany.jpg";
+const gaetanImg = "/assets/gaetan.webp";
+const trustGroupe = "/assets/trust-groupe.webp";
+const trustGroupe2 = "/assets/trust-groupe2.webp";
+const trustTony = "/assets/trust-tony.webp";
+const trustMary = "/assets/trust-mary.webp";
+const trustBrittany = "/assets/trust-brittany.webp";
 
 const EXPEDITION = {
   name: "Indian Kashmir - Line of Control",

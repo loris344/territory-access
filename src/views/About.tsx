@@ -5,13 +5,13 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ContactBubbles from "@/components/ContactBubbles";
-const founderImg = "/assets/founder.png";
-const gaetanImg = "/assets/gaetan.png";
+const founderImg = "/assets/founder.webp";
+const gaetanImg = "/assets/gaetan.webp";
 const aymericImg = "/assets/aymeric.jpg";
-const rayaneImg = "/assets/rayane.jpg";
-const rymImg = "/assets/rym.jpg";
-const leaImg = "/assets/lea.jpg";
-const vitalyImg = "/assets/vitaly.jpg";
+const rayaneImg = "/assets/rayane.webp";
+const rymImg = "/assets/rym.webp";
+const leaImg = "/assets/lea.webp";
+const vitalyImg = "/assets/vitaly.webp";
 
 const faqItems = [
   {
@@ -140,6 +140,7 @@ const About = () => {
                   <img
                     src={member.image}
                     alt={member.name}
+                    loading="lazy"
                     className="w-full h-full object-cover brightness-90 contrast-105 grayscale-[15%]"
                   />
                 </div>

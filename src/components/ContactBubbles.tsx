@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-const founderImg = "/assets/founder.png";
-const leaImg = "/assets/lea.jpg";
-const rymImg = "/assets/rym.jpg";
+const founderImg = "/assets/founder.webp";
+const leaImg = "/assets/lea.webp";
+const rymImg = "/assets/rym.webp";
 
 const people = [
   { img: founderImg, name: "Loris", floatDelay: 0 },
@@ -57,6 +57,7 @@ const ContactBubbles = () => {
                     <img
                       src={person.img}
                       alt={person.name}
+                      loading="lazy"
                       className="w-full h-full object-cover brightness-90 contrast-105 grayscale-[15%]"
                     />
                   </div>

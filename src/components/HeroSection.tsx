@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
-const heroBg = "/assets/hero-bg.jpg";
+const heroBg = "/assets/hero-bg.webp";
 
 const HeroSection = () => {
   const [heroImages, setHeroImages] = useState<string[]>([heroBg]);
@@ -47,6 +47,7 @@ const HeroSection = () => {
             key={currentIndex}
             src={heroImages[currentIndex]}
             alt=""
+            fetchPriority="high"
             className="absolute inset-0 w-full h-full object-cover object-center"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}

@@ -4,11 +4,11 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
 
-const lucasImg = "/assets/lucas-iran.png";
-const isaacImg = "/assets/isaac-transnistria.png";
-const arnaudImg = "/assets/arnaud-somaliland.png";
-const nolanImg = "/assets/nolan-mongolia.jpg";
-const annaImg = "/assets/anna-afghanistan.jpg";
+const lucasImg = "/assets/lucas-iran.webp";
+const isaacImg = "/assets/isaac-transnistria.webp";
+const arnaudImg = "/assets/arnaud-somaliland.webp";
+const nolanImg = "/assets/nolan-mongolia.webp";
+const annaImg = "/assets/anna-afghanistan.webp";
 
 const testimonials = [
   {
@@ -123,6 +123,7 @@ const TestimonialsSection = () => {
                 <img
                   src={t.image}
                   alt={t.name}
+                  loading="lazy"
                   className="w-14 h-14 rounded-full object-cover brightness-95 contrast-105 grayscale-[10%]"
                 />
                 <div>
