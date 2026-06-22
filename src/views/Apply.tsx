@@ -87,7 +87,7 @@ const Apply = () => {
         const hasBookableDates = (id: string) => !withDates.has(id) || withBookableDate.has(id);
 
         const options = data
-          .filter((e) => hasBookableDates(e.id))
+          .filter((e) => e.status !== "cancelled" && hasBookableDates(e.id))
           .map((e) => ({
             id: e.id,
             name: e.name,
@@ -100,7 +100,7 @@ const Apply = () => {
         if (match) setForm((f) => ({ ...f, expedition_id: match.id }));
       } else {
         const options = localExpeditions
-          .filter((e) => e.status !== "closed")
+          .filter((e) => e.status !== "closed" && e.status !== "cancelled")
           .filter((e) => !e.dates || e.dates.length === 0 || e.dates.some((d) => d.status !== "cancelled"))
           .map((e) => ({
             id: e.id,
