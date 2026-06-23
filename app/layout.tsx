@@ -95,6 +95,15 @@ a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,
 twq('config','rd4r6');`,
           }}
         />
+        {/* Deep-link anchors (e.g. /#expeditions): scroll BEFORE React hydrates,
+            so the page lands on the section instead of flashing the top first.
+            Re-pins for a short window while above-fold content settles, and
+            bails the instant the user scrolls. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){function run(){var h=location.hash;if(!h||h.length<2)return;var id=h.slice(1);var done=false;function stop(){done=true;removeEventListener('wheel',stop);removeEventListener('touchstart',stop);removeEventListener('keydown',stop);}addEventListener('wheel',stop,{passive:true});addEventListener('touchstart',stop,{passive:true});addEventListener('keydown',stop);var extra=id==='expeditions'?120:0;var start=Date.now();function tick(){if(done)return;var el=document.getElementById(id);if(el){el.scrollIntoView({block:'start'});if(extra)scrollBy(0,extra);}if(Date.now()-start<1500)requestAnimationFrame(tick);else stop();}requestAnimationFrame(tick);}if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',run);else run();})();`,
+          }}
+        />
       </head>
       <body>
         <Providers>
