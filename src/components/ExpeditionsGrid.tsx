@@ -66,7 +66,7 @@ const ExpeditionsGrid = () => {
                 </h3>
                 <div className="h-px w-8 bg-accent/40 mb-5" />
                 <Carousel
-                  opts={{ align: "start", loop: false }}
+                  opts={{ align: "start", loop: false, dragFree: true, containScroll: "trimSnaps" }}
                   className="w-full"
                 >
                   <CarouselContent className="-ml-3">
