@@ -10,6 +10,7 @@ import { useExpeditionBySlug } from "@/hooks/use-expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WaitlistModal from "@/components/WaitlistModal";
+import TourInfoRequestForm from "@/components/TourInfoRequestForm";
 import { optimizedImageUrl } from "@/lib/utils";
 import NotifyDestinationForm from "@/components/NotifyDestinationForm";
 
@@ -422,6 +423,13 @@ const ExpeditionDetail = () => {
               </ul>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Want to know more — softer lead than applying */}
+      <section className="pb-16 lg:pb-24">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          <TourInfoRequestForm expeditionId={expedition.id} expeditionName={expedition.name} />
         </div>
       </section>
 

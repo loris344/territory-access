@@ -10,7 +10,32 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.1"
+    PostgrestVersion: "14.5"
+  }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
   }
   public: {
     Tables: {
@@ -349,6 +374,71 @@ export type Database = {
         }
         Relationships: []
       }
+      newsletter_subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          interested_destination: string | null
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          interested_destination?: string | null
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          interested_destination?: string | null
+          source?: string | null
+        }
+        Relationships: []
+      }
+      tour_info_requests: {
+        Row: {
+          created_at: string
+          email: string
+          expedition_id: string | null
+          first_name: string
+          id: string
+          last_name: string
+          message: string | null
+          phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          expedition_id?: string | null
+          first_name: string
+          id?: string
+          last_name: string
+          message?: string | null
+          phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          expedition_id?: string | null
+          first_name?: string
+          id?: string
+          last_name?: string
+          message?: string | null
+          phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tour_info_requests_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_roles: {
         Row: {
           id: string
@@ -423,12 +513,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      close_past_expedition_dates: { Args: never; Returns: undefined }
+      expedition_status_from_dates: {
+        Args: { exp_id: string }
+        Returns: string
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
         Returns: boolean
+      }
+      notify_telegram: { Args: { message: string }; Returns: undefined }
+      register_destination_interest: {
+        Args: { p_destination: string; p_email: string }
+        Returns: undefined
       }
     }
     Enums: {
@@ -558,6 +658,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       app_role: ["admin", "user"],

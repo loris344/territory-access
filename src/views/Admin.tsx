@@ -8,6 +8,7 @@ import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLef
 import type { Tables } from "@/integrations/supabase/types";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 import WaitlistPanel from "@/components/admin/WaitlistPanel";
+import InfoRequestsPanel from "@/components/admin/InfoRequestsPanel";
 
 
 const DateRow = ({ dateRow, expId, onUpdate, onDelete, statusOptions }: {
@@ -475,6 +476,9 @@ const Admin = () => {
 
         {/* Waitlist */}
         <WaitlistPanel />
+
+        {/* Tour info requests */}
+        <InfoRequestsPanel />
 
         {/* Hero Images Manager */}
         <div className="mb-8 border border-border bg-card p-4 sm:p-6">
