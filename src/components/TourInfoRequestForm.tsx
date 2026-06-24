@@ -84,9 +84,9 @@ const TourInfoRequestForm = ({
   return (
     <div className="border border-border bg-card p-6 sm:p-8">
       <div className="h-px w-12 bg-accent mb-6" />
-      <h3 className="heading-display text-lg mb-2">Want to know more?</h3>
+      <h3 className="heading-display text-lg mb-2">Not ready to apply yet?</h3>
       <p className="body-text text-sm text-muted-foreground mb-6">
-        Not ready to apply yet? Ask us anything about {expeditionName} and we&apos;ll get back to you.
+        Ask us anything about {expeditionName} and we&apos;ll get back to you.
       </p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
