@@ -4,11 +4,6 @@ import { motion } from "framer-motion";
 import { useActiveExpeditions } from "@/hooks/use-expeditions";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ExpeditionCard from "./ExpeditionCard";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import { useMemo } from "react";
 
 const ExpeditionsGrid = () => {
@@ -65,21 +60,20 @@ const ExpeditionsGrid = () => {
                   {continent}
                 </h3>
                 <div className="h-px w-8 bg-accent/40 mb-5" />
-                <Carousel
-                  opts={{ align: "start", loop: false, dragFree: true, containScroll: "trimSnaps" }}
-                  className="w-full"
-                >
-                  <CarouselContent className="-ml-3">
-                    {exps.map((expedition) => (
-                      <CarouselItem
-                        key={expedition.slug}
-                        className="pl-3 basis-[85%]"
-                      >
-                        <ExpeditionCard expedition={expedition} hidePrice />
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                </Carousel>
+                {/* Native horizontal scroll = GPU/compositor-driven momentum,
+                    as fluid as a social-media card row (embla runs on the JS
+                    main thread and can't match it). scroll-snap keeps cards
+                    aligned. */}
+                <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [-webkit-overflow-scrolling:touch] [overscroll-behavior-x:contain] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
+                  {exps.map((expedition) => (
+                    <div
+                      key={expedition.slug}
+                      className="snap-start shrink-0 w-[85%]"
+                    >
+                      <ExpeditionCard expedition={expedition} hidePrice />
+                    </div>
+                  ))}
+                </div>
               </motion.div>
             ))}
           </div>
