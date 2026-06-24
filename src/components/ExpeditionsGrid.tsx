@@ -72,7 +72,7 @@ const ExpeditionsGrid = () => {
                   <CarouselContent className="-ml-3">
                     {exps.map((expedition) => (
                       <CarouselItem
-                        key={expedition.id}
+                        key={expedition.slug}
                         className="pl-3 basis-[85%]"
                       >
                         <ExpeditionCard expedition={expedition} hidePrice />
@@ -87,7 +87,7 @@ const ExpeditionsGrid = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {expeditions.map((expedition, i) => (
               <motion.div
-                key={expedition.id}
+                key={expedition.slug}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}

@@ -110,7 +110,7 @@ const WorldMap = () => {
 
               {expeditions.map((exp) => (
                 <Marker
-                  key={exp.id}
+                  key={exp.slug}
                   coordinates={exp.coordinates}
                   onMouseEnter={() => { if (!isTouch) setHovered(exp); }}
                   onMouseLeave={() => { if (!isTouch && selected?.id !== exp.id) setHovered(null); }}
