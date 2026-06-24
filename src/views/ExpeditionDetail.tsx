@@ -227,26 +227,37 @@ const ExpeditionDetail = () => {
                 <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-4">Departure Dates</p>
                 <div className="space-y-3">
               {(expedition.dates || []).map((d) => {
+                    const today = new Date().toISOString().split("T")[0];
+                    const isPast = d.end_date < today;
                     const remaining = d.capacity_max - d.spots_taken;
                     const dateLabel = `${new Date(d.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} – ${new Date(d.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}`;
-                    const isActionable = d.status === "open" || d.status === "limited";
-                    const isClosed = d.status === "closed";
+                    const isActionable = !isPast && (d.status === "open" || d.status === "limited");
+                    const isClosed = !isPast && d.status === "closed";
                     const isCancelledOrPostponed = d.status === "cancelled" || d.status === "postponed";
                     return (
                       <div key={d.id} className="flex items-center justify-between gap-4 py-3 border-b border-border/50 last:border-0">
                         <div className="flex items-center gap-4 flex-wrap">
-                          <span className="font-heading text-sm">{dateLabel}</span>
-                          <span className={`font-heading text-[10px] tracking-[0.15em] uppercase px-2 py-0.5 ${statusStyles[d.status]}`}>
-                            {statusLabels[d.status]}
-                          </span>
-                          {!isCancelledOrPostponed && (
-                            <span className={`font-heading text-xs ${remaining <= 3 && remaining > 0 ? "text-accent-red" : "text-muted-foreground"}`}>
-                              {remaining <= 0 ? "Full" : `${remaining} spot${remaining > 1 ? "s" : ""}`}
+                          <span className={`font-heading text-sm ${isPast ? "text-muted-foreground" : ""}`}>{dateLabel}</span>
+                          {isPast ? (
+                            <span className="font-heading text-[10px] tracking-[0.15em] uppercase px-2 py-0.5 bg-muted text-muted-foreground border border-border">
+                              Departed
                             </span>
+                          ) : (
+                            <>
+                              <span className={`font-heading text-[10px] tracking-[0.15em] uppercase px-2 py-0.5 ${statusStyles[d.status]}`}>
+                                {statusLabels[d.status]}
+                              </span>
+                              {!isCancelledOrPostponed && (
+                                <span className={`font-heading text-xs ${remaining <= 3 && remaining > 0 ? "text-accent-red" : "text-muted-foreground"}`}>
+                                  {remaining <= 0 ? "Full" : `${remaining} spot${remaining > 1 ? "s" : ""}`}
+                                </span>
+                              )}
+                            </>
                           )}
                         </div>
                         <div className="flex-shrink-0">
-                          {isActionable ? (
+                          {/* No Apply/Waitlist once the departure has passed */}
+                          {isPast ? null : isActionable ? (
                             <Link
                               href={`/apply?expedition=${expedition.slug}&date=${d.id}`}
                               className="font-heading text-[10px] tracking-[0.15em] uppercase px-4 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-all"
