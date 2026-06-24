@@ -44,6 +44,9 @@ const ExpeditionsGrid = () => {
           <h2 className="heading-display text-2xl sm:text-3xl md:text-4xl">
             Current Expeditions
           </h2>
+          <p className="body-text text-xs text-muted-foreground mt-3 tracking-wider uppercase">
+            By application only · Limited seats per expedition
+          </p>
         </motion.div>
 
         {isMobile ? (
