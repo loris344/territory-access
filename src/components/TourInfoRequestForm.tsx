@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { trackLead } from "@/lib/meta";
 import { toast } from "sonner";
 import TurnstileWidget from "@/components/TurnstileWidget";
 
@@ -67,6 +68,19 @@ const TourInfoRequestForm = ({
       toast.error("Failed to send your request");
       return;
     }
+
+    // Intermediate intent signal — fire ONLY now that the request is stored.
+    trackLead(
+      "info_request",
+      {
+        email: form.email.trim(),
+        phone: form.phone.trim() || undefined,
+        firstName: form.first_name.trim(),
+        lastName: form.last_name.trim(),
+      },
+      expeditionName,
+    );
+
     setSubmitted(true);
   };
 

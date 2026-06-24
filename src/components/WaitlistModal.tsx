@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import Link from "next/link";
 import { supabase } from "@/integrations/supabase/client";
+import { trackLead } from "@/lib/meta";
 import { toast } from "sonner";
 import TurnstileWidget from "@/components/TurnstileWidget";
 
@@ -86,6 +87,18 @@ const WaitlistModal = ({ open, onClose, expeditionId, expeditionName, expedition
       toast.error("Failed to join waitlist");
       return;
     }
+
+    // Lightest intent signal — fire ONLY now that the row is stored.
+    trackLead(
+      "waitlist",
+      {
+        email: form.email.trim(),
+        firstName: form.first_name.trim(),
+        lastName: form.last_name.trim(),
+      },
+      expeditionName,
+    );
+
     setSubmitted(true);
   };
 

@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { PostHogProvider } from "./PostHogProvider";
+import MetaPixelView from "./MetaPixelView";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -14,6 +15,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
     <PostHogProvider>
       <QueryClientProvider client={queryClient}>
         <TooltipProvider>
+          <MetaPixelView />
           <Toaster />
           <Sonner />
           {children}

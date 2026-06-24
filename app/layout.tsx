@@ -57,6 +57,10 @@ const organizationJsonLd = {
   },
 };
 
+// Public Meta Pixel id (safe to expose). Read at build time so the base code
+// only renders once it is configured in .env.
+const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+
 // WebSite node so magazine pages can reference it via isPartOf { @id: #website }.
 const websiteJsonLd = {
   "@context": "https://schema.org",
@@ -95,6 +99,22 @@ a=t.getElementsByTagName(n)[0],a.parentNode.insertBefore(u,a))}(window,document,
 twq('config','rd4r6');`,
           }}
         />
+        {/* Meta (Facebook) Pixel base code — fires the initial PageView. Lead
+            conversions are sent from trackLead() (browser Pixel + server CAPI,
+            deduplicated by event_id). Subsequent SPA route changes mirror a
+            PageView via MetaPixelView in providers. */}
+        {META_PIXEL_ID && (
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','${META_PIXEL_ID}');fbq('track','PageView');`,
+            }}
+          />
+        )}
         {/* Deep-link anchors (e.g. /#expeditions): scroll BEFORE React hydrates,
             so the page lands on the section instead of flashing the top first.
             Re-pins for a short window while above-fold content settles, and
@@ -106,6 +126,18 @@ twq('config','rd4r6');`,
         />
       </head>
       <body>
+        {META_PIXEL_ID && (
+          <noscript>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              height="1"
+              width="1"
+              style={{ display: "none" }}
+              alt=""
+              src={`https://www.facebook.com/tr?id=${META_PIXEL_ID}&ev=PageView&noscript=1`}
+            />
+          </noscript>
+        )}
         <Providers>
           <ScrollToTop />
           {children}

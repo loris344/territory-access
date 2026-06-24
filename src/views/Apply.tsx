@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
+import { trackLead } from "@/lib/meta";
 import { expeditions as localExpeditions } from "@/data/expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -211,6 +212,18 @@ const Apply = () => {
       setSubmitError("An error occurred. Please try again later.");
       return;
     }
+
+    // Strongest intent signal — fire ONLY now that the application is stored.
+    trackLead(
+      "application",
+      {
+        email: result.data.email,
+        phone: result.data.phone,
+        firstName: result.data.first_name,
+        lastName: result.data.last_name,
+      },
+      expeditionOptions.find((o) => o.id === result.data.expedition_id)?.name,
+    );
 
     setSubmitted(true);
   };
