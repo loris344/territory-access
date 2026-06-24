@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Mountain, Thermometer, Brain, Tent, Snowflake, TreePine, Compass, Sword, Users } from "lucide-react";
 import type { Expedition } from "@/data/expeditions";
+import { optimizedImageUrl } from "@/lib/utils";
 
 const statusStyles: Record<string, string> = {
   open: "bg-foreground/10 text-foreground border border-foreground/20",
@@ -70,9 +71,10 @@ const ExpeditionCard = ({ expedition, hidePrice = false }: { expedition: Expedit
       <div className="aspect-[16/9] bg-secondary border-b border-border overflow-hidden">
         {expedition.hero_image_url ? (
           <img
-            src={expedition.hero_image_url}
+            src={optimizedImageUrl(expedition.hero_image_url)}
             alt={expedition.name}
             loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
         ) : (

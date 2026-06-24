@@ -12,6 +12,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useActiveExpeditions } from "@/hooks/use-expeditions";
 import type { Expedition } from "@/data/expeditions";
+import { optimizedImageUrl } from "@/lib/utils";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
@@ -165,7 +166,7 @@ const WorldMap = () => {
                   <div className="border border-border bg-card w-full overflow-hidden">
                     <div className="aspect-[16/9] bg-secondary flex items-center justify-center">
                       {hovered.hero_image_url ? (
-                        <img src={hovered.hero_image_url} alt={hovered.name} loading="lazy" className="w-full h-full object-cover" />
+                        <img src={optimizedImageUrl(hovered.hero_image_url)} alt={hovered.name} loading="lazy" className="w-full h-full object-cover" />
                       ) : (
                         <span className="font-heading text-[9px] tracking-[0.2em] uppercase text-muted-foreground">Photo coming soon</span>
                       )}
@@ -216,7 +217,7 @@ const WorldMap = () => {
                   <div className="border-t border-border bg-card">
                     <div className="flex gap-3 p-4">
                       {hovered.hero_image_url && (
-                        <img src={hovered.hero_image_url} alt={hovered.name} loading="lazy" className="w-20 h-20 object-cover flex-shrink-0" />
+                        <img src={optimizedImageUrl(hovered.hero_image_url)} alt={hovered.name} loading="lazy" className="w-20 h-20 object-cover flex-shrink-0" />
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent-red mb-0.5">{hovered.continent && `${hovered.continent} · `}{hovered.country}</p>

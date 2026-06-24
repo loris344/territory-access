@@ -10,6 +10,7 @@ import { useExpeditionBySlug } from "@/hooks/use-expeditions";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WaitlistModal from "@/components/WaitlistModal";
+import { optimizedImageUrl } from "@/lib/utils";
 import NotifyDestinationForm from "@/components/NotifyDestinationForm";
 
 const statusStyles: Record<string, string> = {
@@ -146,7 +147,7 @@ const ExpeditionDetail = () => {
             <AnimatePresence mode="popLayout">
               <motion.img
                 key={currentImg}
-                src={allImages[currentImg]}
+                src={optimizedImageUrl(allImages[currentImg])}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
                 initial={{ opacity: 0 }}

@@ -85,7 +85,7 @@ const ExpeditionsGrid = () => {
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
+                transition={{ duration: 0.4, delay: Math.min(i, 5) * 0.06 }}
               >
                 <ExpeditionCard expedition={expedition} hidePrice />
               </motion.div>
