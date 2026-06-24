@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import {
   ComposableMap,
@@ -25,9 +25,22 @@ const WorldMap = () => {
   // never separate when zooming. Track the zoom and counter-scale the marker
   // radii by 1/zoom to keep them a constant on-screen size.
   const [zoom, setZoom] = useState(1);
+  // Touch-primary devices (phones/tablets): a tap fires synthetic mouseenter +
+  // mouseleave that flicker the popup open then shut, and thumbs need a bigger
+  // target. On these we ignore hover and drive everything from a tap toggle.
+  // `(pointer: coarse)` is true on mobile but false on a touch laptop w/ mouse.
+  const [isTouch, setIsTouch] = useState(false);
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
+      setIsTouch(true);
+    }
+  }, []);
 
   const handleMarkerClick = useCallback((exp: Expedition) => {
+    // Tap toggles: tapping the open marker again closes it.
     if (selected?.id === exp.id) {
+      setSelected(null);
+      setHovered(null);
       return;
     }
     setSelected(exp);
@@ -99,8 +112,8 @@ const WorldMap = () => {
                 <Marker
                   key={exp.id}
                   coordinates={exp.coordinates}
-                  onMouseEnter={() => setHovered(exp)}
-                  onMouseLeave={() => { if (selected?.id !== exp.id) setHovered(null); }}
+                  onMouseEnter={() => { if (!isTouch) setHovered(exp); }}
+                  onMouseLeave={() => { if (!isTouch && selected?.id !== exp.id) setHovered(null); }}
                   onClick={() => handleMarkerClick(exp)}
                 >
                   {/* Outer glow ring */}
@@ -121,9 +134,9 @@ const WorldMap = () => {
                     fill="hsl(0, 0%, 96%)"
                     className="cursor-pointer"
                   />
-                  {/* Invisible hit area */}
+                  {/* Invisible hit area — larger on touch for thumbs */}
                   <circle
-                    r={14 / zoom}
+                    r={(isTouch ? 20 : 14) / zoom}
                     fill="transparent"
                     className="cursor-pointer"
                   />
