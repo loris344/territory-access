@@ -21,6 +21,10 @@ const WorldMap = () => {
   const [hovered, setHovered] = useState<Expedition | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [fixedTooltipPos, setFixedTooltipPos] = useState({ x: 0, y: 0 });
+  // ZoomableGroup scales the whole group (markers included), so close points
+  // never separate when zooming. Track the zoom and counter-scale the marker
+  // radii by 1/zoom to keep them a constant on-screen size.
+  const [zoom, setZoom] = useState(1);
 
   const handleMarkerClick = useCallback((exp: Expedition) => {
     if (selected?.id === exp.id) {
@@ -70,6 +74,7 @@ const WorldMap = () => {
               center={[50, 42]}
               minZoom={1}
               maxZoom={8}
+              onMoveEnd={({ zoom: k }) => setZoom(k)}
             >
               <Geographies geography={geoUrl}>
                 {({ geographies }) =>
@@ -100,25 +105,25 @@ const WorldMap = () => {
                 >
                   {/* Outer glow ring */}
                   <circle
-                    r={12}
+                    r={12 / zoom}
                     fill="hsla(0, 0%, 96%, 0.06)"
                     className="cursor-pointer"
                   />
                   {/* Mid ring */}
                   <circle
-                    r={7}
+                    r={7 / zoom}
                     fill="hsla(0, 0%, 96%, 0.12)"
                     className="cursor-pointer"
                   />
                   {/* Core dot */}
                   <circle
-                    r={3.5}
+                    r={3.5 / zoom}
                     fill="hsl(0, 0%, 96%)"
                     className="cursor-pointer"
                   />
                   {/* Invisible hit area */}
                   <circle
-                    r={14}
+                    r={14 / zoom}
                     fill="transparent"
                     className="cursor-pointer"
                   />
