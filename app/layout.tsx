@@ -80,6 +80,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Meta (Facebook) domain verification — enables Aggregated Event
+            Measurement / event prioritisation for the Pixel + CAPI dataset. */}
+        <meta name="facebook-domain-verification" content="1a50ia1p7oskzkjdc4eg9agnh8479g" />
         {/* Preload the LCP hero image so it paints as early as possible. */}
         <link rel="preload" as="image" href="/assets/hero-bg.webp" fetchPriority="high" />
         <script
