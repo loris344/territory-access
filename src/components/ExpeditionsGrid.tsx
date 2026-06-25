@@ -6,6 +6,15 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import ExpeditionCard from "./ExpeditionCard";
 import { useMemo } from "react";
 
+// North Korea stays where it is even though it's cancelled (kept on purpose).
+const isNorthKorea = (e: { slug?: string; name?: string }) =>
+  (e.slug ?? "").includes("north-korea") || /north korea/i.test(e.name ?? "");
+
+// On mobile, push cancelled tours to the END of each continent's swipe so the
+// row leads with bookable expeditions. Stable: same-rank items keep their order.
+const mobileRank = (e: { status?: string; slug?: string; name?: string }) =>
+  e.status === "cancelled" && !isNorthKorea(e) ? 1 : 0;
+
 const ExpeditionsGrid = () => {
   const { data: expeditions, isLoading } = useActiveExpeditions();
   const isMobile = useIsMobile();
@@ -68,7 +77,7 @@ const ExpeditionsGrid = () => {
                     main thread and can't match it). scroll-snap keeps cards
                     aligned. */}
                 <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 [-webkit-overflow-scrolling:touch] [overscroll-behavior-x:contain] [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                  {exps.map((expedition) => (
+                  {[...exps].sort((a, b) => mobileRank(a) - mobileRank(b)).map((expedition) => (
                     <div
                       key={expedition.slug}
                       className="snap-start shrink-0 w-[85%]"
