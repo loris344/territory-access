@@ -166,6 +166,15 @@ const ExpeditionDetail = () => {
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <Link
               href="/#expeditions"
+              onClick={() => {
+                // Tell the home page to restore the visitor's previous scroll
+                // position instead of jumping to the top.
+                try {
+                  sessionStorage.setItem("restoreHomeScroll", "1");
+                } catch {
+                  /* ignore */
+                }
+              }}
               className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground hover:text-foreground transition-colors mb-8 inline-block"
             >
               ← All expeditions

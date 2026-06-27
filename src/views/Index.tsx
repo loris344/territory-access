@@ -12,10 +12,12 @@ import EthicalSection from "@/components/EthicalSection";
 import FAQSection from "@/components/FAQSection";
 import ContactBubbles from "@/components/ContactBubbles";
 import Footer from "@/components/Footer";
+import HomeScrollMemory from "@/components/HomeScrollMemory";
 
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      <HomeScrollMemory />
       <Navbar />
       <HeroSection />
       <PhilosophySection />
