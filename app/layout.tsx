@@ -114,7 +114,8 @@ n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
 n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
 document,'script','https://connect.facebook.net/en_US/fbevents.js');
-fbq('init','${META_PIXEL_ID}');fbq('track','PageView');`,
+var _eid;try{_eid=localStorage.getItem('lr_eid');if(!_eid){_eid=(self.crypto&&crypto.randomUUID?crypto.randomUUID():'e'+Date.now()+Math.random().toString(36).slice(2));localStorage.setItem('lr_eid',_eid);}}catch(e){}
+fbq('init','${META_PIXEL_ID}',_eid?{external_id:_eid}:{});fbq('track','PageView');`,
             }}
           />
         )}

@@ -56,6 +56,26 @@ function readCookie(name: string): string | undefined {
   return m ? decodeURIComponent(m[1]) : undefined;
 }
 
+// A stable first-party id for this browser, sent (plain) on both the Pixel
+// (advanced matching, set at init in layout.tsx) and the server event, under the
+// same `lr_eid` localStorage key — improves match quality and lets Meta link the
+// same person across sessions on a long purchase cycle.
+function getExternalId(): string | undefined {
+  try {
+    let eid = localStorage.getItem("lr_eid");
+    if (!eid) {
+      eid =
+        typeof crypto !== "undefined" && typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : "e" + Date.now() + Math.random().toString(36).slice(2);
+      localStorage.setItem("lr_eid", eid);
+    }
+    return eid;
+  } catch {
+    return undefined;
+  }
+}
+
 // One id shared by the browser + server event so Meta dedupes them into one.
 function makeEventId(): string {
   try {
@@ -122,6 +142,7 @@ export function trackLead(
             phone: user.phone,
             first_name: user.firstName,
             last_name: user.lastName,
+            external_id: getExternalId(),
             fbp: readCookie("_fbp"),
             fbc: readCookie("_fbc"),
           },

@@ -55,6 +55,9 @@ Deno.serve(async (req) => {
     if (ph) user_data.ph = [await sha256Hex(ph)];
     if (u.first_name) user_data.fn = [await sha256Hex(norm(u.first_name))];
     if (u.last_name) user_data.ln = [await sha256Hex(norm(u.last_name))];
+    // external_id: sent plain on BOTH Pixel + here so the values match (Meta
+    // allows external_id un-hashed). Stable per-browser id for cross-session match.
+    if (u.external_id) user_data.external_id = u.external_id;
     if (u.fbp) user_data.fbp = u.fbp; // already an identifier — NOT hashed
     if (u.fbc) user_data.fbc = u.fbc; // already an identifier — NOT hashed
 
