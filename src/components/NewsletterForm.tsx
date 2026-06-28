@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { trackLead } from "@/lib/meta";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -29,6 +30,11 @@ export const NewsletterForm = ({ source = "site" }: { source?: string }) => {
     if (error && (error as { code?: string }).code !== "23505") {
       toast.error("Subscription failed. Please try again.");
       return;
+    }
+    // Fire the Meta signal only on a genuinely NEW subscriber (no error), never
+    // on a duplicate re-submit, so we don't inflate conversions.
+    if (!error) {
+      trackLead("newsletter", { email: value }, source);
     }
     setDone(true);
     setEmail("");

@@ -14,9 +14,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 export const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID || "";
 
-export type LeadFormType = "application" | "info_request" | "waitlist";
+export type LeadFormType =
+  | "application"
+  | "info_request"
+  | "waitlist"
+  | "newsletter";
 
-// The intent ladder: stronger signal → higher value.
+// The intent ladder: stronger signal → higher value. Newsletter is the lightest,
+// fastest action — a high-volume top-of-funnel signal to keep Meta's optimiser
+// fed within the 7-day attribution window on a long purchase cycle.
 const LEAD_CONFIG: Record<
   LeadFormType,
   { quality: "high" | "medium" | "low"; value: number }
@@ -24,6 +30,7 @@ const LEAD_CONFIG: Record<
   application: { quality: "high", value: 100 },
   info_request: { quality: "medium", value: 40 },
   waitlist: { quality: "low", value: 20 },
+  newsletter: { quality: "low", value: 10 },
 };
 
 export interface LeadUser {
