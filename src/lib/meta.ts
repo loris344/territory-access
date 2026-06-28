@@ -18,6 +18,7 @@ export type LeadFormType =
   | "application"
   | "info_request"
   | "waitlist"
+  | "notify_destination"
   | "newsletter";
 
 // The intent ladder: stronger signal → higher value. Newsletter is the lightest,
@@ -30,6 +31,7 @@ const LEAD_CONFIG: Record<
   application: { quality: "high", value: 100 },
   info_request: { quality: "medium", value: 40 },
   waitlist: { quality: "low", value: 20 },
+  notify_destination: { quality: "low", value: 15 },
   newsletter: { quality: "low", value: 10 },
 };
 

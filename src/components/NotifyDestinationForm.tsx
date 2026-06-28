@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { trackLead } from "@/lib/meta";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -31,6 +32,8 @@ export const NotifyDestinationForm = ({ destination }: { destination: string }) 
       toast.error("Something went wrong. Please try again.");
       return;
     }
+    // Destination-specific interest signal (content_name = the destination).
+    trackLead("notify_destination", { email: value }, destination);
     setDone(true);
     setEmail("");
     toast.success("You're on the list for this expedition.");
