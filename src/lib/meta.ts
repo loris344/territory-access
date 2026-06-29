@@ -88,12 +88,24 @@ function makeEventId(): string {
   return "evt-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
+// A distinct standard event per form. Meta shows each natively in Events Manager
+// with its own count — no custom conversion / parameter matching needed. We also
+// keep firing `Lead` for all of them so campaign optimisation on Lead still works.
+const STD_EVENT: Record<LeadFormType, string> = {
+  application: "SubmitApplication",
+  info_request: "Contact",
+  waitlist: "CompleteRegistration",
+  notify_destination: "Schedule",
+  newsletter: "Subscribe",
+};
+
 /**
- * Fire a single Meta `Lead` conversion for a COMPLETED form submission.
- * Call this only after the row was successfully inserted — never on click —
- * so a Lead always reflects a real, submitted form.
- *
- * Fire-and-forget: it is never awaited and never throws into the caller.
+ * Fire Meta events for a COMPLETED form submission (never on click).
+ * Sends TWO events, each deduplicated browser-Pixel + server-CAPI:
+ *   1) `Lead` for every form (so the campaign optimises on one aggregate event)
+ *   2) a distinct standard event per form (Subscribe / SubmitApplication / …) so
+ *      each type is visible natively in Events Manager.
+ * Fire-and-forget: never awaited, never throws into the caller.
  */
 export function trackLead(
   formType: LeadFormType,
@@ -103,55 +115,55 @@ export function trackLead(
   if (typeof window === "undefined") return;
 
   const { quality, value } = LEAD_CONFIG[formType];
-  const eventId = makeEventId();
   const eventSourceUrl = window.location.href;
+  const customData = {
+    value,
+    currency: "USD",
+    form_type: formType,
+    lead_quality: quality,
+    content_name: expeditionName,
+  };
 
-  // 1) Browser Pixel — passes eventID for deduplication against the server event.
-  try {
-    window.fbq?.(
-      "track",
-      "Lead",
-      {
-        value,
-        currency: "USD",
-        form_type: formType,
-        lead_quality: quality,
-        content_name: expeditionName,
-      },
-      { eventID: eventId },
-    );
-  } catch {
-    /* pixel blocked / not loaded — server event still fires below */
-  }
-
-  // 2) Server Conversions API via our Supabase edge function. Fire-and-forget.
-  try {
-    supabase.functions
-      .invoke("meta-capi", {
-        body: {
-          event_id: eventId,
-          event_name: "Lead",
-          event_source_url: eventSourceUrl,
-          form_type: formType,
-          lead_quality: quality,
-          value,
-          currency: "USD",
-          content_name: expeditionName,
-          user: {
-            email: user.email,
-            phone: user.phone,
-            first_name: user.firstName,
-            last_name: user.lastName,
-            external_id: getExternalId(),
-            fbp: readCookie("_fbp"),
-            fbc: readCookie("_fbc"),
+  // Fire one named event: browser Pixel + server CAPI sharing an event_id so Meta
+  // deduplicates them into a single conversion.
+  const fire = (eventName: string) => {
+    const eventId = makeEventId();
+    try {
+      window.fbq?.("track", eventName, customData, { eventID: eventId });
+    } catch {
+      /* pixel blocked / not loaded — server event still fires below */
+    }
+    try {
+      supabase.functions
+        .invoke("meta-capi", {
+          body: {
+            event_id: eventId,
+            event_name: eventName,
+            event_source_url: eventSourceUrl,
+            form_type: formType,
+            lead_quality: quality,
+            value,
+            currency: "USD",
+            content_name: expeditionName,
+            user: {
+              email: user.email,
+              phone: user.phone,
+              first_name: user.firstName,
+              last_name: user.lastName,
+              external_id: getExternalId(),
+              fbp: readCookie("_fbp"),
+              fbc: readCookie("_fbc"),
+            },
           },
-        },
-      })
-      .catch(() => {
-        /* network/edge error — the browser Pixel above still counts */
-      });
-  } catch {
-    /* noop */
-  }
+        })
+        .catch(() => {
+          /* network/edge error — the browser Pixel above still counts */
+        });
+    } catch {
+      /* noop */
+    }
+  };
+
+  fire("Lead"); // aggregate event for campaign optimisation
+  fire(STD_EVENT[formType]); // per-form event for native visibility
 }
