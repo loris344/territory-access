@@ -88,23 +88,10 @@ function makeEventId(): string {
   return "evt-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
-// A distinct standard event per form. Meta shows each natively in Events Manager
-// with its own count — no custom conversion / parameter matching needed. We also
-// keep firing `Lead` for all of them so campaign optimisation on Lead still works.
-const STD_EVENT: Record<LeadFormType, string> = {
-  application: "SubmitApplication",
-  info_request: "Contact",
-  waitlist: "CompleteRegistration",
-  notify_destination: "Schedule",
-  newsletter: "Subscribe",
-};
-
 /**
- * Fire Meta events for a COMPLETED form submission (never on click).
- * Sends TWO events, each deduplicated browser-Pixel + server-CAPI:
- *   1) `Lead` for every form (so the campaign optimises on one aggregate event)
- *   2) a distinct standard event per form (Subscribe / SubmitApplication / …) so
- *      each type is visible natively in Events Manager.
+ * Fire ONE Meta `Lead` event for a COMPLETED form submission (never on click).
+ * Deduplicated browser-Pixel + server-CAPI via a shared event_id (= 1 conversion).
+ * `form_type` is attached so the type can be inspected in Test Events / breakdowns.
  * Fire-and-forget: never awaited, never throws into the caller.
  */
 export function trackLead(
@@ -164,6 +151,5 @@ export function trackLead(
     }
   };
 
-  fire("Lead"); // aggregate event for campaign optimisation
-  fire(STD_EVENT[formType]); // per-form event for native visibility
+  fire("Lead"); // one event per submission, deduped browser + server
 }
