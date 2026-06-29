@@ -12,6 +12,8 @@
 //                              Events Manager "Test events" tab (use for testing,
 //                              then remove it so events count as live).
 
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
@@ -95,6 +97,29 @@ Deno.serve(async (req) => {
       },
     );
     const data = await res.json();
+
+    // Ground-truth audit log (never blocks the response). One row per event sent.
+    try {
+      const url = Deno.env.get("SUPABASE_URL");
+      const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+      if (url && key) {
+        await createClient(url, key).from("meta_event_log").insert({
+          event_name: event.event_name,
+          form_type: body.form_type ?? null,
+          value: body.value ?? null,
+          currency: body.currency ?? "USD",
+          content_name: body.content_name ?? null,
+          event_id: body.event_id ?? null,
+          event_source_url: body.event_source_url ?? null,
+          client_ip: ip || null,
+          meta_events_received: typeof data?.events_received === "number" ? data.events_received : null,
+          meta_status: res.status,
+          meta_error: res.ok ? null : JSON.stringify(data).slice(0, 500),
+        });
+      }
+    } catch (logErr) {
+      console.error("meta_event_log insert failed:", logErr);
+    }
 
     if (!res.ok) {
       console.error("Meta CAPI error:", JSON.stringify(data));
