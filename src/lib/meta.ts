@@ -88,10 +88,23 @@ function makeEventId(): string {
   return "evt-" + Math.random().toString(36).slice(2) + Date.now().toString(36);
 }
 
+// A distinct standard event per form, fired ALONGSIDE `Lead`. Lets each trigger
+// be its own column in Ads Manager (per campaign / ad set), since the form_type
+// parameter doesn't surface reliably. NOT double-counting: `Lead` is still counted
+// once per submission for optimisation — these are just per-type labels.
+const STD_EVENT: Record<LeadFormType, string> = {
+  application: "SubmitApplication",
+  info_request: "Contact",
+  waitlist: "CompleteRegistration",
+  notify_destination: "Schedule",
+  newsletter: "Subscribe",
+};
+
 /**
- * Fire ONE Meta `Lead` event for a COMPLETED form submission (never on click).
- * Deduplicated browser-Pixel + server-CAPI via a shared event_id (= 1 conversion).
- * `form_type` is attached so the type can be inspected in Test Events / breakdowns.
+ * Fire Meta events for a COMPLETED form submission (never on click). Sends TWO
+ * events, each deduplicated browser-Pixel + server-CAPI via a shared event_id:
+ *   1) `Lead` (every form) — the single aggregate event the campaign optimises on
+ *   2) a distinct standard event per form — visible per ad set as its own column
  * Fire-and-forget: never awaited, never throws into the caller.
  */
 export function trackLead(
@@ -151,5 +164,6 @@ export function trackLead(
     }
   };
 
-  fire("Lead"); // one event per submission, deduped browser + server
+  fire("Lead"); // aggregate event the campaign optimises on (counted once)
+  fire(STD_EVENT[formType]); // per-form event → its own column per ad set
 }
