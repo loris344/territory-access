@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CommunityButton } from "./CommunityButton";
 import { NewsletterForm } from "./NewsletterForm";
 
 const CommunitySection = () => {
@@ -19,12 +18,8 @@ const CommunitySection = () => {
             Stay on the line
           </h2>
           <p className="body-text text-muted-foreground text-sm sm:text-base max-w-xl mx-auto mb-8">
-            Join the community for expedition openings and field dispatches from the territories others avoid, or get them straight to your inbox.
+            Expedition openings and field dispatches from the territories others avoid — straight to your inbox.
           </p>
-
-          <div className="flex justify-center mb-10">
-            <CommunityButton />
-          </div>
 
           <NewsletterForm source="home-community" />
         </motion.div>

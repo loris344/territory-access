@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { Instagram } from "lucide-react";
-import { CommunityButton } from "./CommunityButton";
 import { NewsletterForm } from "./NewsletterForm";
 
 const Footer = () => {
@@ -84,7 +83,6 @@ const Footer = () => {
             >
               Apply now
             </Link>
-            <CommunityButton />
           </div>
           <p className="font-heading text-[10px] sm:text-xs tracking-[0.2em] uppercase text-muted-foreground/70 mt-10 mb-4">
             Or join the newsletter
