@@ -9,7 +9,13 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // Collects newsletter emails into the public.newsletter_subscribers table.
 // `source` records where the signup happened (e.g. "footer", "home-community").
-export const NewsletterForm = ({ source = "site" }: { source?: string }) => {
+export const NewsletterForm = ({
+  source = "site",
+  align = "center",
+}: {
+  source?: string;
+  align?: "center" | "left";
+}) => {
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
@@ -52,7 +58,9 @@ export const NewsletterForm = ({ source = "site" }: { source?: string }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col sm:flex-row items-stretch justify-center gap-3 w-full max-w-md mx-auto"
+      className={`flex flex-col sm:flex-row items-stretch gap-3 w-full max-w-md ${
+        align === "center" ? "justify-center mx-auto" : ""
+      }`}
     >
       <input
         type="email"

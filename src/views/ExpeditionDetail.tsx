@@ -13,6 +13,7 @@ import WaitlistModal from "@/components/WaitlistModal";
 import TourInfoRequestForm from "@/components/TourInfoRequestForm";
 import { optimizedImageUrl } from "@/lib/utils";
 import NotifyDestinationForm from "@/components/NotifyDestinationForm";
+import { NewsletterForm } from "@/components/NewsletterForm";
 
 const statusStyles: Record<string, string> = {
   open: "bg-foreground/10 text-foreground border border-foreground/20",
@@ -358,6 +359,18 @@ const ExpeditionDetail = () => {
           <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed">
             {expedition.long_description}
           </p>
+        </div>
+      </section>
+
+      {/* Newsletter — soft signup once the overview has hooked the reader */}
+      <section className="py-12 lg:py-16 border-t border-border">
+        <div className="max-w-2xl mx-auto px-6 lg:px-8 text-center">
+          <div className="h-px w-12 bg-accent mb-8 mx-auto" />
+          <h2 className="heading-display text-lg sm:text-xl mb-3">Be first to know</h2>
+          <p className="body-text text-sm text-muted-foreground mb-6">
+            New expeditions open only a few times a year, with limited places. Join the list to hear before they fill.
+          </p>
+          <NewsletterForm source="expedition-detail" />
         </div>
       </section>
 
