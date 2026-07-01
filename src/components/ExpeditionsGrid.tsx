@@ -60,7 +60,7 @@ const ExpeditionsGrid = () => {
 
           <div className="mt-8 max-w-md">
             <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-3">
-              Or get notified when new expeditions open
+              Planning to go one day? Join the list for early access
             </p>
             <NewsletterForm source="expeditions-grid" align="left" />
           </div>
