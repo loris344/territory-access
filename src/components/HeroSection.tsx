@@ -49,7 +49,12 @@ const HeroSection = () => {
             alt=""
             fetchPriority="high"
             className="absolute inset-0 w-full h-full object-cover object-center"
-            initial={{ opacity: 0 }}
+            // initial={false}: the hero image is the LCP element. Gating it on a
+            // JS fade-in (opacity:0 -> 1) made framer-motion render opacity:0 in
+            // the SSR HTML, so it stayed invisible until hydration -> ~18s LCP on
+            // throttled mobile. Rendered at rest, it paints from the preloaded
+            // webp immediately; the slideshow still cross-dissolves via `exit`.
+            initial={false}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5 }}
