@@ -366,9 +366,9 @@ const ExpeditionDetail = () => {
       <section className="py-12 lg:py-16 border-t border-border">
         <div className="max-w-2xl mx-auto px-6 lg:px-8 text-center">
           <div className="h-px w-12 bg-accent mb-8 mx-auto" />
-          <h2 className="heading-display text-lg sm:text-xl mb-3">Planning to go — one day?</h2>
+          <h2 className="heading-display text-lg sm:text-xl mb-3">Never miss a departure</h2>
           <p className="body-text text-sm text-muted-foreground mb-6">
-            Join the list: upcoming departures before they open, and first word when a place frees up. For those who intend to go — not just to read.
+            Join the list and be first to know when new expeditions open, and when a place frees up.
           </p>
           <NewsletterForm source="expedition-detail" />
         </div>
