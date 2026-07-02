@@ -15,7 +15,12 @@ export const metadata: Metadata = {
   title: DEFAULT_TITLE,
   description: DEFAULT_DESCRIPTION,
   authors: [{ name: SITE_NAME }],
-  icons: { icon: "/favicon.png" },
+  // Versioned URL so Google's favicon crawler treats it as a new resource and
+  // re-fetches it, instead of re-serving the stale (Lovable-era) cached icon.
+  icons: {
+    icon: [{ url: "/favicon-v2.png", type: "image/png", sizes: "512x512" }],
+    shortcut: "/favicon-v2.png",
+  },
   alternates: { canonical: "/" },
   openGraph: {
     title: DEFAULT_TITLE,
