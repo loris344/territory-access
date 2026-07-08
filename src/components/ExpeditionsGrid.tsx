@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useActiveExpeditions } from "@/hooks/use-expeditions";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ExpeditionCard from "./ExpeditionCard";
+import { NewsletterForm } from "./NewsletterForm";
 import { useMemo } from "react";
 
 // North Korea stays where it is even though it's cancelled (kept on purpose).
@@ -42,6 +43,14 @@ const ExpeditionsGrid = () => {
   return (
     <section id="expeditions" className="scroll-mt-20 py-16 sm:py-24 lg:py-32 bg-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Newsletter — placed above the section title, between the map and the list. */}
+        <div className="max-w-md mb-16 pb-12 border-b border-border">
+          <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-3">
+            Join the list for early access to new departures
+          </p>
+          <NewsletterForm source="expeditions-grid" align="left" />
+        </div>
+
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
