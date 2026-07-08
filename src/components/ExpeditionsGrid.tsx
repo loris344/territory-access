@@ -32,7 +32,7 @@ const ExpeditionsGrid = () => {
 
   if (isLoading) {
     return (
-      <section id="expeditions" className="scroll-mt-20 py-16 sm:py-24 lg:py-32 bg-secondary">
+      <section className="py-16 sm:py-24 lg:py-32 bg-secondary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="font-heading text-sm tracking-wider uppercase text-muted-foreground text-center">Loading expeditions...</p>
         </div>
@@ -41,7 +41,7 @@ const ExpeditionsGrid = () => {
   }
 
   return (
-    <section id="expeditions" className="scroll-mt-20 py-16 sm:py-24 lg:py-32 bg-secondary">
+    <section className="py-16 sm:py-24 lg:py-32 bg-secondary">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Newsletter — placed above the section title, between the map and the list. */}
         <div className="max-w-md mb-16 pb-12 border-b border-border">
@@ -50,6 +50,9 @@ const ExpeditionsGrid = () => {
           </p>
           <NewsletterForm source="expeditions-grid" align="left" />
         </div>
+
+        {/* Anchor for /#expeditions — lands on the title, skipping the newsletter above it. */}
+        <div id="expeditions" className="scroll-mt-24" />
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
