@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { useActiveExpeditions } from "@/hooks/use-expeditions";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ExpeditionCard from "./ExpeditionCard";
-import { NewsletterForm } from "./NewsletterForm";
 import { useMemo } from "react";
 
 // North Korea stays where it is even though it's cancelled (kept on purpose).
@@ -57,13 +56,6 @@ const ExpeditionsGrid = () => {
           <p className="body-text text-xs text-muted-foreground mt-3 tracking-wider uppercase">
             By application only · Limited seats per expedition
           </p>
-
-          <div className="mt-8 max-w-md">
-            <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-muted-foreground mb-3">
-              Join the list for early access to new departures
-            </p>
-            <NewsletterForm source="expeditions-grid" align="left" />
-          </div>
         </motion.div>
 
         {isMobile ? (
