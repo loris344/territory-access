@@ -121,6 +121,12 @@ const LegalNotice = () => {
               </motion.div>
             ))}
           </div>
+
+          <div className="mt-16 pt-8 border-t border-border">
+            <p className="body-text text-xs text-muted-foreground leading-relaxed">
+              Entreprise individuelle : Loris Jaussaud | SIRET : 891792749 | Adresse : 135 Rue de la Cavalade, 34000 Montpellier
+            </p>
+          </div>
         </div>
       </section>
       <Footer />
