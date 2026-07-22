@@ -6,18 +6,13 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Serve a Supabase-stored image through the transform endpoint so browsers get
- * a much lighter WebP. It only re-encodes (quality) — NO width/height, so the
- * original dimensions are kept (no resize, no crop). Non-Supabase URLs (local
- * assets, etc.) are returned untouched.
+ * Was meant to serve Supabase-stored images through the storage transform
+ * endpoint (/render/image) for a lighter WebP. That endpoint 404s on this
+ * project (Image Transformations isn't enabled on the plan), which was
+ * silently breaking every expedition image site-wide (broken <img> falling
+ * back to its alt text). Serving the raw object URL until transforms are
+ * enabled or images are pre-optimized at upload.
  */
-export function optimizedImageUrl(url: string, quality = 72): string {
-  const marker = "/storage/v1/object/public/";
-  const idx = url.indexOf(marker);
-  if (idx === -1) return url;
-  const origin = url.slice(0, idx);
-  const [path, query] = url.slice(idx + marker.length).split("?");
-  const params = new URLSearchParams(query);
-  params.set("quality", String(quality));
-  return `${origin}/storage/v1/render/image/public/${path}?${params.toString()}`;
+export function optimizedImageUrl(url: string): string {
+  return url;
 }

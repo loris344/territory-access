@@ -246,7 +246,7 @@ export const expeditions: Expedition[] = [
   },
   {
     id: "7",
-    name: "Transnistria – A Step Back in Time",
+    name: "Transnistria – A Soviet Time Capsule",
     slug: "transnistria-soviet-ghost-state",
     location: "Tiraspol",
     country: "Transnistria",
@@ -261,7 +261,7 @@ export const expeditions: Expedition[] = [
     intensity_level: "Easy",
     intensity_type: "political",
     difficulty_level: "easy",
-    short_description: "4 days exploring a country most people don't know exists.",
+    short_description: "4 days in a Soviet-era time capsule most people don't know exists.",
     long_description: "4 days in Tiraspol and Bender: Soviet-era streets frozen in time, the historic Bender Fortress, a visit to a local distillery, and a guided shooting range session, a fascinating look at how an unrecognized state actually functions day to day.",
     status: "open",
     expedition_status: "upcoming",
