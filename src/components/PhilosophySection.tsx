@@ -23,7 +23,7 @@ const PhilosophySection = () => {
             <p>
               Every expedition is built around genuine immersion: remarkable landscapes,
               layered cultures, and places that ask something of you. You don't watch
-              from the outside — you take part.
+              from the outside. You take part.
             </p>
             <p>
               Small groups. Trusted local guides and fixers who know these places inside out.

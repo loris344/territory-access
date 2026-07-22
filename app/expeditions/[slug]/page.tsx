@@ -26,7 +26,7 @@ export async function generateMetadata({
   }
 
   return buildMetadata({
-    title: `${data.name} — ${data.country || ""}`,
+    title: `${data.name} | ${data.country || ""}`,
     description: data.short_description,
     path: `/expeditions/${data.slug}`,
     ogImage: data.hero_image_url || undefined,

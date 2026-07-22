@@ -18,7 +18,7 @@ const CommunitySection = () => {
             Stay on the line
           </h2>
           <p className="body-text text-muted-foreground text-sm sm:text-base max-w-xl mx-auto mb-8">
-            Expedition openings and field dispatches from the world's least-visited places — straight to your inbox.
+            Expedition openings and field dispatches from the world's least-visited places, straight to your inbox.
           </p>
 
           <NewsletterForm source="home-community" />

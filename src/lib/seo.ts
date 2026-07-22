@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 
 export const SITE_NAME = "Ligne Rouge Tours";
 export const DEFAULT_TITLE =
-  "Ligne Rouge Tours — Expeditions to the World's Least-Visited Places";
+  "Ligne Rouge Tours | Expeditions to the World's Least-Visited Places";
 export const DEFAULT_DESCRIPTION =
   "We design expeditions to the world's least-visited places. For those who'd rather live the story than read about it.";
 export const SITE_URL = "https://lignerougetours.com";
@@ -27,7 +27,7 @@ export function buildMetadata({
   ogImage = DEFAULT_OG_IMAGE,
   noIndex = false,
 }: BuildMetadataOptions = {}): Metadata {
-  const fullTitle = title ? `${title} — ${SITE_NAME}` : DEFAULT_TITLE;
+  const fullTitle = title ? `${title} | ${SITE_NAME}` : DEFAULT_TITLE;
   const canonicalUrl = `${SITE_URL}${path}`;
 
   return {

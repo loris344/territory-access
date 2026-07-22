@@ -34,7 +34,7 @@ const TrailerSection = () => {
               className="absolute inset-0 h-full w-full"
               allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
               allowFullScreen
-              title="Ligne Rouge — Trailer"
+              title="Ligne Rouge: Trailer"
             />
           </div>
         </motion.div>

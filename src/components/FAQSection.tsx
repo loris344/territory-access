@@ -15,7 +15,7 @@ const faqItems = [
   },
   {
     q: "Are these destinations safe?",
-    a: "Every destination is chosen and prepared with real care: trusted local fixers, detailed security planning, and protocols built from experience on the ground. Some uncertainty is part of traveling to remote or complex regions, and we're always upfront about it before you commit — nothing is left to chance on our end.",
+    a: "Every destination is chosen and prepared with real care: trusted local fixers, detailed security planning, and protocols built from experience on the ground. Some uncertainty is part of traveling to remote or complex regions, and we're always upfront about it before you commit. Nothing is left to chance on our end.",
   },
   {
     q: "What is the selection process?",

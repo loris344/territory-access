@@ -221,7 +221,7 @@ const KashmirLanding = () => {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12">
             {[
-              { icon: Shield, title: "Safe, civilian areas", desc: "Real immersion, thoughtfully planned — never reckless." },
+              { icon: Shield, title: "Safe, civilian areas", desc: "Real immersion, thoughtfully planned, never reckless." },
               { icon: Users, title: "Small groups", desc: "Max 10-12 participants, carefully selected by application." },
               { icon: Mountain, title: "Physical commitment", desc: "High-altitude trekking, 5-6h walks. Real terrain, real effort." },
             ].map(({ icon: Icon, title, desc }, i) => (

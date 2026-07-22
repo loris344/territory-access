@@ -25,7 +25,7 @@ const EthicalSection = () => {
             How We Operate
           </h2>
           <p className="body-text text-muted-foreground text-base sm:text-lg max-w-3xl mb-10">
-            Access to remarkable places comes with real responsibility. Every expedition follows a strict set of principles — this is what makes it exploration, not exploitation.
+            Access to remarkable places comes with real responsibility. Every expedition follows a strict set of principles: this is what makes it exploration, not exploitation.
           </p>
 
           <ul className="space-y-4">
