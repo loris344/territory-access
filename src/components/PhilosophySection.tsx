@@ -19,14 +19,15 @@ const PhilosophySection = () => {
           </h2>
 
           <div className="space-y-6 body-text text-muted-foreground text-base sm:text-lg max-w-3xl">
-            <p>We don't sell vacations. We craft confrontations with the real.</p>
+            <p>We don't sell vacations. We design real encounters with the world.</p>
             <p>
-              Every expedition is designed around tension, the kind that transforms you.
-              Politically complex territories, geographically extreme landscapes,
-              cultures that challenge everything you think you know.
+              Every expedition is built around genuine immersion: remarkable landscapes,
+              layered cultures, and places that ask something of you. You don't watch
+              from the outside — you take part.
             </p>
             <p>
-              Small groups. Trusted local fixers. No scripts, no safety nets, no spectators.
+              Small groups. Trusted local guides and fixers who know these places inside out.
+              No scripts, no crowds, no spectators.
             </p>
             <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent/80 pt-2">
               Each expedition is limited to a small number of participants, carefully selected.

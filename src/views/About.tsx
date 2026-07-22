@@ -20,7 +20,7 @@ const faqItems = [
   },
   {
     q: "Are these destinations safe?",
-    a: "We operate in territories that carry inherent risks. We mitigate those risks through meticulous planning, trusted local fixers, and strict operational protocols. However, we cannot eliminate all dangers, and we do not pretend to. You travel at your own risk with full awareness.",
+    a: "Every destination is chosen and prepared with real care: trusted local fixers, detailed security planning, and protocols built from experience on the ground. Some uncertainty is part of traveling to remote or complex regions, and we're always upfront about it before you commit — nothing is left to chance on our end.",
   },
   {
     q: "What is the selection process?",
@@ -104,18 +104,18 @@ const About = () => {
             <div className="h-px w-12 bg-accent mb-10" />
             <h1 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-8">Who We Are</h1>
             <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
-              Ligne Rouge Tours is not a travel agency. We are an expedition company that operates in territories most
-              operators refuse to approach: conflict zones, politically sensitive regions, extreme environments, and
-              unrecognized states.
+              Ligne Rouge Tours is not a travel agency. We're an expedition company built around real access: remote
+              regions, politically complex places, extreme environments, and territories most travelers never get
+              to see.
             </p>
             <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
-              We design each expedition as a structured immersion: controlled, intense, and deliberately uncomfortable.
-              Our clients are not tourists. They are professionals, entrepreneurs, and individuals who refuse to observe
-              the world from a distance.
+              We design each expedition as a genuine immersion: thoughtfully planned, intense, and built to challenge
+              you in the best way. Our clients aren't tourists. They're people who want to experience the world
+              firsthand, not observe it from a distance.
             </p>
             <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed">
-              Every expedition is built around local fixers, strict security protocols, and a philosophy that values
-              direct exposure over passive observation. We do not sell vacations. We offer access.
+              Every expedition is built around trusted local guides, careful security planning, and a belief that
+              direct experience beats passive observation. We do not sell vacations. We offer access.
             </p>
           </motion.div>
         </div>

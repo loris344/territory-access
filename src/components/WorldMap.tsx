@@ -13,6 +13,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useActiveExpeditions } from "@/hooks/use-expeditions";
 import type { Expedition } from "@/data/expeditions";
 import { optimizedImageUrl } from "@/lib/utils";
+import { intensityLabels } from "@/components/ExpeditionCard";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
@@ -180,7 +181,7 @@ const WorldMap = () => {
                         <span className="text-border">|</span>
                         <span>{hovered.difficulty_level}</span>
                         <span className="text-border">|</span>
-                        <span>{hovered.intensity_type}</span>
+                        <span>{intensityLabels[hovered.intensity_type] || hovered.intensity_type}</span>
                       </div>
                       <div className="mt-2 text-[10px] text-muted-foreground font-heading tracking-wider">
                         {new Date(hovered.start_date).toLocaleDateString("en-US", { month: "short", day: "numeric" })} – {new Date(hovered.end_date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}

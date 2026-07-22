@@ -25,7 +25,7 @@ const EXPEDITION = {
   heroImage:
     "https://hyeqshzcujnupxxeocfy.supabase.co/storage/v1/object/public/expedition-images/a0000001-0000-0000-0000-000000000010.webp?t=1771291609044",
   shortDescription:
-    "7-day high-security border region expedition along one of the most heavily guarded frontiers in the world.",
+    "A 7-day journey through the mountains, valleys, and villages of Indian Kashmir, along one of the world's most storied frontiers.",
   expeditionId: "a0000001-0000-0000-0000-000000000010",
   dates: [
     { id: "5aee8b06-2e1c-45d8-bbdb-975133b33a88", label: "Sep 9 - Sep 15, 2026", status: "closed", spots: 0 },
@@ -221,7 +221,7 @@ const KashmirLanding = () => {
         <div className="max-w-5xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-12">
             {[
-              { icon: Shield, title: "No active combat zones", desc: "Civil areas only. Real immersion, zero recklessness." },
+              { icon: Shield, title: "Safe, civilian areas", desc: "Real immersion, thoughtfully planned — never reckless." },
               { icon: Users, title: "Small groups", desc: "Max 10-12 participants, carefully selected by application." },
               { icon: Mountain, title: "Physical commitment", desc: "High-altitude trekking, 5-6h walks. Real terrain, real effort." },
             ].map(({ icon: Icon, title, desc }, i) => (
@@ -251,12 +251,12 @@ const KashmirLanding = () => {
           <div className="h-px w-12 bg-accent mb-10" />
           <h2 className="heading-display text-xl sm:text-2xl mb-4">This is not a trip.</h2>
           <p className="body-text text-sm text-muted-foreground max-w-2xl mb-10">
-            You will walk where few dare to go. You will meet people who live on the edge of a frozen conflict. You will push your limits at altitude, far from comfort zones. And you will return with a story that is yours alone.
+            You will walk trails few travelers ever see. You will meet people building a life in one of the most contested valleys on Earth. You will push your limits at altitude, far from your comfort zone. And you will come home with a story that's entirely your own.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {[
               { title: "Push your limits", desc: "High-altitude treks, real terrain, real effort. You will discover what you're capable of." },
-              { title: "A story no one else has", desc: "The Line of Control, Kashmiri villages, military checkpoints: experiences that can't be bought on a booking platform." },
+              { title: "A story no one else has", desc: "The Line of Control, Kashmiri villages, mountain passes: experiences that can't be bought on a booking platform." },
               { title: "See the world differently", desc: "You won't observe from a distance. You will sit with locals, understand their reality, and feel the tension firsthand." },
               { title: "Come back transformed", desc: "Every participant leaves Kashmir with a sharper perspective, a deeper confidence, and a sense of having truly lived." },
             ].map(({ title, desc }, i) => (

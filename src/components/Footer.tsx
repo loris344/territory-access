@@ -12,7 +12,7 @@ const Footer = () => {
           <div>
             <h4 className="heading-display text-sm mb-4">Ligne Rouge Tours</h4>
             <p className="body-text text-muted-foreground text-sm">
-              We organize expeditions in territories others avoid.
+              We design expeditions to the world's least-visited places.
             </p>
           </div>
           <div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Mountain, Thermometer, Brain, Tent, Snowflake, TreePine, Compass, Sword, Users } from "lucide-react";
+import { Mountain, Thermometer, Brain, Tent, Snowflake, TreePine, Compass, Landmark, Users } from "lucide-react";
 import type { Expedition } from "@/data/expeditions";
 import { optimizedImageUrl } from "@/lib/utils";
 
@@ -30,12 +30,14 @@ const intensityIcons: Record<string, React.ReactNode> = {
   jungle: <TreePine className="w-3.5 h-3.5" />,
   nomadic: <Compass className="w-3.5 h-3.5" />,
   political: <Users className="w-3.5 h-3.5" />,
-  historical: <Sword className="w-3.5 h-3.5" />,
-  "post-conflict": <Sword className="w-3.5 h-3.5" />,
+  historical: <Landmark className="w-3.5 h-3.5" />,
+  "post-conflict": <Landmark className="w-3.5 h-3.5" />,
+  conflict: <TreePine className="w-3.5 h-3.5" />,
+  tribal: <Users className="w-3.5 h-3.5" />,
   altitude: <Mountain className="w-3.5 h-3.5" />,
 };
 
-const intensityLabels: Record<string, string> = {
+export const intensityLabels: Record<string, string> = {
   mountain: "Mountain",
   desert: "Desert",
   psychological: "Psychological",
@@ -43,9 +45,11 @@ const intensityLabels: Record<string, string> = {
   polar: "Polar",
   jungle: "Jungle",
   nomadic: "Nomadic",
-  political: "Political",
+  political: "Society",
   historical: "Historical",
-  "post-conflict": "Post-Conflict",
+  "post-conflict": "Resilience",
+  conflict: "Conservation",
+  tribal: "Heritage",
   altitude: "Altitude",
 };
 
