@@ -77,21 +77,25 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
                   coordinates={[p.longitude, p.latitude]}
                   onClick={() => setSelectedDay(p.day_number)}
                 >
+                  {/* Outer glow ring, same layering as the homepage WorldMap */}
+                  <circle r={(isSelected ? 22 : 18) / zoom} fill="hsla(0, 100%, 41%, 0.12)" className="cursor-pointer" />
+                  <circle r={(isSelected ? 15 : 12) / zoom} fill="hsla(0, 100%, 41%, 0.22)" className="cursor-pointer" />
                   <circle
-                    r={(isSelected ? 8 : 5) / zoom}
+                    r={(isSelected ? 11 : 8) / zoom}
                     fill={isSelected ? "hsl(0, 0%, 96%)" : "hsl(0, 100%, 41%)"}
                     stroke="hsl(0, 0%, 100%)"
-                    strokeWidth={1 / zoom}
+                    strokeWidth={1.5 / zoom}
                     className="cursor-pointer"
                   />
                   <text
                     textAnchor="middle"
-                    y={-10 / zoom}
+                    dominantBaseline="central"
                     style={{
                       fontFamily: "var(--font-heading)",
-                      fontSize: 9 / zoom,
-                      fill: isSelected ? "hsl(0, 100%, 41%)" : "hsl(0, 0%, 96%)",
-                      fontWeight: isSelected ? 700 : 400,
+                      fontSize: (isSelected ? 11 : 10) / zoom,
+                      fill: isSelected ? "hsl(0, 100%, 41%)" : "hsl(0, 0%, 100%)",
+                      fontWeight: 700,
+                      pointerEvents: "none",
                     }}
                   >
                     {p.day_number}
