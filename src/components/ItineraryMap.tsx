@@ -26,11 +26,14 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
   const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2;
   const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
   const spread = Math.max(Math.max(...lats) - Math.min(...lats), Math.max(...lngs) - Math.min(...lngs), 0.05);
-  const scale = Math.max(300, Math.min(40000, 2000 / spread));
+  // Calibrated for the 400x300 canvas below (half the library's 800x600
+  // default — see the comment on ComposableMap for why).
+  const scale = Math.max(150, Math.min(20000, 1000 / spread));
   // However tight the initial framing, always allow zooming out to roughly
-  // world-map scale (matches the homepage WorldMap's own scale of 180) so
-  // the visitor can see where the region actually sits on the globe.
-  const minZoom = Math.max(0.02, 150 / scale);
+  // world-map scale (matches the homepage WorldMap's own scale of 180 on its
+  // 800-wide canvas, halved here for our 400-wide one) so the visitor can
+  // see where the region actually sits on the globe.
+  const minZoom = Math.max(0.02, 90 / scale);
 
   const selected = points.find((p) => p.day_number === selectedDay) || points[0];
 
@@ -40,6 +43,12 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
         <ComposableMap
           projection="geoMercator"
           projectionConfig={{ scale, center: [centerLng, centerLat] }}
+          // Half the library's default 800x600 viewBox: on a narrow phone
+          // screen the rendered width is much closer to this canvas size, so
+          // marker/line sizes (defined in SVG units below) map to roughly
+          // 2x more CSS pixels than they would at the default viewBox.
+          width={400}
+          height={300}
           style={{ width: "100%", height: "clamp(280px, 45vw, 420px)" }}
         >
           <ZoomableGroup center={[centerLng, centerLat]} minZoom={minZoom} maxZoom={10} onMoveEnd={({ zoom: k }) => setZoom(k)}>
@@ -69,7 +78,12 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
               />
             ))}
 
-            {points.map((p) => {
+            {/* Render the selected marker last so it sits on top of any
+                day it happens to overlap (e.g. an arrival/departure pair
+                sharing the same city). */}
+            {[...points]
+              .sort((a, b) => (a.day_number === selectedDay ? 1 : 0) - (b.day_number === selectedDay ? 1 : 0))
+              .map((p) => {
               const isSelected = p.day_number === selectedDay;
               return (
                 <Marker
@@ -77,11 +91,14 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
                   coordinates={[p.longitude, p.latitude]}
                   onClick={() => setSelectedDay(p.day_number)}
                 >
-                  {/* Outer glow ring, same layering as the homepage WorldMap */}
-                  <circle r={(isSelected ? 22 : 18) / zoom} fill="hsla(0, 100%, 41%, 0.12)" className="cursor-pointer" />
-                  <circle r={(isSelected ? 15 : 12) / zoom} fill="hsla(0, 100%, 41%, 0.22)" className="cursor-pointer" />
+                  {/* Outer glow ring, same layering as the homepage WorldMap.
+                      Kept modest so stops that are geographically close
+                      (common on compact itineraries) don't fully swallow
+                      each other. */}
+                  <circle r={(isSelected ? 14 : 11) / zoom} fill="hsla(0, 100%, 41%, 0.15)" className="cursor-pointer" />
+                  <circle r={(isSelected ? 10 : 8) / zoom} fill="hsla(0, 100%, 41%, 0.25)" className="cursor-pointer" />
                   <circle
-                    r={(isSelected ? 11 : 8) / zoom}
+                    r={(isSelected ? 9 : 7) / zoom}
                     fill={isSelected ? "hsl(0, 0%, 96%)" : "hsl(0, 100%, 41%)"}
                     stroke="hsl(0, 0%, 100%)"
                     strokeWidth={1.5 / zoom}
@@ -92,7 +109,7 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
                     dominantBaseline="central"
                     style={{
                       fontFamily: "var(--font-heading)",
-                      fontSize: (isSelected ? 11 : 10) / zoom,
+                      fontSize: (isSelected ? 10 : 9) / zoom,
                       fill: isSelected ? "hsl(0, 100%, 41%)" : "hsl(0, 0%, 100%)",
                       fontWeight: 700,
                       pointerEvents: "none",

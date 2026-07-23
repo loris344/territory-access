@@ -148,6 +148,7 @@ const TourLandingPage = () => {
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [waitlistDateId, setWaitlistDateId] = useState<string | undefined>();
   const [waitlistDateLabel, setWaitlistDateLabel] = useState("");
+  const [selectedDateId, setSelectedDateId] = useState<string | undefined>();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -427,12 +428,13 @@ const TourLandingPage = () => {
                         </p>
                       </div>
                       {d.status === "open" || d.status === "limited" ? (
-                        <Link
-                          href={`/apply?expedition=${expedition.slug}&date=${d.id}`}
+                        <a
+                          href="#apply"
+                          onClick={() => setSelectedDateId(d.id)}
                           className="font-heading text-[10px] tracking-[0.15em] uppercase px-4 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-all flex-shrink-0"
                         >
                           Apply
-                        </Link>
+                        </a>
                       ) : d.status === "closed" ? (
                         <button
                           onClick={() => { setWaitlistDateId(d.id); setWaitlistDateLabel(label); setWaitlistOpen(true); }}
@@ -465,7 +467,7 @@ const TourLandingPage = () => {
 
             <ApplicationForm
               lockedExpedition={{ id: expedition.id, name: lp.headline, price: expedition.price_usd }}
-              preselectedDateId={featuredDate?.id}
+              preselectedDateId={selectedDateId ?? featuredDate?.id}
             />
           </motion.div>
         </div>
