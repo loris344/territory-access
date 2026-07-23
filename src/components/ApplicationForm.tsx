@@ -303,10 +303,10 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
             <>
               <h3 className="heading-display text-lg mb-3">Deposit Received</h3>
               <p className="body-text text-sm text-muted-foreground mb-2">
-                Your ${amountLabel} deposit has been received. You&apos;re pre-booked for this expedition.
+                Your ${amountLabel} deposit has been received. Your spot is provisionally reserved while our team reviews your application.
               </p>
               <p className="body-text text-sm text-muted-foreground">
-                Our team will follow up by email with next steps.
+                Fully refundable if your application isn&apos;t accepted, or if we&apos;re ever unable to run this departure. We&apos;ll follow up by email with next steps.
               </p>
             </>
           )}
@@ -314,14 +314,17 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
           {(depositStatus === "offer" || depositStatus === "paying" || depositStatus === "cancelled") && (
             <>
               <h3 className="heading-display text-lg mb-3">
-                {depositStatus === "cancelled" ? "Payment Not Completed" : "Reserve Your Spot"}
+                {depositStatus === "cancelled" ? "Payment Not Completed" : "Application Received"}
               </h3>
               <p className="body-text text-sm text-muted-foreground mb-2">
-                Your application has been registered. To pre-book your spot, pay a ${amountLabel} deposit now.
+                Your application has been registered and will be reviewed individually, like every candidacy for this expedition.
+              </p>
+              <p className="body-text text-sm text-muted-foreground mb-4">
+                While we review it, you can reserve a provisional spot with a ${amountLabel} deposit. It&apos;s fully refundable if your application isn&apos;t accepted, or if we&apos;re ever unable to run this departure.
               </p>
               {depositStatus === "cancelled" && (
                 <p className="body-text text-sm text-muted-foreground mb-4">
-                  Your payment was cancelled or not completed. You can try again below.
+                  Your payment wasn&apos;t completed. You can try again below.
                 </p>
               )}
               {depositError && <p className="text-destructive text-sm mb-4">{depositError}</p>}

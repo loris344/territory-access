@@ -220,16 +220,6 @@ const TourLandingPage = () => {
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center pt-14">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-            <div className="flex items-center justify-center gap-3 mb-6">
-              <div className="flex items-center gap-1.5 bg-white/95 px-3 py-1.5 rounded-sm">
-                <img src="/assets/google-logo.svg" alt="Google" className="h-3.5 w-3.5" />
-                <span className="text-[10px] font-medium text-gray-700 tracking-wide">Google Reviews</span>
-              </div>
-              <div className="flex items-center bg-white/95 px-3 py-1.5 rounded-sm">
-                <img src="/assets/tripadvisor-logo.svg" alt="Tripadvisor" className="h-3.5 w-auto" />
-              </div>
-            </div>
-
             {lp.tagline && (
               <p className="font-heading text-[10px] sm:text-xs tracking-[0.2em] uppercase text-accent-red mb-4">
                 {lp.tagline}
@@ -271,10 +261,19 @@ const TourLandingPage = () => {
               </a>
             </div>
 
-            <p className="font-heading text-[9px] tracking-[0.15em] uppercase text-muted-foreground/50">
+            <p className="font-heading text-[9px] tracking-[0.15em] uppercase text-muted-foreground/50 mb-6">
               By application only
               {remaining !== null && remaining > 0 && ` · ${remaining} spots remaining on next session`}
             </p>
+
+            <div className="flex items-center justify-center gap-3">
+              <div className="flex items-center bg-white/95 px-3 py-1.5 rounded-sm">
+                <img src="/assets/google-reviews-logo.png" alt="Google Reviews" className="h-6 w-auto" />
+              </div>
+              <div className="flex items-center bg-white/95 px-3 py-1.5 rounded-sm">
+                <img src="/assets/tripadvisor-logo.png" alt="Tripadvisor" className="h-6 w-auto" />
+              </div>
+            </div>
           </motion.div>
         </div>
 
