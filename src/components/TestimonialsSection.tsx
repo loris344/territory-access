@@ -58,6 +58,7 @@ const duplicated = [...testimonials, ...testimonials];
 
 const TestimonialsSection = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollPosRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
@@ -65,17 +66,16 @@ const TestimonialsSection = () => {
     if (!container) return;
 
     let animationId: number;
-    let scrollPos = 0;
     const speed = 0.5;
 
     const step = () => {
       if (!isPaused && container) {
-        scrollPos += speed;
+        scrollPosRef.current += speed;
         // Reset when we've scrolled through the first set
-        if (scrollPos >= container.scrollWidth / 2) {
-          scrollPos = 0;
+        if (scrollPosRef.current >= container.scrollWidth / 2) {
+          scrollPosRef.current = 0;
         }
-        container.scrollLeft = scrollPos;
+        container.scrollLeft = scrollPosRef.current;
       }
       animationId = requestAnimationFrame(step);
     };

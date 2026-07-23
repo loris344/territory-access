@@ -26,19 +26,19 @@ const ICONS: Record<string, LucideIcon> = { Shield, Mountain, Users, Clock, Chec
 
 const GalleryCarousel = ({ images }: { images: string[] }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollPosRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const container = scrollRef.current;
     if (!container) return;
     let animationId: number;
-    let scrollPos = 0;
     const speed = 0.6;
     const step = () => {
       if (!isPaused && container) {
-        scrollPos += speed;
-        if (scrollPos >= container.scrollWidth / 2) scrollPos = 0;
-        container.scrollLeft = scrollPos;
+        scrollPosRef.current += speed;
+        if (scrollPosRef.current >= container.scrollWidth / 2) scrollPosRef.current = 0;
+        container.scrollLeft = scrollPosRef.current;
       }
       animationId = requestAnimationFrame(step);
     };
@@ -76,6 +76,7 @@ const GalleryCarousel = ({ images }: { images: string[] }) => {
 // the list for a seamless loop, advance scrollLeft via rAF, pause on hover.
 const TestimonialsCarousel = ({ testimonials }: { testimonials: LandingTestimonial[] }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollPosRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
   const duplicated = [...testimonials, ...testimonials];
 
@@ -83,13 +84,12 @@ const TestimonialsCarousel = ({ testimonials }: { testimonials: LandingTestimoni
     const container = scrollRef.current;
     if (!container) return;
     let animationId: number;
-    let scrollPos = 0;
     const speed = 0.5;
     const step = () => {
       if (!isPaused && container) {
-        scrollPos += speed;
-        if (scrollPos >= container.scrollWidth / 2) scrollPos = 0;
-        container.scrollLeft = scrollPos;
+        scrollPosRef.current += speed;
+        if (scrollPosRef.current >= container.scrollWidth / 2) scrollPosRef.current = 0;
+        container.scrollLeft = scrollPosRef.current;
       }
       animationId = requestAnimationFrame(step);
     };
