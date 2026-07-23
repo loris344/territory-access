@@ -4,9 +4,10 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar, Download } from "lucide-react";
+import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar, Download, Crosshair } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { downloadImage } from "@/lib/utils";
+import FocalPointModal from "@/components/admin/FocalPointModal";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 import WaitlistPanel from "@/components/admin/WaitlistPanel";
 import InfoRequestsPanel from "@/components/admin/InfoRequestsPanel";
@@ -95,6 +96,7 @@ const Admin = () => {
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
   const [galleryUploading, setGalleryUploading] = useState(false);
   const [expeditionDates, setExpeditionDates] = useState<any[]>([]);
+  const [focalPointTarget, setFocalPointTarget] = useState<{ id: string; url: string; position: string } | null>(null);
 
   useEffect(() => {
     checkAuth();
@@ -200,6 +202,21 @@ const Admin = () => {
       fetchExpeditions();
     }
     setUploading(false);
+  };
+
+  const saveHeroImagePosition = async (position: string) => {
+    if (!focalPointTarget) return;
+    const { error } = await supabase
+      .from("expeditions")
+      .update({ hero_image_position: position })
+      .eq("id", focalPointTarget.id);
+    if (error) {
+      toast.error("Failed to save framing: " + error.message);
+      return;
+    }
+    toast.success("Framing saved!");
+    setFocalPointTarget(null);
+    fetchExpeditions();
   };
 
   const deleteExpedition = async (id: string) => {
@@ -801,17 +818,30 @@ const Admin = () => {
                       />
                     </label>
                     {exp.hero_image_url && (
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          downloadImage(exp.hero_image_url!, `${exp.slug}-hero.jpg`).catch(() => toast.error("Download failed"));
-                        }}
-                        className="absolute top-1 right-1 p-1 bg-background/80 border border-border opacity-0 group-hover:opacity-100 transition-opacity"
-                        title="Download"
-                      >
-                        <Download className="w-3 h-3 text-foreground" />
-                      </button>
+                      <div className="absolute top-1 right-1 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            setFocalPointTarget({ id: exp.id, url: exp.hero_image_url!, position: exp.hero_image_position || "50% 50%" });
+                          }}
+                          className="p-1 bg-background/80 border border-border"
+                          title="Adjust framing"
+                        >
+                          <Crosshair className="w-3 h-3 text-foreground" />
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            downloadImage(exp.hero_image_url!, `${exp.slug}-hero.jpg`).catch(() => toast.error("Download failed"));
+                          }}
+                          className="p-1 bg-background/80 border border-border"
+                          title="Download"
+                        >
+                          <Download className="w-3 h-3 text-foreground" />
+                        </button>
+                      </div>
                     )}
                   </div>
 
@@ -858,6 +888,15 @@ const Admin = () => {
           ))}
         </div>
       </div>
+
+      {focalPointTarget && (
+        <FocalPointModal
+          imageUrl={focalPointTarget.url}
+          position={focalPointTarget.position}
+          onSave={saveHeroImagePosition}
+          onClose={() => setFocalPointTarget(null)}
+        />
+      )}
     </div>
   );
 };

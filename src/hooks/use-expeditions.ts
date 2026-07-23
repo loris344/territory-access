@@ -57,6 +57,7 @@ async function fetchExpeditions(): Promise<Expedition[]> {
       status: exp.status as Expedition["status"],
       expedition_status: exp.expedition_status,
       hero_image_url: exp.hero_image_url || undefined,
+      hero_image_position: exp.hero_image_position || "50% 50%",
       itinerary: (e.expedition_days_itinerary || [])
         .map((d: any) => ({ day_number: d.day_number, title: d.title, description: d.description }))
         .sort((a: { day_number: number }, b: { day_number: number }) => a.day_number - b.day_number),

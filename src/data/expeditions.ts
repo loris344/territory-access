@@ -39,6 +39,7 @@ export interface Expedition {
   cancellation_reason?: string;
   expedition_status: string;
   hero_image_url?: string;
+  hero_image_position?: string;
   itinerary: ExpeditionDay[];
   inclusions: string[];
   exclusions: string[];

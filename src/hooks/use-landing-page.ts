@@ -30,6 +30,7 @@ export interface LandingPageData {
   headline: string;
   subheadline: string;
   hero_image_url: string | null;
+  hero_image_position: string;
   trust_signals: TrustSignal[];
   promise_intro: string;
   promise_bullets: PromiseBullet[];
@@ -101,6 +102,7 @@ async function fetchLandingPage(slug: string): Promise<LandingPageData | null> {
     status: exp.status as Expedition["status"],
     expedition_status: exp.expedition_status,
     hero_image_url: exp.hero_image_url || undefined,
+    hero_image_position: exp.hero_image_position || "50% 50%",
     itinerary: (exp.expedition_days_itinerary || [])
       .map((d: any) => ({
         day_number: d.day_number,
@@ -128,6 +130,7 @@ async function fetchLandingPage(slug: string): Promise<LandingPageData | null> {
     headline: data.headline,
     subheadline: data.subheadline,
     hero_image_url: data.hero_image_url,
+    hero_image_position: (data as any).hero_image_position || "50% 50%",
     trust_signals: ((data.trust_signals as unknown) as TrustSignal[]) || [],
     promise_intro: data.promise_intro,
     promise_bullets: ((data.promise_bullets as unknown) as PromiseBullet[]) || [],

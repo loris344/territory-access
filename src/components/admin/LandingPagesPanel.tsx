@@ -3,8 +3,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Plus, Trash2, Upload, Save, ExternalLink, X, Download } from "lucide-react";
+import { Plus, Trash2, Upload, Save, ExternalLink, X, Download, Crosshair } from "lucide-react";
 import { downloadImage } from "@/lib/utils";
+import FocalPointModal from "@/components/admin/FocalPointModal";
 
 interface TrustSignal { icon: string; title: string; desc: string; }
 interface PromiseBullet { title: string; desc: string; }
@@ -19,6 +20,7 @@ interface LandingPageRow {
   headline: string;
   subheadline: string;
   hero_image_url: string | null;
+  hero_image_position: string;
   trust_signals: TrustSignal[];
   promise_intro: string;
   promise_bullets: PromiseBullet[];
@@ -101,6 +103,7 @@ const LandingPagesPanel = () => {
   const [newSlug, setNewSlug] = useState("");
   const [newExpeditionId, setNewExpeditionId] = useState("");
   const [creating, setCreating] = useState(false);
+  const [focalPointOpen, setFocalPointOpen] = useState(false);
 
   const fetchPages = async () => {
     const { data, error } = await supabase
@@ -295,7 +298,18 @@ const LandingPagesPanel = () => {
 
                   <div>
                     <label className={labelCls}>Hero image (blank = use the tour's own hero image)</label>
-                    <ImageUploader url={form.hero_image_url} prefix={`lp-${form.slug}-hero`} alt="Hero" onUploaded={(url) => setForm({ ...form, hero_image_url: url })} />
+                    <div className="flex items-center gap-3">
+                      <ImageUploader url={form.hero_image_url} prefix={`lp-${form.slug}-hero`} alt="Hero" onUploaded={(url) => setForm({ ...form, hero_image_url: url })} />
+                      {form.hero_image_url && (
+                        <button
+                          type="button"
+                          onClick={() => setFocalPointOpen(true)}
+                          className="flex items-center gap-1.5 font-heading text-[9px] tracking-wider uppercase px-3 py-2 border border-border hover:border-foreground transition-colors"
+                        >
+                          <Crosshair className="w-3.5 h-3.5" /> Adjust framing
+                        </button>
+                      )}
+                    </div>
                   </div>
 
                   {/* Trust signals */}
@@ -481,6 +495,18 @@ const LandingPagesPanel = () => {
             </div>
           ))}
         </div>
+      )}
+
+      {focalPointOpen && form?.hero_image_url && (
+        <FocalPointModal
+          imageUrl={form.hero_image_url}
+          position={form.hero_image_position || "50% 50%"}
+          onSave={(position) => {
+            setForm({ ...form, hero_image_position: position });
+            setFocalPointOpen(false);
+          }}
+          onClose={() => setFocalPointOpen(false)}
+        />
       )}
     </div>
   );

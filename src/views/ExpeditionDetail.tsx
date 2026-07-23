@@ -152,6 +152,12 @@ const ExpeditionDetail = () => {
                 src={optimizedImageUrl(allImages[currentImg])}
                 alt=""
                 className="absolute inset-0 w-full h-full object-cover"
+                style={{
+                  objectPosition:
+                    allImages[currentImg] === expedition.hero_image_url
+                      ? expedition.hero_image_position || "50% 50%"
+                      : "50% 50%",
+                }}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}

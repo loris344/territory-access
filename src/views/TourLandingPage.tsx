@@ -177,6 +177,7 @@ const TourLandingPage = () => {
   const featuredDate = upcomingDates.find((d) => d.status === "open" || d.status === "limited") || upcomingDates[0];
   const remaining = featuredDate ? featuredDate.capacity_max - featuredDate.spots_taken : null;
   const heroImage = optimizedImageUrl(lp.hero_image_url || expedition.hero_image_url || "");
+  const heroImagePosition = lp.hero_image_url ? lp.hero_image_position : expedition.hero_image_position;
 
   // Gallery: expedition photos with the landing page's own trust photos
   // interleaved every 2 images (a request-time mix, not stored pre-merged).
@@ -214,7 +215,14 @@ const TourLandingPage = () => {
       {/* Hero */}
       <section className="relative min-h-[90svh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          {heroImage && <img src={heroImage} alt={expedition.name} className="w-full h-full object-cover" />}
+          {heroImage && (
+            <img
+              src={heroImage}
+              alt={expedition.name}
+              className="w-full h-full object-cover"
+              style={{ objectPosition: heroImagePosition }}
+            />
+          )}
           <div className="absolute inset-0 bg-background/60" />
         </div>
 

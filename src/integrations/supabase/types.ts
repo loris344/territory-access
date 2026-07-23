@@ -299,6 +299,7 @@ export type Database = {
           duration_days: number
           end_date: string
           expedition_status: string
+          hero_image_position: string
           hero_image_url: string | null
           id: string
           intensity_level: string
@@ -326,6 +327,7 @@ export type Database = {
           duration_days: number
           end_date: string
           expedition_status?: string
+          hero_image_position?: string
           hero_image_url?: string | null
           id?: string
           intensity_level: string
@@ -353,6 +355,7 @@ export type Database = {
           duration_days?: number
           end_date?: string
           expedition_status?: string
+          hero_image_position?: string
           hero_image_url?: string | null
           id?: string
           intensity_level?: string
@@ -403,6 +406,7 @@ export type Database = {
           expedition_id: string
           gallery_trust_images: Json
           headline: string
+          hero_image_position: string
           hero_image_url: string | null
           id: string
           is_published: boolean
@@ -424,6 +428,7 @@ export type Database = {
           expedition_id: string
           gallery_trust_images?: Json
           headline?: string
+          hero_image_position?: string
           hero_image_url?: string | null
           id?: string
           is_published?: boolean
@@ -445,6 +450,7 @@ export type Database = {
           expedition_id?: string
           gallery_trust_images?: Json
           headline?: string
+          hero_image_position?: string
           hero_image_url?: string | null
           id?: string
           is_published?: boolean
