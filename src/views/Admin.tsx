@@ -4,12 +4,13 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar, ExternalLink } from "lucide-react";
+import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 import WaitlistPanel from "@/components/admin/WaitlistPanel";
 import InfoRequestsPanel from "@/components/admin/InfoRequestsPanel";
 import MetaEventLogPanel from "@/components/admin/MetaEventLogPanel";
+import LandingPagesPanel from "@/components/admin/LandingPagesPanel";
 
 
 const DateRow = ({ dateRow, expId, onUpdate, onDelete, statusOptions }: {
@@ -453,24 +454,7 @@ const Admin = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Landing Pages */}
-        <div className="mb-8 border border-border bg-card p-4 sm:p-6">
-          <div className="flex items-center gap-2 font-heading text-sm tracking-wider uppercase mb-3">
-            <ExternalLink className="w-4 h-4" />
-            Landing Pages
-          </div>
-          <div className="space-y-2">
-            <a
-              href="/lp/kashmir"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 text-sm text-muted-foreground hover:text-accent transition-colors group"
-            >
-              <span className="font-heading text-xs tracking-wider uppercase text-foreground">/lp/kashmir</span>
-              <span className="text-xs">Indian Kashmir — Line of Control</span>
-              <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity ml-auto" />
-            </a>
-          </div>
-        </div>
+        <LandingPagesPanel />
 
         {/* Applications */}
         <ApplicationsPanel />

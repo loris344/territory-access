@@ -374,10 +374,127 @@ export type Database = {
         }
         Relationships: []
       }
+      landing_pages: {
+        Row: {
+          created_at: string
+          expedition_id: string
+          gallery_trust_images: Json
+          headline: string
+          hero_image_url: string | null
+          id: string
+          is_published: boolean
+          led_by_bio: string
+          led_by_image_url: string | null
+          led_by_name: string
+          promise_bullets: Json
+          promise_intro: string
+          slug: string
+          subheadline: string
+          tagline: string
+          testimonials: Json
+          trust_signals: Json
+        }
+        Insert: {
+          created_at?: string
+          expedition_id: string
+          gallery_trust_images?: Json
+          headline?: string
+          hero_image_url?: string | null
+          id?: string
+          is_published?: boolean
+          led_by_bio?: string
+          led_by_image_url?: string | null
+          led_by_name?: string
+          promise_bullets?: Json
+          promise_intro?: string
+          slug: string
+          subheadline?: string
+          tagline?: string
+          testimonials?: Json
+          trust_signals?: Json
+        }
+        Update: {
+          created_at?: string
+          expedition_id?: string
+          gallery_trust_images?: Json
+          headline?: string
+          hero_image_url?: string | null
+          id?: string
+          is_published?: boolean
+          led_by_bio?: string
+          led_by_image_url?: string | null
+          led_by_name?: string
+          promise_bullets?: Json
+          promise_intro?: string
+          slug?: string
+          subheadline?: string
+          tagline?: string
+          testimonials?: Json
+          trust_signals?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "landing_pages_expedition_id_fkey"
+            columns: ["expedition_id"]
+            isOneToOne: false
+            referencedRelation: "expeditions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      meta_event_log: {
+        Row: {
+          client_ip: string | null
+          content_name: string | null
+          created_at: string
+          currency: string | null
+          event_id: string | null
+          event_name: string | null
+          event_source_url: string | null
+          form_type: string | null
+          id: string
+          meta_error: string | null
+          meta_events_received: number | null
+          meta_status: number | null
+          value: number | null
+        }
+        Insert: {
+          client_ip?: string | null
+          content_name?: string | null
+          created_at?: string
+          currency?: string | null
+          event_id?: string | null
+          event_name?: string | null
+          event_source_url?: string | null
+          form_type?: string | null
+          id?: string
+          meta_error?: string | null
+          meta_events_received?: number | null
+          meta_status?: number | null
+          value?: number | null
+        }
+        Update: {
+          client_ip?: string | null
+          content_name?: string | null
+          created_at?: string
+          currency?: string | null
+          event_id?: string | null
+          event_name?: string | null
+          event_source_url?: string | null
+          form_type?: string | null
+          id?: string
+          meta_error?: string | null
+          meta_events_received?: number | null
+          meta_status?: number | null
+          value?: number | null
+        }
+        Relationships: []
+      }
       newsletter_subscribers: {
         Row: {
           created_at: string
           email: string
+          first_name: string | null
           id: string
           interested_destination: string | null
           source: string | null
@@ -385,6 +502,7 @@ export type Database = {
         Insert: {
           created_at?: string
           email: string
+          first_name?: string | null
           id?: string
           interested_destination?: string | null
           source?: string | null
@@ -392,6 +510,7 @@ export type Database = {
         Update: {
           created_at?: string
           email?: string
+          first_name?: string | null
           id?: string
           interested_destination?: string | null
           source?: string | null
