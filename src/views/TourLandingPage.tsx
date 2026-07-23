@@ -16,6 +16,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import WaitlistModal from "@/components/WaitlistModal";
+import ItineraryMap from "@/components/ItineraryMap";
+import ApplicationForm from "@/components/ApplicationForm";
 import { useLandingPage } from "@/hooks/use-landing-page";
 import { optimizedImageUrl } from "@/lib/utils";
 const logoDark = "/assets/logo-dark.webp";
@@ -103,7 +105,6 @@ const TourLandingPage = () => {
   const upcomingDates = (expedition.dates || []).filter((d) => d.end_date >= today && d.status !== "cancelled" && d.status !== "postponed");
   const featuredDate = upcomingDates.find((d) => d.status === "open" || d.status === "limited") || upcomingDates[0];
   const remaining = featuredDate ? featuredDate.capacity_max - featuredDate.spots_taken : null;
-  const APPLY_URL = `/apply?expedition=${expedition.slug}${featuredDate ? `&date=${featuredDate.id}` : ""}`;
   const heroImage = optimizedImageUrl(lp.hero_image_url || expedition.hero_image_url || "");
 
   // Gallery: expedition photos with the landing page's own trust photos
@@ -130,12 +131,12 @@ const TourLandingPage = () => {
           <Link href="/" className="flex items-center">
             <img src={logoDark} alt="Ligne Rouge Tours" className="h-14 sm:h-16 w-auto" />
           </Link>
-          <Link
-            href={APPLY_URL}
+          <a
+            href="#apply"
             className="font-heading text-[10px] tracking-[0.15em] uppercase px-5 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-all"
           >
             Apply now
-          </Link>
+          </a>
         </div>
       </div>
 
@@ -181,12 +182,12 @@ const TourLandingPage = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4">
-              <Link
-                href={APPLY_URL}
+              <a
+                href="#apply"
                 className="font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all w-full sm:w-auto text-center"
               >
                 Apply - ${expedition.price_usd.toLocaleString("en-US")} / pers.
-              </Link>
+              </a>
             </div>
 
             <p className="font-heading text-[9px] tracking-[0.15em] uppercase text-muted-foreground/50">
@@ -322,6 +323,10 @@ const TourLandingPage = () => {
                 </motion.div>
               ))}
             </div>
+
+            <div className="mt-10">
+              <ItineraryMap days={expedition.itinerary} />
+            </div>
           </div>
         </section>
       )}
@@ -410,29 +415,23 @@ const TourLandingPage = () => {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="py-20 sm:py-28 border-t border-border">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
+      {/* Apply directly on this page — tour is fixed, can't be changed */}
+      <section id="apply" className="py-20 sm:py-28 border-t border-border">
+        <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             <div className="flex justify-center mb-8">
               <div className="h-px w-16 bg-accent" />
             </div>
 
-            <h2 className="heading-display text-2xl sm:text-3xl mb-4">Ready to cross the line?</h2>
-            <p className="body-text text-muted-foreground text-sm sm:text-base max-w-xl mx-auto mb-8">
+            <h2 className="heading-display text-2xl sm:text-3xl mb-4 text-center">Ready to cross the line?</h2>
+            <p className="body-text text-muted-foreground text-sm sm:text-base max-w-xl mx-auto mb-10 text-center">
               Each application is reviewed individually. We select participants based on motivation, physical readiness and attitude, not first come, first served.
             </p>
 
-            <Link
-              href={APPLY_URL}
-              className="inline-block font-heading text-xs tracking-[0.15em] uppercase px-10 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all"
-            >
-              Apply for {lp.headline} - ${expedition.price_usd.toLocaleString("en-US")} / pers.
-            </Link>
-
-            <p className="font-heading text-[9px] tracking-[0.15em] uppercase text-muted-foreground/40 mt-6">
-              Selection only
-            </p>
+            <ApplicationForm
+              lockedExpedition={{ id: expedition.id, name: lp.headline, price: expedition.price_usd }}
+              preselectedDateId={featuredDate?.id}
+            />
           </motion.div>
         </div>
       </section>

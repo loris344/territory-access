@@ -2,6 +2,8 @@ export interface ExpeditionDay {
   day_number: number;
   title: string;
   description: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface ExpeditionDate {

@@ -156,6 +156,8 @@ export type Database = {
           description: string
           expedition_id: string
           id: string
+          latitude: number | null
+          longitude: number | null
           title: string
         }
         Insert: {
@@ -163,6 +165,8 @@ export type Database = {
           description: string
           expedition_id: string
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           title: string
         }
         Update: {
@@ -170,6 +174,8 @@ export type Database = {
           description?: string
           expedition_id?: string
           id?: string
+          latitude?: number | null
+          longitude?: number | null
           title?: string
         }
         Relationships: [
