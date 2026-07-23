@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { trackLead } from "@/lib/meta";
 import { expeditions as localExpeditions } from "@/data/expeditions";
 import TurnstileWidget from "@/components/TurnstileWidget";
+import CardEntryFormPlaceholder from "@/components/CardEntryFormPlaceholder";
 
 const applicationSchema = z.object({
   expedition_id: z.string().min(1, "Please select an expedition"),
@@ -51,6 +52,9 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
   const [activeApplicationId, setActiveApplicationId] = useState<string>(() => crypto.randomUUID());
   const [depositStatus, setDepositStatus] = useState<DepositStatus>("idle");
   const [depositError, setDepositError] = useState("");
+  // Temporary: shows a visual-only card form instead of redirecting to
+  // Stripe, per request, while the real payment connection is pending.
+  const [showCardForm, setShowCardForm] = useState(false);
 
   const [form, setForm] = useState({
     expedition_id: lockedExpedition?.id || "",
@@ -100,6 +104,9 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
 
+  // The real Stripe Checkout flow — currently not wired to any button while
+  // CardEntryFormPlaceholder stands in for it, but left intact to reconnect
+  // later (swap the button below back to calling this).
   const handlePayDeposit = async () => {
     if (!slug) return;
     setDepositStatus("paying");
@@ -328,13 +335,16 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
                 </p>
               )}
               {depositError && <p className="text-destructive text-sm mb-4">{depositError}</p>}
-              <button
-                onClick={handlePayDeposit}
-                disabled={depositStatus === "paying"}
-                className="w-full font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 mt-4 disabled:opacity-50"
-              >
-                {depositStatus === "paying" ? "Redirecting..." : `Pay $${amountLabel} Deposit`}
-              </button>
+              {showCardForm ? (
+                <CardEntryFormPlaceholder amountLabel={amountLabel} onCancel={() => setShowCardForm(false)} />
+              ) : (
+                <button
+                  onClick={() => setShowCardForm(true)}
+                  className="w-full font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 mt-4 disabled:opacity-50"
+                >
+                  {`Pay $${amountLabel} Deposit`}
+                </button>
+              )}
             </>
           )}
         </div>
