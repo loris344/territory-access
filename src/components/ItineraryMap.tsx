@@ -26,7 +26,11 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
   const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2;
   const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2;
   const spread = Math.max(Math.max(...lats) - Math.min(...lats), Math.max(...lngs) - Math.min(...lngs), 0.05);
-  const scale = Math.max(400, Math.min(50000, 4000 / spread));
+  const scale = Math.max(300, Math.min(40000, 2000 / spread));
+  // However tight the initial framing, always allow zooming out to roughly
+  // world-map scale (matches the homepage WorldMap's own scale of 180) so
+  // the visitor can see where the region actually sits on the globe.
+  const minZoom = Math.max(0.02, 150 / scale);
 
   const selected = points.find((p) => p.day_number === selectedDay) || points[0];
 
@@ -38,7 +42,7 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
           projectionConfig={{ scale, center: [centerLng, centerLat] }}
           style={{ width: "100%", height: "clamp(280px, 45vw, 420px)" }}
         >
-          <ZoomableGroup center={[centerLng, centerLat]} minZoom={1} maxZoom={10} onMoveEnd={({ zoom: k }) => setZoom(k)}>
+          <ZoomableGroup center={[centerLng, centerLat]} minZoom={minZoom} maxZoom={10} onMoveEnd={({ zoom: k }) => setZoom(k)}>
             <Geographies geography={geoUrl}>
               {({ geographies }) =>
                 geographies.map((geo) => (
@@ -99,7 +103,7 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
         </ComposableMap>
       </div>
 
-      {/* Selected day's activity — tap a point on the map to switch */}
+      {/* Selected day's activity: tap a point on the map to switch */}
       {selected && (
         <div className="border-t border-border p-5 sm:p-6">
           <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-accent-red mb-1">
