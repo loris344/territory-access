@@ -266,9 +266,9 @@ const TourLandingPage = () => {
               {remaining !== null && remaining > 0 && ` · ${remaining} spots remaining on next session`}
             </p>
 
-            <div className="flex items-center justify-center gap-6">
-              <img src="/assets/google-reviews-logo.png" alt="Google Reviews" className="h-9 w-auto" />
-              <img src="/assets/tripadvisor-logo.png" alt="Tripadvisor" className="h-12 w-auto" />
+            <div className="flex items-center justify-center gap-5">
+              <img src="/assets/google-reviews-logo.png" alt="Google Reviews" className="h-5 w-auto" />
+              <img src="/assets/tripadvisor-logo.png" alt="Tripadvisor" className="h-5 w-auto" />
             </div>
           </motion.div>
         </div>
