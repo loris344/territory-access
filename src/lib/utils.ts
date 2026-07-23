@@ -16,3 +16,23 @@ export function cn(...inputs: ClassValue[]) {
 export function optimizedImageUrl(url: string): string {
   return url;
 }
+
+/**
+ * Force-downloads an image via a fetched blob rather than a plain
+ * `<a href download>`, since browsers ignore the `download` attribute for
+ * cross-origin URLs (all our images live on Supabase Storage or the static
+ * assets domain) and would just navigate to the image instead.
+ */
+export async function downloadImage(url: string, filename?: string): Promise<void> {
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Failed to fetch image: ${res.status}`);
+  const blob = await res.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = objectUrl;
+  a.download = filename || url.split("/").pop()?.split("?")[0] || "image";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(objectUrl);
+}

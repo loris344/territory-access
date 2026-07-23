@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Plus, Trash2, Upload, Save, ExternalLink, X } from "lucide-react";
+import { Plus, Trash2, Upload, Save, ExternalLink, X, Download } from "lucide-react";
+import { downloadImage } from "@/lib/utils";
 
 interface TrustSignal { icon: string; title: string; desc: string; }
 interface PromiseBullet { title: string; desc: string; }
@@ -26,6 +27,8 @@ interface LandingPageRow {
   led_by_bio: string;
   led_by_image_url: string | null;
   gallery_trust_images: string[];
+  deposit_required: boolean;
+  deposit_amount_usd: number;
   expeditions?: { name: string; slug: string } | null;
 }
 
@@ -74,6 +77,16 @@ const ImageUploader = ({ url, prefix, onUploaded, alt }: { url: string | null | 
           }}
         />
       </label>
+      {url && (
+        <button
+          type="button"
+          onClick={() => downloadImage(url, `${prefix}.jpg`).catch(() => toast.error("Download failed"))}
+          className="p-2 border border-border hover:border-foreground transition-colors"
+          title="Download"
+        >
+          <Download className="w-3.5 h-3.5" />
+        </button>
+      )}
     </div>
   );
 };
@@ -228,6 +241,29 @@ const LandingPagesPanel = () => {
                     />
                     <label className="text-xs text-muted-foreground">Published</label>
                     <span className="ml-auto text-xs text-muted-foreground font-heading">/lp/{form.slug}</span>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={form.deposit_required}
+                      onChange={(e) => setForm({ ...form, deposit_required: e.target.checked })}
+                      className="h-4 w-4 accent-accent"
+                    />
+                    <label className="text-xs text-muted-foreground">Require a deposit to pre-book</label>
+                    {form.deposit_required && (
+                      <div className="flex items-center gap-2 ml-2">
+                        <span className="text-xs text-muted-foreground">$</span>
+                        <input
+                          type="number"
+                          min={1}
+                          value={form.deposit_amount_usd}
+                          onChange={(e) => setForm({ ...form, deposit_amount_usd: parseInt(e.target.value) || 0 })}
+                          className={`${inputCls} w-24`}
+                        />
+                        <span className="text-xs text-muted-foreground">USD</span>
+                      </div>
+                    )}
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -388,8 +424,16 @@ const LandingPagesPanel = () => {
                         <div key={i} className="relative group">
                           <img src={url} alt="" className="w-16 h-16 object-cover border border-border" />
                           <button
+                            onClick={() => downloadImage(url, `lp-${form.slug}-trust-${i}.jpg`).catch(() => toast.error("Download failed"))}
+                            className="absolute -top-1.5 -left-1.5 bg-background border border-border rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                            title="Download"
+                          >
+                            <Download className="w-3 h-3" />
+                          </button>
+                          <button
                             onClick={() => setForm({ ...form, gallery_trust_images: form.gallery_trust_images.filter((_, j) => j !== i) })}
                             className="absolute -top-1.5 -right-1.5 bg-background border border-destructive text-destructive rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                            title="Delete"
                           >
                             <X className="w-3 h-3" />
                           </button>

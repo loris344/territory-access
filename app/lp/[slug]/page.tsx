@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import TourLandingPage from "@/views/TourLandingPage";
 import { buildMetadata } from "@/lib/seo";
 import { supabase } from "@/integrations/supabase/client";
@@ -39,5 +40,11 @@ export async function generateMetadata({
 }
 
 export default function LandingPageRoute() {
-  return <TourLandingPage />;
+  // <TourLandingPage> embeds <ApplicationForm>, which uses useSearchParams()
+  // for the Stripe deposit redirect flow — must sit under a Suspense boundary.
+  return (
+    <Suspense>
+      <TourLandingPage />
+    </Suspense>
+  );
 }

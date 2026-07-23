@@ -18,6 +18,9 @@ type Application = {
   created_at: string;
   expedition_id: string;
   expedition_name?: string;
+  deposit_required: boolean;
+  deposit_paid: boolean;
+  deposit_amount_usd: number | null;
 };
 
 const statusColors: Record<string, string> = {
@@ -118,6 +121,15 @@ const ApplicationsPanel = () => {
                       <span className={`font-heading text-[10px] tracking-wider uppercase px-2 py-0.5 ${statusColors[app.status] || "bg-muted text-muted-foreground"}`}>
                         {app.status}
                       </span>
+                      {app.deposit_required && (
+                        <span
+                          className={`font-heading text-[10px] tracking-wider uppercase px-2 py-0.5 ${
+                            app.deposit_paid ? "bg-green-500/10 text-green-600" : "bg-amber-500/10 text-amber-600"
+                          }`}
+                        >
+                          {app.deposit_paid ? `Deposit paid ($${app.deposit_amount_usd})` : "Deposit pending"}
+                        </span>
+                      )}
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
                       <span className="text-accent">{app.expedition_name}</span>

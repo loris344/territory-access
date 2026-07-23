@@ -4,8 +4,9 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar, Download } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
+import { downloadImage } from "@/lib/utils";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 import WaitlistPanel from "@/components/admin/WaitlistPanel";
 import InfoRequestsPanel from "@/components/admin/InfoRequestsPanel";
@@ -493,6 +494,13 @@ const Admin = () => {
                         {img.is_active ? "Disable" : "Enable"}
                       </button>
                       <button
+                        onClick={() => downloadImage(img.image_url, `hero-${img.id}.jpg`).catch(() => toast.error("Download failed"))}
+                        className="p-1.5 bg-background border border-border"
+                        title="Download"
+                      >
+                        <Download className="w-3 h-3" />
+                      </button>
+                      <button
                         onClick={() => deleteHeroImage(img.id)}
                         className="p-1.5 bg-background border border-destructive text-destructive"
                       >
@@ -699,6 +707,13 @@ const Admin = () => {
                               </button>
                             )}
                             <button
+                              onClick={() => downloadImage(img.image_url, `gallery-${img.id}.jpg`).catch(() => toast.error("Download failed"))}
+                              className="p-1 bg-background/80 border border-border"
+                              title="Download"
+                            >
+                              <Download className="w-3 h-3" />
+                            </button>
+                            <button
                               onClick={() => deleteGalleryImage(img.id, editData.id)}
                               className="p-1 bg-background/80 border border-destructive text-destructive"
                             >
@@ -785,6 +800,19 @@ const Admin = () => {
                         }}
                       />
                     </label>
+                    {exp.hero_image_url && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          e.preventDefault();
+                          downloadImage(exp.hero_image_url!, `${exp.slug}-hero.jpg`).catch(() => toast.error("Download failed"));
+                        }}
+                        className="absolute top-1 right-1 p-1 bg-background/80 border border-border opacity-0 group-hover:opacity-100 transition-opacity"
+                        title="Download"
+                      >
+                        <Download className="w-3 h-3 text-foreground" />
+                      </button>
+                    )}
                   </div>
 
                   {/* Info */}

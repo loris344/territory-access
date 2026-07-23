@@ -42,6 +42,10 @@ export type Database = {
       applications: {
         Row: {
           created_at: string
+          deposit_amount_usd: number | null
+          deposit_paid: boolean
+          deposit_paid_at: string | null
+          deposit_required: boolean
           email: string
           expedition_date_id: string | null
           expedition_id: string
@@ -54,9 +58,14 @@ export type Database = {
           phone: string
           physical_condition: string
           status: string
+          stripe_checkout_session_id: string | null
         }
         Insert: {
           created_at?: string
+          deposit_amount_usd?: number | null
+          deposit_paid?: boolean
+          deposit_paid_at?: string | null
+          deposit_required?: boolean
           email: string
           expedition_date_id?: string | null
           expedition_id: string
@@ -69,9 +78,14 @@ export type Database = {
           phone: string
           physical_condition: string
           status?: string
+          stripe_checkout_session_id?: string | null
         }
         Update: {
           created_at?: string
+          deposit_amount_usd?: number | null
+          deposit_paid?: boolean
+          deposit_paid_at?: string | null
+          deposit_required?: boolean
           email?: string
           expedition_date_id?: string | null
           expedition_id?: string
@@ -84,6 +98,7 @@ export type Database = {
           phone?: string
           physical_condition?: string
           status?: string
+          stripe_checkout_session_id?: string | null
         }
         Relationships: [
           {
@@ -383,6 +398,8 @@ export type Database = {
       landing_pages: {
         Row: {
           created_at: string
+          deposit_amount_usd: number
+          deposit_required: boolean
           expedition_id: string
           gallery_trust_images: Json
           headline: string
@@ -402,6 +419,8 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          deposit_amount_usd?: number
+          deposit_required?: boolean
           expedition_id: string
           gallery_trust_images?: Json
           headline?: string
@@ -421,6 +440,8 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          deposit_amount_usd?: number
+          deposit_required?: boolean
           expedition_id?: string
           gallery_trust_images?: Json
           headline?: string

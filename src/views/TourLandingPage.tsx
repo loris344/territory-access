@@ -466,7 +466,14 @@ const TourLandingPage = () => {
             </p>
 
             <ApplicationForm
-              lockedExpedition={{ id: expedition.id, name: lp.headline, price: expedition.price_usd }}
+              lockedExpedition={{
+                id: expedition.id,
+                name: lp.headline,
+                price: expedition.price_usd,
+                depositRequired: lp.deposit_required,
+                depositAmountUsd: lp.deposit_amount_usd,
+              }}
+              slug={lp.slug}
               preselectedDateId={selectedDateId ?? featuredDate?.id}
             />
           </motion.div>

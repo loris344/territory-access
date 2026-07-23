@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { z } from "zod";
 import { supabase } from "@/integrations/supabase/client";
 import { trackLead } from "@/lib/meta";
@@ -29,11 +30,17 @@ interface ApplicationFormProps {
   preselectedDateId?: string;
   // When set, the tour can't be changed: no dropdown, just a fixed label.
   // Used when the form is embedded directly on a tour's landing page.
-  lockedExpedition?: { id: string; name: string; price: number };
+  lockedExpedition?: { id: string; name: string; price: number; depositRequired?: boolean; depositAmountUsd?: number };
+  // Landing page slug — only needed when a deposit flow is in play (Stripe
+  // redirect URLs and the sessionStorage retry key are scoped to it).
+  slug?: string;
   onSubmitted?: () => void;
 }
 
-const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedExpedition, onSubmitted }: ApplicationFormProps) => {
+type DepositStatus = "idle" | "offer" | "paying" | "confirming" | "paid" | "cancelled";
+
+const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedExpedition, slug, onSubmitted }: ApplicationFormProps) => {
+  const searchParams = useSearchParams();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -41,6 +48,9 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
   const [expeditionOptions, setExpeditionOptions] = useState<ExpeditionOption[]>([]);
   const [selectedDateLabel, setSelectedDateLabel] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [activeApplicationId, setActiveApplicationId] = useState<string>(() => crypto.randomUUID());
+  const [depositStatus, setDepositStatus] = useState<DepositStatus>("idle");
+  const [depositError, setDepositError] = useState("");
 
   const [form, setForm] = useState({
     expedition_id: lockedExpedition?.id || "",
@@ -57,6 +67,59 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
 
   const handleTurnstileVerify = useCallback((token: string) => setTurnstileToken(token), []);
   const handleTurnstileExpire = useCallback(() => setTurnstileToken(""), []);
+
+  // Resume the deposit flow after a Stripe Checkout redirect. On a fresh
+  // pageview (not the in-memory state right after submit), so this reads
+  // from the URL / sessionStorage rather than component state.
+  useEffect(() => {
+    if (!slug) return;
+    const depositParam = searchParams.get("deposit");
+    const sessionId = searchParams.get("session_id");
+    const storageKey = `deposit_pending_${slug}`;
+
+    if (depositParam === "success" && sessionId) {
+      setSubmitted(true);
+      setDepositStatus("confirming");
+      supabase.functions.invoke("confirm-deposit", { body: { session_id: sessionId } }).then(({ data, error }) => {
+        if (!error && data?.paid) {
+          setDepositStatus("paid");
+          sessionStorage.removeItem(storageKey);
+        } else {
+          setDepositStatus("cancelled");
+          setDepositError("We couldn't confirm your payment yet. If you completed checkout, contact us and we'll verify it manually.");
+        }
+      });
+    } else if (depositParam === "cancelled") {
+      const pendingId = sessionStorage.getItem(storageKey);
+      if (pendingId) {
+        setActiveApplicationId(pendingId);
+        setSubmitted(true);
+        setDepositStatus("cancelled");
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [slug]);
+
+  const handlePayDeposit = async () => {
+    if (!slug) return;
+    setDepositStatus("paying");
+    setDepositError("");
+    try {
+      const { data, error } = await supabase.functions.invoke("create-deposit-checkout", {
+        body: { application_id: activeApplicationId },
+      });
+      if (error || !data?.url) {
+        setDepositError("Could not start payment. Please try again.");
+        setDepositStatus("offer");
+        return;
+      }
+      sessionStorage.setItem(`deposit_pending_${slug}`, activeApplicationId);
+      window.location.href = data.url;
+    } catch {
+      setDepositError("Could not start payment. Please try again.");
+      setDepositStatus("offer");
+    }
+  };
 
   useEffect(() => {
     if (lockedExpedition) return; // tour is fixed, nothing to fetch/preselect
@@ -177,6 +240,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     }
 
     const { error } = await supabase.from("applications").insert({
+      id: activeApplicationId,
       expedition_id: result.data.expedition_id,
       expedition_date_id: preselectedDateId || null,
       first_name: result.data.first_name,
@@ -209,6 +273,9 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     );
 
     setSubmitted(true);
+    if (lockedExpedition?.depositRequired) {
+      setDepositStatus("offer");
+    }
     onSubmitted?.();
   };
 
@@ -219,6 +286,58 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     errors[field] ? <p className="text-destructive text-xs mt-1">{errors[field]}</p> : null;
 
   if (submitted) {
+    if (depositStatus !== "idle") {
+      const amountLabel = lockedExpedition?.depositAmountUsd?.toLocaleString("en-US");
+      return (
+        <div className="border border-border bg-card p-8 text-center">
+          <div className="h-px w-12 bg-accent mx-auto mb-6" />
+
+          {depositStatus === "confirming" && (
+            <>
+              <h3 className="heading-display text-lg mb-3">Confirming your payment...</h3>
+              <p className="body-text text-sm text-muted-foreground">Please wait a moment.</p>
+            </>
+          )}
+
+          {depositStatus === "paid" && (
+            <>
+              <h3 className="heading-display text-lg mb-3">Deposit Received</h3>
+              <p className="body-text text-sm text-muted-foreground mb-2">
+                Your ${amountLabel} deposit has been received. You&apos;re pre-booked for this expedition.
+              </p>
+              <p className="body-text text-sm text-muted-foreground">
+                Our team will follow up by email with next steps.
+              </p>
+            </>
+          )}
+
+          {(depositStatus === "offer" || depositStatus === "paying" || depositStatus === "cancelled") && (
+            <>
+              <h3 className="heading-display text-lg mb-3">
+                {depositStatus === "cancelled" ? "Payment Not Completed" : "Reserve Your Spot"}
+              </h3>
+              <p className="body-text text-sm text-muted-foreground mb-2">
+                Your application has been registered. To pre-book your spot, pay a ${amountLabel} deposit now.
+              </p>
+              {depositStatus === "cancelled" && (
+                <p className="body-text text-sm text-muted-foreground mb-4">
+                  Your payment was cancelled or not completed. You can try again below.
+                </p>
+              )}
+              {depositError && <p className="text-destructive text-sm mb-4">{depositError}</p>}
+              <button
+                onClick={handlePayDeposit}
+                disabled={depositStatus === "paying"}
+                className="w-full font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 mt-4 disabled:opacity-50"
+              >
+                {depositStatus === "paying" ? "Redirecting..." : `Pay $${amountLabel} Deposit`}
+              </button>
+            </>
+          )}
+        </div>
+      );
+    }
+
     return (
       <div className="border border-border bg-card p-8 text-center">
         <div className="h-px w-12 bg-accent mx-auto mb-6" />
