@@ -243,7 +243,7 @@ const ExpeditionDetail = () => {
                   <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">
                     Travelers
                   </p>
-                  <p className="font-heading text-sm">{expedition.travelers_count} crossed the line</p>
+                  <p className="font-heading text-sm">{expedition.travelers_count}+ crossed the line</p>
                 </div>
               )}
             </div>

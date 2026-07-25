@@ -200,11 +200,17 @@ const TourLandingPage = () => {
               </a>
             </div>
 
-            <p className="font-heading text-[9px] tracking-[0.15em] uppercase text-muted-foreground/50 mb-6">
+            <p className="font-heading text-[9px] tracking-[0.15em] uppercase text-muted-foreground/50 mb-4">
               By application only
               {remaining !== null && remaining > 0 && ` · ${remaining} spots remaining on next session`}
-              {!!expedition.travelers_count && ` · ${expedition.travelers_count} travelers have already crossed this line`}
             </p>
+
+            {!!expedition.travelers_count && (
+              <p className="flex items-center justify-center gap-1.5 font-heading text-xs tracking-wider uppercase text-foreground/80 mb-6">
+                <Users className="w-3.5 h-3.5 text-accent-red" />
+                {expedition.travelers_count}+ travelers have already crossed this line
+              </p>
+            )}
 
             <div className="flex items-center justify-center gap-5">
               <img src="/assets/google-reviews-logo.png" alt="Google Reviews" className="h-5 w-auto" />
