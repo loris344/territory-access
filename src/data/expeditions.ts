@@ -42,6 +42,8 @@ export interface Expedition {
   hero_image_url?: string;
   hero_image_position?: string;
   travelers_count?: number;
+  deposit_required?: boolean;
+  deposit_amount_usd?: number;
   itinerary: ExpeditionDay[];
   inclusions: string[];
   exclusions: string[];

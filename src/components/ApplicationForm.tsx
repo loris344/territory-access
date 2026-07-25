@@ -23,7 +23,15 @@ const applicationSchema = z.object({
   terms_accepted: z.boolean(),
 });
 
-type ExpeditionOption = { id: string; name: string; slug: string; price: number; status: string };
+type ExpeditionOption = {
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  status: string;
+  depositRequired: boolean;
+  depositAmountUsd: number;
+};
 
 interface ApplicationFormProps {
   // Query-param-driven preselection, used on the open /apply page.
@@ -52,6 +60,11 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
   const [activeApplicationId, setActiveApplicationId] = useState<string>(() => crypto.randomUUID());
   const [depositStatus, setDepositStatus] = useState<DepositStatus>("idle");
   const [depositError, setDepositError] = useState("");
+  // Frozen at submit time so it can't change mid-flow even if the dropdown
+  // selection would (it's disabled by then anyway, but this is also what
+  // survives a fresh pageview after a Stripe redirect, restored from
+  // sessionStorage rather than re-derived from props/options).
+  const [resolvedDeposit, setResolvedDeposit] = useState<{ required: boolean; amountUsd?: number } | null>(null);
   // Temporary: shows a visual-only card form instead of redirecting to
   // Stripe, per request, while the real payment connection is pending.
   const [showCardForm, setShowCardForm] = useState(false);
@@ -69,37 +82,53 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     terms_accepted: false,
   });
 
+  // Where Stripe should redirect back to, and the sessionStorage key scoped
+  // to that same route — works whether embedded on a landing page (slug set)
+  // or the open /apply page (no slug).
+  const returnPath = slug ? `/lp/${slug}` : "/apply";
+  const depositStorageKey = `deposit_pending_${slug || "apply"}`;
+
+  // Not locked to a single tour (the open /apply page): resolve deposit info
+  // from whichever expedition is currently selected in the dropdown, so the
+  // explicit note below can update live as the visitor picks a tour.
+  const selectedOption = lockedExpedition ? null : expeditionOptions.find((o) => o.id === form.expedition_id);
+  const currentDepositRequired = lockedExpedition?.depositRequired ?? selectedOption?.depositRequired ?? false;
+  const currentDepositAmountUsd = lockedExpedition?.depositAmountUsd ?? selectedOption?.depositAmountUsd;
+
   const handleTurnstileVerify = useCallback((token: string) => setTurnstileToken(token), []);
   const handleTurnstileExpire = useCallback(() => setTurnstileToken(""), []);
 
   // Resume the deposit flow after a Stripe Checkout redirect. On a fresh
   // pageview (not the in-memory state right after submit), so this reads
-  // from the URL / sessionStorage rather than component state.
+  // from the URL / sessionStorage rather than component state. Works both
+  // embedded on a landing page and on the open /apply page.
   useEffect(() => {
-    if (!slug) return;
     const depositParam = searchParams.get("deposit");
     const sessionId = searchParams.get("session_id");
-    const storageKey = `deposit_pending_${slug}`;
+    const stored = sessionStorage.getItem(depositStorageKey);
+    const pending = stored ? (JSON.parse(stored) as { applicationId: string; amountUsd?: number }) : null;
 
     if (depositParam === "success" && sessionId) {
+      if (pending) {
+        setActiveApplicationId(pending.applicationId);
+        setResolvedDeposit({ required: true, amountUsd: pending.amountUsd });
+      }
       setSubmitted(true);
       setDepositStatus("confirming");
       supabase.functions.invoke("confirm-deposit", { body: { session_id: sessionId } }).then(({ data, error }) => {
         if (!error && data?.paid) {
           setDepositStatus("paid");
-          sessionStorage.removeItem(storageKey);
+          sessionStorage.removeItem(depositStorageKey);
         } else {
           setDepositStatus("cancelled");
           setDepositError("We couldn't confirm your payment yet. If you completed checkout, contact us and we'll verify it manually.");
         }
       });
-    } else if (depositParam === "cancelled") {
-      const pendingId = sessionStorage.getItem(storageKey);
-      if (pendingId) {
-        setActiveApplicationId(pendingId);
-        setSubmitted(true);
-        setDepositStatus("cancelled");
-      }
+    } else if (depositParam === "cancelled" && pending) {
+      setActiveApplicationId(pending.applicationId);
+      setResolvedDeposit({ required: true, amountUsd: pending.amountUsd });
+      setSubmitted(true);
+      setDepositStatus("cancelled");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
@@ -108,19 +137,18 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
   // CardEntryFormPlaceholder stands in for it, but left intact to reconnect
   // later (swap the button below back to calling this).
   const handlePayDeposit = async () => {
-    if (!slug) return;
     setDepositStatus("paying");
     setDepositError("");
     try {
       const { data, error } = await supabase.functions.invoke("create-deposit-checkout", {
-        body: { application_id: activeApplicationId },
+        body: { application_id: activeApplicationId, return_path: returnPath },
       });
       if (error || !data?.url) {
         setDepositError("Could not start payment. Please try again.");
         setDepositStatus("offer");
         return;
       }
-      sessionStorage.setItem(`deposit_pending_${slug}`, activeApplicationId);
+      sessionStorage.setItem(depositStorageKey, JSON.stringify({ applicationId: activeApplicationId, amountUsd: resolvedDeposit?.amountUsd }));
       window.location.href = data.url;
     } catch {
       setDepositError("Could not start payment. Please try again.");
@@ -134,7 +162,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     const fetchExpeditions = async () => {
       const { data } = await supabase
         .from("expeditions")
-        .select("id, name, slug, price_usd, status")
+        .select("id, name, slug, price_usd, status, deposit_required, deposit_amount_usd")
         .neq("status", "closed");
 
       if (data && data.length > 0) {
@@ -152,7 +180,15 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
 
         const options = data
           .filter((e) => e.status !== "cancelled" && hasBookableDates(e.id))
-          .map((e) => ({ id: e.id, name: e.name, slug: e.slug, price: e.price_usd, status: e.status }));
+          .map((e) => ({
+            id: e.id,
+            name: e.name,
+            slug: e.slug,
+            price: e.price_usd,
+            status: e.status,
+            depositRequired: e.deposit_required,
+            depositAmountUsd: e.deposit_amount_usd,
+          }));
         setExpeditionOptions(options);
         const match = options.find((o) => o.slug === preselectedSlug);
         if (match) setForm((f) => ({ ...f, expedition_id: match.id }));
@@ -160,7 +196,15 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
         const options = localExpeditions
           .filter((e) => e.status !== "closed" && e.status !== "cancelled")
           .filter((e) => !e.dates || e.dates.length === 0 || e.dates.some((d) => d.status !== "cancelled"))
-          .map((e) => ({ id: e.id, name: e.name, slug: e.slug, price: e.price_usd, status: e.status }));
+          .map((e) => ({
+            id: e.id,
+            name: e.name,
+            slug: e.slug,
+            price: e.price_usd,
+            status: e.status,
+            depositRequired: false,
+            depositAmountUsd: 420,
+          }));
         setExpeditionOptions(options);
         const match = options.find((o) => o.slug === preselectedSlug);
         if (match) setForm((f) => ({ ...f, expedition_id: match.id }));
@@ -268,6 +312,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     }
 
     // Strongest intent signal — fire ONLY now that the application is stored.
+    const matchedOption = expeditionOptions.find((o) => o.id === result.data.expedition_id);
     trackLead(
       "application",
       {
@@ -276,12 +321,23 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
         firstName: result.data.first_name,
         lastName: result.data.last_name,
       },
-      lockedExpedition?.name || expeditionOptions.find((o) => o.id === result.data.expedition_id)?.name,
+      lockedExpedition?.name || matchedOption?.name,
     );
 
+    const depositRequired = lockedExpedition?.depositRequired ?? matchedOption?.depositRequired ?? false;
+    const depositAmountUsd = lockedExpedition?.depositAmountUsd ?? matchedOption?.depositAmountUsd;
+
     setSubmitted(true);
-    if (lockedExpedition?.depositRequired) {
+    if (depositRequired) {
+      setResolvedDeposit({ required: true, amountUsd: depositAmountUsd });
       setDepositStatus("offer");
+      // The confirmation email is intentionally NOT sent here — it only goes
+      // out once the deposit step is actually submitted (see
+      // CardEntryFormPlaceholder), otherwise it would tell people their
+      // application is "received" before the part that actually matters.
+    } else {
+      // No deposit gate for this tour: the application is complete as-is.
+      supabase.functions.invoke("notify-application", { body: { application_id: activeApplicationId } }).catch(() => {});
     }
     onSubmitted?.();
   };
@@ -294,7 +350,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
 
   if (submitted) {
     if (depositStatus !== "idle") {
-      const amountLabel = lockedExpedition?.depositAmountUsd?.toLocaleString("en-US");
+      const amountLabel = resolvedDeposit?.amountUsd?.toLocaleString("en-US");
       return (
         <div className="border border-border bg-card p-8 text-center">
           <div className="h-px w-12 bg-accent mx-auto mb-6" />
@@ -336,7 +392,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
               )}
               {depositError && <p className="text-destructive text-sm mb-4">{depositError}</p>}
               {showCardForm ? (
-                <CardEntryFormPlaceholder amountLabel={amountLabel} onCancel={() => setShowCardForm(false)} />
+                <CardEntryFormPlaceholder amountLabel={amountLabel} applicationId={activeApplicationId} onCancel={() => setShowCardForm(false)} />
               ) : (
                 <button
                   onClick={() => setShowCardForm(true)}
@@ -521,6 +577,15 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
         <div className="mt-2">
           <TurnstileWidget onVerify={handleTurnstileVerify} onExpire={handleTurnstileExpire} />
         </div>
+
+        {currentDepositRequired && (
+          <div className="border border-accent/40 bg-accent/5 px-4 py-3">
+            <p className="body-text text-xs text-foreground">
+              <span className="font-heading tracking-wide uppercase text-[10px] text-accent-red">Note — </span>
+              Your application is only processed once the ${currentDepositAmountUsd?.toLocaleString("en-US")} deposit (next step, right after this form) is submitted. Without it, this form alone won&apos;t be reviewed.
+            </p>
+          </div>
+        )}
 
         <button
           type="submit"

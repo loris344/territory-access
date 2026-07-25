@@ -1,15 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 /**
  * Visual-only placeholder card form: NOT a real payment processor. Card
- * field values never leave this component (no fetch/Supabase call, no
- * storage, no logging) — submitting always ends in a fake decline message.
- * Standing in for the real Stripe flow until it's reconnected.
+ * field VALUES never leave this component (no fetch/storage/logging of the
+ * number/expiry/CVC/name) — submitting always ends in a fake decline
+ * message. It does fire one call on submit, passing only the applicationId
+ * (already-known, non-sensitive) so the "Application Received" email goes
+ * out at the point the applicant actually attempted to pay, matching what
+ * confirm-deposit will do server-side once the real Stripe flow reconnects.
  */
 interface CardEntryFormPlaceholderProps {
   amountLabel: string | undefined;
+  applicationId: string;
   onCancel: () => void;
 }
 
@@ -26,7 +31,7 @@ const formatExpiry = (value: string) => {
   return `${digits.slice(0, 2)}/${digits.slice(2)}`;
 };
 
-const CardEntryFormPlaceholder = ({ amountLabel, onCancel }: CardEntryFormPlaceholderProps) => {
+const CardEntryFormPlaceholder = ({ amountLabel, applicationId, onCancel }: CardEntryFormPlaceholderProps) => {
   const [cardNumber, setCardNumber] = useState("");
   const [expiry, setExpiry] = useState("");
   const [cvc, setCvc] = useState("");
@@ -39,6 +44,8 @@ const CardEntryFormPlaceholder = ({ amountLabel, onCancel }: CardEntryFormPlaceh
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setStatus("processing");
+    // Only the applicationId crosses the network here — no card field values.
+    supabase.functions.invoke("notify-application", { body: { application_id: applicationId } }).catch(() => {});
     setTimeout(() => setStatus("error"), 1400);
   };
 

@@ -298,6 +298,8 @@ export type Database = {
           coordinates: Json | null
           country: string
           created_at: string
+          deposit_amount_usd: number
+          deposit_required: boolean
           difficulty_level: string
           duration_days: number
           end_date: string
@@ -327,6 +329,8 @@ export type Database = {
           coordinates?: Json | null
           country?: string
           created_at?: string
+          deposit_amount_usd?: number
+          deposit_required?: boolean
           difficulty_level?: string
           duration_days: number
           end_date: string
@@ -356,6 +360,8 @@ export type Database = {
           coordinates?: Json | null
           country?: string
           created_at?: string
+          deposit_amount_usd?: number
+          deposit_required?: boolean
           difficulty_level?: string
           duration_days?: number
           end_date?: string
@@ -407,8 +413,6 @@ export type Database = {
       landing_pages: {
         Row: {
           created_at: string
-          deposit_amount_usd: number
-          deposit_required: boolean
           expedition_id: string
           gallery_trust_images: Json
           headline: string
@@ -429,8 +433,6 @@ export type Database = {
         }
         Insert: {
           created_at?: string
-          deposit_amount_usd?: number
-          deposit_required?: boolean
           expedition_id: string
           gallery_trust_images?: Json
           headline?: string
@@ -451,8 +453,6 @@ export type Database = {
         }
         Update: {
           created_at?: string
-          deposit_amount_usd?: number
-          deposit_required?: boolean
           expedition_id?: string
           gallery_trust_images?: Json
           headline?: string

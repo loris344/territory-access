@@ -44,6 +44,15 @@ Deno.serve(async (req) => {
         .update({ deposit_paid: true, deposit_paid_at: new Date().toISOString() })
         .eq("id", applicationId)
         .eq("stripe_checkout_session_id", session_id);
+
+      // The applicant/admin emails only go out once the deposit is actually
+      // done — this is the real-payment equivalent of the client-side call
+      // CardEntryFormPlaceholder makes for the current visual-only form.
+      fetch(`${supabaseUrl}/functions/v1/notify-application`, {
+        method: "POST",
+        headers: { Authorization: `Bearer ${supabaseKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ application_id: applicationId }),
+      }).catch((err) => console.error("notify-application call failed:", err));
     }
 
     return new Response(JSON.stringify({ paid }), {

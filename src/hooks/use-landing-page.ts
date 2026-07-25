@@ -39,8 +39,6 @@ export interface LandingPageData {
   led_by_bio: string;
   led_by_image_url: string | null;
   gallery_trust_images: string[];
-  deposit_required: boolean;
-  deposit_amount_usd: number;
   expedition: Expedition;
   galleryImages: string[];
 }
@@ -104,6 +102,8 @@ async function fetchLandingPage(slug: string): Promise<LandingPageData | null> {
     hero_image_url: exp.hero_image_url || undefined,
     hero_image_position: exp.hero_image_position || "50% 50%",
     travelers_count: exp.travelers_count || 0,
+    deposit_required: exp.deposit_required ?? true,
+    deposit_amount_usd: exp.deposit_amount_usd ?? 420,
     itinerary: (exp.expedition_days_itinerary || [])
       .map((d: any) => ({
         day_number: d.day_number,
@@ -141,8 +141,6 @@ async function fetchLandingPage(slug: string): Promise<LandingPageData | null> {
     led_by_bio: data.led_by_bio,
     led_by_image_url: data.led_by_image_url,
     gallery_trust_images: ((data.gallery_trust_images as unknown) as string[]) || [],
-    deposit_required: (data as any).deposit_required || false,
-    deposit_amount_usd: (data as any).deposit_amount_usd || 0,
     expedition,
     galleryImages,
   };

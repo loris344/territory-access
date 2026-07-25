@@ -484,8 +484,8 @@ const TourLandingPage = () => {
                 id: expedition.id,
                 name: lp.headline,
                 price: expedition.price_usd,
-                depositRequired: lp.deposit_required,
-                depositAmountUsd: lp.deposit_amount_usd,
+                depositRequired: expedition.deposit_required,
+                depositAmountUsd: expedition.deposit_amount_usd,
               }}
               slug={lp.slug}
               preselectedDateId={selectedDateId ?? featuredDate?.id}

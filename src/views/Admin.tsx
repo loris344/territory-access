@@ -830,6 +830,29 @@ const Admin = () => {
                         className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
                       />
                     </div>
+                    <div className="flex items-end gap-3 pb-2">
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={editData.deposit_required ?? true}
+                          onChange={(e) => setEditData({ ...editData, deposit_required: e.target.checked })}
+                          className="h-4 w-4 accent-accent"
+                        />
+                        <label className="text-xs text-muted-foreground">Require deposit</label>
+                      </div>
+                      {(editData.deposit_required ?? true) && (
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-muted-foreground">$</span>
+                          <input
+                            type="number"
+                            min={1}
+                            value={editData.deposit_amount_usd ?? 420}
+                            onChange={(e) => setEditData({ ...editData, deposit_amount_usd: parseInt(e.target.value) || 0 })}
+                            className="w-20 px-2 py-2 bg-background border border-border text-foreground text-sm"
+                          />
+                        </div>
+                      )}
+                    </div>
                     <div>
                       <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Intensity Level</label>
                       <select

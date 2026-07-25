@@ -29,8 +29,6 @@ interface LandingPageRow {
   led_by_bio: string;
   led_by_image_url: string | null;
   gallery_trust_images: string[];
-  deposit_required: boolean;
-  deposit_amount_usd: number;
   expeditions?: { name: string; slug: string } | null;
 }
 
@@ -244,29 +242,6 @@ const LandingPagesPanel = () => {
                     />
                     <label className="text-xs text-muted-foreground">Published</label>
                     <span className="ml-auto text-xs text-muted-foreground font-heading">/lp/{form.slug}</span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <input
-                      type="checkbox"
-                      checked={form.deposit_required}
-                      onChange={(e) => setForm({ ...form, deposit_required: e.target.checked })}
-                      className="h-4 w-4 accent-accent"
-                    />
-                    <label className="text-xs text-muted-foreground">Require a deposit to pre-book</label>
-                    {form.deposit_required && (
-                      <div className="flex items-center gap-2 ml-2">
-                        <span className="text-xs text-muted-foreground">$</span>
-                        <input
-                          type="number"
-                          min={1}
-                          value={form.deposit_amount_usd}
-                          onChange={(e) => setForm({ ...form, deposit_amount_usd: parseInt(e.target.value) || 0 })}
-                          className={`${inputCls} w-24`}
-                        />
-                        <span className="text-xs text-muted-foreground">USD</span>
-                      </div>
-                    )}
                   </div>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

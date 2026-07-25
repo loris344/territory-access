@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
       throw new Error("STRIPE_SECRET_KEY is not configured");
     }
 
-    const { application_id } = await req.json();
+    const { application_id, return_path } = await req.json();
     if (!application_id) {
       throw new Error("application_id is required");
     }
@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
 
     const { data: app, error: appError } = await supabase
       .from("applications")
-      .select("id, email, first_name, expedition_id")
+      .select("id, email, first_name, expedition_id, expeditions!applications_expedition_id_fkey(name, deposit_required, deposit_amount_usd)")
       .eq("id", application_id)
       .single();
 
@@ -38,29 +38,25 @@ Deno.serve(async (req) => {
       throw new Error("Application not found");
     }
 
-    // Deposit amount is always re-derived server-side from the landing page
-    // config, never trusted from the client, so a tampered request can't
-    // force a lower charge.
-    const { data: lp, error: lpError } = await supabase
-      .from("landing_pages")
-      .select("slug, deposit_amount_usd, expeditions(name)")
-      .eq("expedition_id", app.expedition_id)
-      .eq("deposit_required", true)
-      .limit(1)
-      .maybeSingle();
-
-    if (lpError || !lp) {
+    // Deposit amount is always re-derived server-side from the expedition's
+    // own config, never trusted from the client, so a tampered request
+    // can't force a lower charge.
+    const expedition = (app as any).expeditions;
+    if (!expedition?.deposit_required) {
       return new Response(JSON.stringify({ error: "Deposit not required for this expedition" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const expeditionName = (lp as any).expeditions?.name || "Expedition";
-    const amountCents = lp.deposit_amount_usd * 100;
+    const expeditionName = expedition.name || "Expedition";
+    const amountCents = expedition.deposit_amount_usd * 100;
+    // Only ever redirect back to a known route of our own site — never trust
+    // an arbitrary path straight from the request body (open-redirect risk).
+    const safePath = typeof return_path === "string" && /^\/(apply|lp\/[a-z0-9-]+)$/.test(return_path) ? return_path : "/apply";
     const origin = req.headers.get("origin") || FALLBACK_ORIGIN;
-    const successUrl = `${origin}/lp/${lp.slug}?deposit=success&session_id={CHECKOUT_SESSION_ID}`;
-    const cancelUrl = `${origin}/lp/${lp.slug}?deposit=cancelled`;
+    const successUrl = `${origin}${safePath}?deposit=success&session_id={CHECKOUT_SESSION_ID}`;
+    const cancelUrl = `${origin}${safePath}?deposit=cancelled`;
 
     const body = new URLSearchParams();
     body.set("mode", "payment");
@@ -92,7 +88,7 @@ Deno.serve(async (req) => {
       .from("applications")
       .update({
         deposit_required: true,
-        deposit_amount_usd: lp.deposit_amount_usd,
+        deposit_amount_usd: expedition.deposit_amount_usd,
         stripe_checkout_session_id: session.id,
       })
       .eq("id", application_id);
