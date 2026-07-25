@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar, Download, Crosshair, MapPin } from "lucide-react";
+import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar, Download, Crosshair, MapPin, Eye, EyeOff } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { downloadImage } from "@/lib/utils";
 import FocalPointModal from "@/components/admin/FocalPointModal";
@@ -347,6 +347,16 @@ const Admin = () => {
       return;
     }
     toast.success("Expedition deleted");
+    fetchExpeditions();
+  };
+
+  const toggleExpeditionHidden = async (id: string, currentlyHidden: boolean) => {
+    const { error } = await supabase.from("expeditions").update({ is_hidden: !currentlyHidden }).eq("id", id);
+    if (error) {
+      toast.error("Failed to update: " + error.message);
+      return;
+    }
+    toast.success(currentlyHidden ? "Expedition is visible again" : "Expedition hidden from the site");
     fetchExpeditions();
   };
 
@@ -1089,13 +1099,20 @@ const Admin = () => {
                           {exp.continent && <span className="text-accent">{exp.continent}</span>}{exp.continent && " · "}{exp.country} · {exp.location} · {exp.duration_days} days
                         </p>
                       </div>
-                      <span className={`font-heading text-[10px] tracking-wider uppercase px-2 py-0.5 flex-shrink-0 ${
-                        exp.status === "open" ? "bg-foreground/10 text-foreground" :
-                        exp.status === "limited" ? "bg-accent/10 text-accent" :
-                        "bg-muted text-muted-foreground"
-                      }`}>
-                        {exp.status}
-                      </span>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {exp.is_hidden && (
+                          <span className="font-heading text-[10px] tracking-wider uppercase px-2 py-0.5 bg-destructive/10 text-destructive">
+                            Hidden
+                          </span>
+                        )}
+                        <span className={`font-heading text-[10px] tracking-wider uppercase px-2 py-0.5 ${
+                          exp.status === "open" ? "bg-foreground/10 text-foreground" :
+                          exp.status === "limited" ? "bg-accent/10 text-accent" :
+                          "bg-muted text-muted-foreground"
+                        }`}>
+                          {exp.status}
+                        </span>
+                      </div>
                     </div>
                     <p className="text-xs text-muted-foreground mt-2 line-clamp-1">{exp.short_description}</p>
                   </div>
@@ -1108,6 +1125,13 @@ const Admin = () => {
                       title="Edit"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => toggleExpeditionHidden(exp.id, exp.is_hidden)}
+                      className="p-2 border border-border hover:border-foreground transition-colors"
+                      title={exp.is_hidden ? "Show on site" : "Hide from site"}
+                    >
+                      {exp.is_hidden ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
                     </button>
                     <button
                       onClick={() => deleteExpedition(exp.id)}

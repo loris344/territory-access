@@ -309,6 +309,7 @@ export type Database = {
           id: string
           intensity_level: string
           intensity_type: string
+          is_hidden: boolean
           location: string
           long_description: string
           name: string
@@ -340,6 +341,7 @@ export type Database = {
           id?: string
           intensity_level: string
           intensity_type?: string
+          is_hidden?: boolean
           location: string
           long_description: string
           name: string
@@ -371,6 +373,7 @@ export type Database = {
           id?: string
           intensity_level?: string
           intensity_type?: string
+          is_hidden?: boolean
           location?: string
           long_description?: string
           name?: string
