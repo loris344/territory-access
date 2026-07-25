@@ -7,6 +7,13 @@ export interface ExpeditionDay {
   image_url?: string;
 }
 
+export interface Testimonial {
+  name: string;
+  detail: string;
+  quote: string;
+  image_url: string;
+}
+
 export interface ExpeditionDate {
   id: string;
   start_date: string;
@@ -44,6 +51,7 @@ export interface Expedition {
   travelers_count?: number;
   deposit_required?: boolean;
   deposit_amount_usd?: number;
+  testimonials?: Testimonial[];
   itinerary: ExpeditionDay[];
   inclusions: string[];
   exclusions: string[];

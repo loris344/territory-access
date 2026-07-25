@@ -14,6 +14,7 @@ import TourInfoRequestForm from "@/components/TourInfoRequestForm";
 import { optimizedImageUrl } from "@/lib/utils";
 import NotifyDestinationForm from "@/components/NotifyDestinationForm";
 import { NewsletterForm } from "@/components/NewsletterForm";
+import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 
 const statusStyles: Record<string, string> = {
   open: "bg-foreground/10 text-foreground border border-foreground/20",
@@ -461,6 +462,11 @@ const ExpeditionDetail = () => {
           </div>
         </div>
       </section>
+
+      {/* Social proof */}
+      {expedition.testimonials && expedition.testimonials.length > 0 && (
+        <TestimonialsCarousel testimonials={expedition.testimonials} />
+      )}
 
       {/* Want to know more — softer lead than applying */}
       <section className="pb-16 lg:pb-24">

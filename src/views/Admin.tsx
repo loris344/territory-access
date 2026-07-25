@@ -500,6 +500,26 @@ const Admin = () => {
     setGalleryUploading(false);
   };
 
+  // Testimonial photos: uploaded to storage immediately (to get a URL), but
+  // only written into editData's draft — actually persisted on Save, same
+  // as every other field in the expedition edit form.
+  const uploadTestimonialImage = async (file: File, index: number, slug: string) => {
+    const ext = file.name.split(".").pop();
+    const path = `testimonial-${slug}-${index}-${Date.now()}.${ext}`;
+    const { error: uploadError } = await supabase.storage.from("expedition-images").upload(path, file, { upsert: true });
+    if (uploadError) {
+      toast.error("Upload failed: " + uploadError.message);
+      return;
+    }
+    const { data: urlData } = supabase.storage.from("expedition-images").getPublicUrl(path);
+    const imageUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+    setEditData((prev: any) => {
+      const next = [...(prev.testimonials || [])];
+      next[index] = { ...next[index], image_url: imageUrl };
+      return { ...prev, testimonials: next };
+    });
+  };
+
   const moveGalleryImage = async (index: number, direction: "left" | "right", expId: string) => {
     const swapIndex = direction === "left" ? index - 1 : index + 1;
     if (swapIndex < 0 || swapIndex >= galleryImages.length) return;
@@ -1029,6 +1049,90 @@ const Admin = () => {
                       </button>
                     </div>
                   </div>
+
+                  {/* Testimonials */}
+                  <div className="border border-border p-4">
+                    <h4 className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground mb-3">
+                      Testimonials ({(editData.testimonials || []).length}) — at least 7 recommended
+                    </h4>
+                    <div className="space-y-3">
+                      {(editData.testimonials || []).map((t: any, i: number) => (
+                        <div key={i} className="border border-border/60 p-3 space-y-2">
+                          <div className="flex items-start gap-3">
+                            <div className="relative w-14 h-14 flex-shrink-0 bg-secondary border border-border overflow-hidden group">
+                              {t.image_url ? (
+                                <img src={t.image_url} alt="" className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                                  <Image className="w-3.5 h-3.5" />
+                                </div>
+                              )}
+                              <label className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+                                <Upload className="w-3.5 h-3.5 text-foreground" />
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    const file = e.target.files?.[0];
+                                    if (file) uploadTestimonialImage(file, i, editData.slug);
+                                  }}
+                                />
+                              </label>
+                            </div>
+                            <div className="flex-1 min-w-0 space-y-2">
+                              <div className="flex flex-wrap items-center gap-2">
+                                <input
+                                  value={t.name}
+                                  placeholder="Name"
+                                  onChange={(e) => {
+                                    const next = [...editData.testimonials];
+                                    next[i] = { ...t, name: e.target.value };
+                                    setEditData({ ...editData, testimonials: next });
+                                  }}
+                                  className="px-2 py-1.5 bg-background border border-border text-foreground text-xs w-32"
+                                />
+                                <input
+                                  value={t.detail}
+                                  placeholder="Detail (e.g. UK - Expedition 2025)"
+                                  onChange={(e) => {
+                                    const next = [...editData.testimonials];
+                                    next[i] = { ...t, detail: e.target.value };
+                                    setEditData({ ...editData, testimonials: next });
+                                  }}
+                                  className="px-2 py-1.5 bg-background border border-border text-foreground text-xs flex-1 min-w-[160px]"
+                                />
+                                <button
+                                  onClick={() => setEditData({ ...editData, testimonials: editData.testimonials.filter((_: any, j: number) => j !== i) })}
+                                  className="p-1.5 border border-border hover:border-destructive hover:text-destructive"
+                                >
+                                  <X className="w-3 h-3" />
+                                </button>
+                              </div>
+                              <textarea
+                                value={t.quote}
+                                placeholder="Quote"
+                                rows={2}
+                                onChange={(e) => {
+                                  const next = [...editData.testimonials];
+                                  next[i] = { ...t, quote: e.target.value };
+                                  setEditData({ ...editData, testimonials: next });
+                                }}
+                                className="w-full px-2 py-1.5 bg-background border border-border text-foreground text-xs resize-none"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                      <button
+                        onClick={() => setEditData({ ...editData, testimonials: [...(editData.testimonials || []), { name: "", detail: "", quote: "", image_url: "" }] })}
+                        className="flex items-center gap-2 font-heading text-[10px] tracking-wider uppercase text-muted-foreground hover:text-foreground transition-colors border border-dashed border-border px-4 py-2"
+                      >
+                        <Plus className="w-3 h-3" /> Add testimonial
+                      </button>
+                    </div>
+                  </div>
+
                   <div className="flex gap-3">
                     <button onClick={saveEdit} className="flex items-center gap-2 font-heading text-xs tracking-wider uppercase px-6 py-3 bg-accent text-accent-foreground hover:bg-accent/90 transition-all">
                       <Save className="w-3.5 h-3.5" /> Save

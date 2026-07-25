@@ -321,6 +321,7 @@ export type Database = {
           start_date: string
           status: string
           storytelling: string | null
+          testimonials: Json
           travelers_count: number
         }
         Insert: {
@@ -353,6 +354,7 @@ export type Database = {
           start_date: string
           status?: string
           storytelling?: string | null
+          testimonials?: Json
           travelers_count?: number
         }
         Update: {
@@ -385,6 +387,7 @@ export type Database = {
           start_date?: string
           status?: string
           storytelling?: string | null
+          testimonials?: Json
           travelers_count?: number
         }
         Relationships: []
@@ -431,7 +434,6 @@ export type Database = {
           slug: string
           subheadline: string
           tagline: string
-          testimonials: Json
           trust_signals: Json
         }
         Insert: {
@@ -451,7 +453,6 @@ export type Database = {
           slug: string
           subheadline?: string
           tagline?: string
-          testimonials?: Json
           trust_signals?: Json
         }
         Update: {
@@ -471,7 +472,6 @@ export type Database = {
           slug?: string
           subheadline?: string
           tagline?: string
-          testimonials?: Json
           trust_signals?: Json
         }
         Relationships: [

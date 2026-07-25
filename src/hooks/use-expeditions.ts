@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { expeditions as staticExpeditions } from "@/data/expeditions";
-import type { Expedition, ExpeditionDate } from "@/data/expeditions";
+import type { Expedition, ExpeditionDate, Testimonial } from "@/data/expeditions";
 
 async function fetchExpeditions(): Promise<Expedition[]> {
   // Single round-trip: pull the expeditions and all their children via
@@ -61,6 +61,7 @@ async function fetchExpeditions(): Promise<Expedition[]> {
       travelers_count: exp.travelers_count || 0,
       deposit_required: exp.deposit_required ?? true,
       deposit_amount_usd: exp.deposit_amount_usd ?? 420,
+      testimonials: ((exp.testimonials as unknown) as Testimonial[]) || [],
       itinerary: (e.expedition_days_itinerary || [])
         .map((d: any) => ({ day_number: d.day_number, title: d.title, description: d.description, image_url: d.image_url || undefined }))
         .sort((a: { day_number: number }, b: { day_number: number }) => a.day_number - b.day_number),

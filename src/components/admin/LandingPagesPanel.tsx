@@ -9,7 +9,6 @@ import FocalPointModal from "@/components/admin/FocalPointModal";
 
 interface TrustSignal { icon: string; title: string; desc: string; }
 interface PromiseBullet { title: string; desc: string; }
-interface Testimonial { name: string; detail: string; quote: string; image_url: string; }
 
 interface LandingPageRow {
   id: string;
@@ -24,7 +23,6 @@ interface LandingPageRow {
   trust_signals: TrustSignal[];
   promise_intro: string;
   promise_bullets: PromiseBullet[];
-  testimonials: Testimonial[];
   led_by_name: string;
   led_by_bio: string;
   led_by_image_url: string | null;
@@ -128,7 +126,7 @@ const LandingPagesPanel = () => {
 
   const startEdit = (page: LandingPageRow) => {
     setEditing(page.id);
-    setForm({ ...page, trust_signals: [...page.trust_signals], promise_bullets: [...page.promise_bullets], testimonials: [...page.testimonials], gallery_trust_images: [...page.gallery_trust_images] });
+    setForm({ ...page, trust_signals: [...page.trust_signals], promise_bullets: [...page.promise_bullets], gallery_trust_images: [...page.gallery_trust_images] });
   };
 
   const cancelEdit = () => {
@@ -179,7 +177,7 @@ const LandingPagesPanel = () => {
     setNewSlug("");
     setNewExpeditionId("");
     await fetchPages();
-    if (data) startEdit({ ...(data as any), trust_signals: [], promise_bullets: [], testimonials: [], gallery_trust_images: [] });
+    if (data) startEdit({ ...(data as any), trust_signals: [], promise_bullets: [], gallery_trust_images: [] });
   };
 
   const deletePage = async (id: string) => {
@@ -369,31 +367,9 @@ const LandingPagesPanel = () => {
                     </div>
                   </div>
 
-                  {/* Testimonials */}
-                  <div className="border border-border p-3">
-                    <p className={labelCls}>Testimonials</p>
-                    <div className="space-y-3">
-                      {form.testimonials.map((t, i) => (
-                        <div key={i} className="border border-border/60 p-3 space-y-2">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <input value={t.name} placeholder="Name" onChange={(e) => { const next = [...form.testimonials]; next[i] = { ...t, name: e.target.value }; setForm({ ...form, testimonials: next }); }} className={`${inputCls} w-40`} />
-                            <input value={t.detail} placeholder="Detail (e.g. UK - 2025)" onChange={(e) => { const next = [...form.testimonials]; next[i] = { ...t, detail: e.target.value }; setForm({ ...form, testimonials: next }); }} className={`${inputCls} flex-1 min-w-[160px]`} />
-                            <button onClick={() => setForm({ ...form, testimonials: form.testimonials.filter((_, j) => j !== i) })} className="p-2 border border-border hover:border-destructive hover:text-destructive">
-                              <X className="w-3 h-3" />
-                            </button>
-                          </div>
-                          <textarea value={t.quote} placeholder="Quote" onChange={(e) => { const next = [...form.testimonials]; next[i] = { ...t, quote: e.target.value }; setForm({ ...form, testimonials: next }); }} rows={2} className={inputCls} />
-                          <ImageUploader url={t.image_url} prefix={`lp-${form.slug}-testimonial-${i}`} alt={t.name} onUploaded={(url) => { const next = [...form.testimonials]; next[i] = { ...t, image_url: url }; setForm({ ...form, testimonials: next }); }} />
-                        </div>
-                      ))}
-                      <button
-                        onClick={() => setForm({ ...form, testimonials: [...form.testimonials, { name: "", detail: "", quote: "", image_url: "" }] })}
-                        className="flex items-center gap-1 font-heading text-[9px] tracking-wider uppercase text-muted-foreground hover:text-foreground border border-dashed border-border px-3 py-1.5"
-                      >
-                        <Plus className="w-3 h-3" /> Add testimonial
-                      </button>
-                    </div>
-                  </div>
+                  {/* Testimonials now live on the tour itself (edit in the
+                      Expeditions section below), shown automatically on
+                      both the tour page and this landing page. */}
 
                   {/* Led by */}
                   <div className="border border-border p-3">

@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Expedition, ExpeditionDate } from "@/data/expeditions";
+import type { Expedition, ExpeditionDate, Testimonial } from "@/data/expeditions";
 
 export interface TrustSignal {
   icon: string;
@@ -13,13 +13,6 @@ export interface TrustSignal {
 export interface PromiseBullet {
   title: string;
   desc: string;
-}
-
-export interface LandingTestimonial {
-  name: string;
-  detail: string;
-  quote: string;
-  image_url: string;
 }
 
 export interface LandingPageData {
@@ -34,7 +27,6 @@ export interface LandingPageData {
   trust_signals: TrustSignal[];
   promise_intro: string;
   promise_bullets: PromiseBullet[];
-  testimonials: LandingTestimonial[];
   led_by_name: string;
   led_by_bio: string;
   led_by_image_url: string | null;
@@ -104,6 +96,7 @@ async function fetchLandingPage(slug: string): Promise<LandingPageData | null> {
     travelers_count: exp.travelers_count || 0,
     deposit_required: exp.deposit_required ?? true,
     deposit_amount_usd: exp.deposit_amount_usd ?? 420,
+    testimonials: ((exp.testimonials as unknown) as Testimonial[]) || [],
     itinerary: (exp.expedition_days_itinerary || [])
       .map((d: any) => ({
         day_number: d.day_number,
@@ -136,7 +129,6 @@ async function fetchLandingPage(slug: string): Promise<LandingPageData | null> {
     trust_signals: ((data.trust_signals as unknown) as TrustSignal[]) || [],
     promise_intro: data.promise_intro,
     promise_bullets: ((data.promise_bullets as unknown) as PromiseBullet[]) || [],
-    testimonials: ((data.testimonials as unknown) as LandingTestimonial[]) || [],
     led_by_name: data.led_by_name,
     led_by_bio: data.led_by_bio,
     led_by_image_url: data.led_by_image_url,
