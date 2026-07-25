@@ -54,7 +54,7 @@ async function fetchLandingPage(slug: string): Promise<LandingPageData | null> {
   const { data, error } = await supabase
     .from("landing_pages")
     .select(
-      "*, expeditions(*, expedition_dates(id, start_date, end_date, capacity_max, spots_taken, status), expedition_days_itinerary(day_number, title, description, latitude, longitude), expedition_inclusions(item_text), expedition_exclusions(item_text), expedition_gallery(image_url, display_order))"
+      "*, expeditions(*, expedition_dates(id, start_date, end_date, capacity_max, spots_taken, status), expedition_days_itinerary(day_number, title, description, latitude, longitude, image_url), expedition_inclusions(item_text), expedition_exclusions(item_text), expedition_gallery(image_url, display_order))"
     )
     .eq("slug", slug)
     .maybeSingle();
@@ -103,6 +103,7 @@ async function fetchLandingPage(slug: string): Promise<LandingPageData | null> {
     expedition_status: exp.expedition_status,
     hero_image_url: exp.hero_image_url || undefined,
     hero_image_position: exp.hero_image_position || "50% 50%",
+    travelers_count: exp.travelers_count || 0,
     itinerary: (exp.expedition_days_itinerary || [])
       .map((d: any) => ({
         day_number: d.day_number,
@@ -110,6 +111,7 @@ async function fetchLandingPage(slug: string): Promise<LandingPageData | null> {
         description: d.description,
         latitude: d.latitude ?? undefined,
         longitude: d.longitude ?? undefined,
+        image_url: d.image_url ?? undefined,
       }))
       .sort((a: { day_number: number }, b: { day_number: number }) => a.day_number - b.day_number),
     inclusions: (exp.expedition_inclusions || []).map((i: any) => i.item_text),

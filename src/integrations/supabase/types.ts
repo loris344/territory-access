@@ -171,6 +171,7 @@ export type Database = {
           description: string
           expedition_id: string
           id: string
+          image_url: string | null
           latitude: number | null
           longitude: number | null
           title: string
@@ -180,6 +181,7 @@ export type Database = {
           description: string
           expedition_id: string
           id?: string
+          image_url?: string | null
           latitude?: number | null
           longitude?: number | null
           title: string
@@ -189,6 +191,7 @@ export type Database = {
           description?: string
           expedition_id?: string
           id?: string
+          image_url?: string | null
           latitude?: number | null
           longitude?: number | null
           title?: string
@@ -315,6 +318,7 @@ export type Database = {
           start_date: string
           status: string
           storytelling: string | null
+          travelers_count: number
         }
         Insert: {
           cancellation_reason?: string | null
@@ -343,6 +347,7 @@ export type Database = {
           start_date: string
           status?: string
           storytelling?: string | null
+          travelers_count?: number
         }
         Update: {
           cancellation_reason?: string | null
@@ -371,6 +376,7 @@ export type Database = {
           start_date?: string
           status?: string
           storytelling?: string | null
+          travelers_count?: number
         }
         Relationships: []
       }

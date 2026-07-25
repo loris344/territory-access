@@ -4,6 +4,7 @@ export interface ExpeditionDay {
   description: string;
   latitude?: number;
   longitude?: number;
+  image_url?: string;
 }
 
 export interface ExpeditionDate {
@@ -40,6 +41,7 @@ export interface Expedition {
   expedition_status: string;
   hero_image_url?: string;
   hero_image_position?: string;
+  travelers_count?: number;
   itinerary: ExpeditionDay[];
   inclusions: string[];
   exclusions: string[];

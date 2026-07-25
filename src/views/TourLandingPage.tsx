@@ -272,6 +272,7 @@ const TourLandingPage = () => {
             <p className="font-heading text-[9px] tracking-[0.15em] uppercase text-muted-foreground/50 mb-6">
               By application only
               {remaining !== null && remaining > 0 && ` · ${remaining} spots remaining on next session`}
+              {!!expedition.travelers_count && ` · ${expedition.travelers_count} travelers have already crossed this line`}
             </p>
 
             <div className="flex items-center justify-center gap-5">

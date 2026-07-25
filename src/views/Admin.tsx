@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar, Download, Crosshair } from "lucide-react";
+import { LogOut, Plus, Edit2, Trash2, Upload, Save, Image, X, Images, ChevronLeft, ChevronRight, Calendar, Download, Crosshair, MapPin } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 import { downloadImage } from "@/lib/utils";
 import FocalPointModal from "@/components/admin/FocalPointModal";
@@ -72,6 +72,124 @@ const DateRow = ({ dateRow, expId, onUpdate, onDelete, statusOptions }: {
   );
 };
 
+const DayRow = ({ dayRow, expId, onUpdate, onDelete, onImageUpload }: {
+  dayRow: any;
+  expId: string;
+  onUpdate: (id: string, field: string, value: any, expId: string) => void;
+  onDelete: (id: string, expId: string) => void;
+  onImageUpload: (dayId: string, file: File, expId: string) => void;
+}) => {
+  const [local, setLocal] = useState({
+    day_number: dayRow.day_number,
+    title: dayRow.title,
+    description: dayRow.description,
+    latitude: dayRow.latitude ?? "",
+    longitude: dayRow.longitude ?? "",
+  });
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    setLocal({
+      day_number: dayRow.day_number,
+      title: dayRow.title,
+      description: dayRow.description,
+      latitude: dayRow.latitude ?? "",
+      longitude: dayRow.longitude ?? "",
+    });
+  }, [dayRow]);
+
+  const handleBlur = (field: string, value: any) => {
+    const parsed =
+      field === "day_number" ? parseInt(value) || 0 : field === "latitude" || field === "longitude" ? (value === "" ? null : parseFloat(value)) : value;
+    if (parsed !== dayRow[field]) {
+      onUpdate(dayRow.id, field, parsed, expId);
+    }
+  };
+
+  return (
+    <div className="border border-border p-3 bg-background flex items-start gap-3">
+      <div className="relative w-16 h-16 flex-shrink-0 bg-secondary border border-border overflow-hidden group">
+        {dayRow.image_url ? (
+          <img src={dayRow.image_url} alt="" className="w-full h-full object-cover" />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+            <Image className="w-4 h-4" />
+          </div>
+        )}
+        <label className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+          <Upload className="w-4 h-4 text-foreground" />
+          <input
+            type="file"
+            accept="image/*"
+            className="hidden"
+            disabled={uploading}
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (!file) return;
+              setUploading(true);
+              await onImageUpload(dayRow.id, file, expId);
+              setUploading(false);
+            }}
+          />
+        </label>
+      </div>
+
+      <div className="flex-1 min-w-0 space-y-2">
+        <div className="flex gap-2">
+          <input
+            type="number"
+            value={local.day_number}
+            onChange={(e) => setLocal({ ...local, day_number: e.target.value })}
+            onBlur={() => handleBlur("day_number", local.day_number)}
+            title="Day #"
+            className="w-14 px-2 py-1.5 bg-background border border-border text-foreground text-xs"
+          />
+          <input
+            type="text"
+            value={local.title}
+            onChange={(e) => setLocal({ ...local, title: e.target.value })}
+            onBlur={() => handleBlur("title", local.title)}
+            placeholder="Title"
+            className="flex-1 px-2 py-1.5 bg-background border border-border text-foreground text-xs"
+          />
+        </div>
+        <textarea
+          value={local.description}
+          onChange={(e) => setLocal({ ...local, description: e.target.value })}
+          onBlur={() => handleBlur("description", local.description)}
+          placeholder="Description"
+          rows={2}
+          className="w-full px-2 py-1.5 bg-background border border-border text-foreground text-xs resize-none"
+        />
+        <div className="flex gap-2">
+          <input
+            type="number"
+            step="any"
+            value={local.latitude}
+            onChange={(e) => setLocal({ ...local, latitude: e.target.value })}
+            onBlur={() => handleBlur("latitude", local.latitude)}
+            placeholder="Latitude"
+            className="w-28 px-2 py-1.5 bg-background border border-border text-foreground text-xs"
+          />
+          <input
+            type="number"
+            step="any"
+            value={local.longitude}
+            onChange={(e) => setLocal({ ...local, longitude: e.target.value })}
+            onBlur={() => handleBlur("longitude", local.longitude)}
+            placeholder="Longitude"
+            className="w-28 px-2 py-1.5 bg-background border border-border text-foreground text-xs"
+          />
+        </div>
+      </div>
+
+      <button onClick={() => onDelete(dayRow.id, expId)} className="p-1 border border-border hover:border-destructive hover:text-destructive transition-colors flex-shrink-0">
+        <X className="w-3 h-3" />
+      </button>
+    </div>
+  );
+};
+
 type Expedition = Tables<"expeditions"> & {
   country?: string;
   coordinates?: number[];
@@ -96,6 +214,7 @@ const Admin = () => {
   const [galleryImages, setGalleryImages] = useState<any[]>([]);
   const [galleryUploading, setGalleryUploading] = useState(false);
   const [expeditionDates, setExpeditionDates] = useState<any[]>([]);
+  const [itineraryDays, setItineraryDays] = useState<any[]>([]);
   const [focalPointTarget, setFocalPointTarget] = useState<{ id: string; url: string; position: string } | null>(null);
 
   useEffect(() => {
@@ -143,6 +262,7 @@ const Admin = () => {
     setEditData({ ...exp });
     fetchGalleryImages(exp.id);
     fetchExpeditionDates(exp.id);
+    fetchItineraryDays(exp.id);
   };
 
   const cancelEdit = () => {
@@ -442,6 +562,71 @@ const Admin = () => {
     fetchExpeditionDates(expId);
   };
 
+  const fetchItineraryDays = async (expId: string) => {
+    const { data } = await supabase
+      .from("expedition_days_itinerary")
+      .select("*")
+      .eq("expedition_id", expId)
+      .order("day_number", { ascending: true });
+    setItineraryDays(data || []);
+  };
+
+  const addItineraryDay = async (expId: string) => {
+    const nextDayNumber = itineraryDays.length > 0 ? Math.max(...itineraryDays.map((d) => d.day_number)) + 1 : 1;
+    const { error } = await supabase.from("expedition_days_itinerary").insert({
+      expedition_id: expId,
+      day_number: nextDayNumber,
+      title: "New day",
+      description: "",
+    });
+    if (error) {
+      toast.error("Failed to add day: " + error.message);
+      return;
+    }
+    toast.success("Day added");
+    fetchItineraryDays(expId);
+  };
+
+  const updateItineraryDay = async (dayId: string, field: string, value: any, expId: string) => {
+    const { error } = await supabase.from("expedition_days_itinerary").update({ [field]: value }).eq("id", dayId);
+    if (error) {
+      toast.error("Failed to update: " + error.message);
+      return;
+    }
+    fetchItineraryDays(expId);
+  };
+
+  const deleteItineraryDay = async (dayId: string, expId: string) => {
+    if (!confirm("Delete this day?")) return;
+    const { error } = await supabase.from("expedition_days_itinerary").delete().eq("id", dayId);
+    if (error) {
+      toast.error("Failed to delete: " + error.message);
+      return;
+    }
+    toast.success("Day removed");
+    fetchItineraryDays(expId);
+  };
+
+  const uploadItineraryDayImage = async (dayId: string, file: File, expId: string) => {
+    const ext = file.name.split(".").pop();
+    const path = `itinerary-${dayId}.${ext}`;
+    await supabase.storage.from("expedition-images").remove([path]);
+    const { error: uploadError } = await supabase.storage.from("expedition-images").upload(path, file, { upsert: true });
+    if (uploadError) {
+      toast.error("Upload failed: " + uploadError.message);
+      return;
+    }
+    const { data: urlData } = supabase.storage.from("expedition-images").getPublicUrl(path);
+    const imageUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+    const { error } = await supabase.from("expedition_days_itinerary").update({ image_url: imageUrl }).eq("id", dayId);
+    if (error) {
+      toast.error("Failed to save image: " + error.message);
+      return;
+    }
+    toast.success("Day photo uploaded!");
+    fetchItineraryDays(expId);
+  };
+
   const statusOptions = ["open", "limited", "closed", "cancelled", "postponed"];
   const intensityLevelOptions = ["Easy", "Medium", "Hard", "Extreme"];
   const intensityTypeOptions = ["mountain", "desert", "psychological", "isolation", "polar", "jungle", "nomadic", "political", "historical", "post-conflict", "altitude"];
@@ -637,6 +822,15 @@ const Admin = () => {
                       />
                     </div>
                     <div>
+                      <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Travelers count (reassurance stat)</label>
+                      <input
+                        type="number"
+                        value={editData.travelers_count || 0}
+                        onChange={(e) => setEditData({ ...editData, travelers_count: parseInt(e.target.value) })}
+                        className="w-full px-3 py-2 bg-background border border-border text-foreground text-sm"
+                      />
+                    </div>
+                    <div>
                       <label className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground block mb-1">Intensity Level</label>
                       <select
                         value={editData.intensity_level || "Medium"}
@@ -781,6 +975,24 @@ const Admin = () => {
                         className="flex items-center gap-2 font-heading text-[10px] tracking-wider uppercase text-muted-foreground hover:text-foreground transition-colors border border-dashed border-border px-4 py-2"
                       >
                         <Plus className="w-3 h-3" /> Add date
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Itinerary Days */}
+                  <div className="border border-border p-4">
+                    <h4 className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground mb-3 flex items-center gap-2">
+                      <MapPin className="w-3.5 h-3.5" /> Itinerary Days ({itineraryDays.length})
+                    </h4>
+                    <div className="space-y-3">
+                      {itineraryDays.map((d) => (
+                        <DayRow key={d.id} dayRow={d} expId={editData.id} onUpdate={updateItineraryDay} onDelete={deleteItineraryDay} onImageUpload={uploadItineraryDayImage} />
+                      ))}
+                      <button
+                        onClick={() => addItineraryDay(editData.id)}
+                        className="flex items-center gap-2 font-heading text-[10px] tracking-wider uppercase text-muted-foreground hover:text-foreground transition-colors border border-dashed border-border px-4 py-2"
+                      >
+                        <Plus className="w-3 h-3" /> Add day
                       </button>
                     </div>
                   </div>

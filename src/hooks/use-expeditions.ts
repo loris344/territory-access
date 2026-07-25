@@ -11,7 +11,7 @@ async function fetchExpeditions(): Promise<Expedition[]> {
   const { data, error } = await supabase
     .from("expeditions")
     .select(
-      "*, expedition_days_itinerary(day_number, title, description), expedition_inclusions(item_text), expedition_exclusions(item_text), expedition_dates(id, start_date, end_date, capacity_max, spots_taken, status)"
+      "*, expedition_days_itinerary(day_number, title, description, image_url), expedition_inclusions(item_text), expedition_exclusions(item_text), expedition_dates(id, start_date, end_date, capacity_max, spots_taken, status)"
     )
     .order("start_date", { ascending: true });
 
@@ -58,8 +58,9 @@ async function fetchExpeditions(): Promise<Expedition[]> {
       expedition_status: exp.expedition_status,
       hero_image_url: exp.hero_image_url || undefined,
       hero_image_position: exp.hero_image_position || "50% 50%",
+      travelers_count: exp.travelers_count || 0,
       itinerary: (e.expedition_days_itinerary || [])
-        .map((d: any) => ({ day_number: d.day_number, title: d.title, description: d.description }))
+        .map((d: any) => ({ day_number: d.day_number, title: d.title, description: d.description, image_url: d.image_url || undefined }))
         .sort((a: { day_number: number }, b: { day_number: number }) => a.day_number - b.day_number),
       inclusions: (e.expedition_inclusions || []).map((i: any) => i.item_text),
       exclusions: (e.expedition_exclusions || []).map((x: any) => x.item_text),

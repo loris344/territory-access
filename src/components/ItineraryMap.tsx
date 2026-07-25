@@ -127,11 +127,22 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
       {/* Selected day's activity: tap a point on the map to switch */}
       {selected && (
         <div className="border-t border-border p-5 sm:p-6">
-          <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-accent-red mb-1">
-            Day {selected.day_number}
-          </p>
-          <h3 className="font-heading text-sm tracking-[0.05em] uppercase mb-2">{selected.title}</h3>
-          <p className="body-text text-sm text-muted-foreground">{selected.description}</p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            {selected.image_url && (
+              <img
+                src={selected.image_url}
+                alt={selected.title}
+                className="w-full sm:w-32 h-32 object-cover flex-shrink-0 border border-border"
+              />
+            )}
+            <div className="flex-1 min-w-0">
+              <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-accent-red mb-1">
+                Day {selected.day_number}
+              </p>
+              <h3 className="font-heading text-sm tracking-[0.05em] uppercase mb-2">{selected.title}</h3>
+              <p className="body-text text-sm text-muted-foreground">{selected.description}</p>
+            </div>
+          </div>
           <div className="flex flex-wrap gap-2 mt-4">
             {points.map((p) => (
               <button

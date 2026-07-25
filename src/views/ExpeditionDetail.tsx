@@ -209,7 +209,7 @@ const ExpeditionDetail = () => {
               </p>
             )}
 
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 border-t border-border pt-8">
+            <div className={`grid grid-cols-2 ${expedition.travelers_count ? "sm:grid-cols-5" : "sm:grid-cols-4"} gap-6 border-t border-border pt-8`}>
               <div>
                 <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">
                   Duration
@@ -237,6 +237,14 @@ const ExpeditionDetail = () => {
                 </p>
                 <p className="font-heading text-sm">{(expedition.dates || []).length || 1} date{(expedition.dates || []).length > 1 ? "s" : ""}</p>
               </div>
+              {!!expedition.travelers_count && (
+                <div>
+                  <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-1">
+                    Travelers
+                  </p>
+                  <p className="font-heading text-sm">{expedition.travelers_count} crossed the line</p>
+                </div>
+              )}
             </div>
 
             {/* Departure dates */}

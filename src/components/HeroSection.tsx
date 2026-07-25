@@ -90,9 +90,14 @@ const HeroSection = () => {
           <p className="body-text text-muted-foreground text-sm sm:text-lg max-w-2xl mx-auto mb-3 sm:mb-5">
             For those who'd rather live the story than read about it.
           </p>
-          <p className="font-heading text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-8 sm:mb-12">
+          <p className="font-heading text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-6">
             By application only · Small groups, real access
           </p>
+
+          <div className="flex items-center justify-center gap-5 mb-8 sm:mb-12">
+            <img src="/assets/google-reviews-logo.png" alt="Google Reviews" className="h-5 w-auto" />
+            <img src="/assets/tripadvisor-logo.png" alt="Tripadvisor" className="h-5 w-auto" />
+          </div>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <a
