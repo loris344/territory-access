@@ -88,13 +88,6 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
   const returnPath = slug ? `/lp/${slug}` : "/apply";
   const depositStorageKey = `deposit_pending_${slug || "apply"}`;
 
-  // Not locked to a single tour (the open /apply page): resolve deposit info
-  // from whichever expedition is currently selected in the dropdown, so the
-  // explicit note below can update live as the visitor picks a tour.
-  const selectedOption = lockedExpedition ? null : expeditionOptions.find((o) => o.id === form.expedition_id);
-  const currentDepositRequired = lockedExpedition?.depositRequired ?? selectedOption?.depositRequired ?? false;
-  const currentDepositAmountUsd = lockedExpedition?.depositAmountUsd ?? selectedOption?.depositAmountUsd;
-
   const handleTurnstileVerify = useCallback((token: string) => setTurnstileToken(token), []);
   const handleTurnstileExpire = useCallback(() => setTurnstileToken(""), []);
 
@@ -366,10 +359,13 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
             <>
               <h3 className="heading-display text-lg mb-3">Deposit Received</h3>
               <p className="body-text text-sm text-muted-foreground mb-2">
-                Your ${amountLabel} deposit has been received and your pre-booking is confirmed.
+                Your ${amountLabel} deposit (30% of the total price) has been received and your pre-booking is confirmed.
+              </p>
+              <p className="body-text text-sm text-muted-foreground mb-2">
+                The remaining balance (70%) is due between 30 and 45 days before departure. Our team will contact you within 48 hours to confirm the details of your file.
               </p>
               <p className="body-text text-sm text-muted-foreground">
-                Fully refundable if your application isn&apos;t accepted, or if we&apos;re ever unable to run this departure. We&apos;ll follow up by email with next steps.
+                Fully refundable if your application isn&apos;t accepted, or if we&apos;re ever unable to run this departure.
               </p>
             </>
           )}
@@ -380,10 +376,13 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
                 {depositStatus === "cancelled" ? "Payment Not Completed" : "Application Received"}
               </h3>
               <p className="body-text text-sm text-muted-foreground mb-2">
-                Your application has been registered. A ${amountLabel} deposit is required now to confirm your pre-booking.
+                Your application has been registered. A ${amountLabel} deposit (30% of the total price) is required now to confirm your pre-booking.
+              </p>
+              <p className="body-text text-sm text-muted-foreground mb-2">
+                The remaining balance (70%) is due between 30 and 45 days before departure. Our team will contact you within 48 hours to confirm the details of your file.
               </p>
               <p className="body-text text-sm text-muted-foreground mb-4">
-                It&apos;s fully refundable if your application isn&apos;t accepted, or if we&apos;re ever unable to run this departure.
+                The deposit is fully refundable if your application isn&apos;t accepted, or if we&apos;re ever unable to run this departure.
               </p>
               {depositStatus === "cancelled" && (
                 <p className="body-text text-sm text-muted-foreground mb-4">
@@ -577,15 +576,6 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
         <div className="mt-2">
           <TurnstileWidget onVerify={handleTurnstileVerify} onExpire={handleTurnstileExpire} />
         </div>
-
-        {currentDepositRequired && (
-          <div className="border border-accent/40 bg-accent/5 px-4 py-3">
-            <p className="body-text text-xs text-foreground">
-              <span className="font-heading tracking-wide uppercase text-[10px] text-accent-red">Note — </span>
-              Your application is only processed once the ${currentDepositAmountUsd?.toLocaleString("en-US")} deposit (next step, right after this form) is submitted. Without it, this form alone won&apos;t be reviewed.
-            </p>
-          </div>
-        )}
 
         <button
           type="submit"

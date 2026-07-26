@@ -876,10 +876,11 @@ const Admin = () => {
                           <input
                             type="number"
                             min={1}
-                            value={editData.deposit_amount_usd ?? 420}
+                            value={editData.deposit_amount_usd ?? Math.round((editData.price_usd || 0) * 0.3)}
                             onChange={(e) => setEditData({ ...editData, deposit_amount_usd: parseInt(e.target.value) || 0 })}
                             className="w-20 px-2 py-2 bg-background border border-border text-foreground text-sm"
                           />
+                          <span className="text-[10px] text-muted-foreground/60">(30% of price)</span>
                         </div>
                       )}
                     </div>
