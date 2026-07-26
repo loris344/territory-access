@@ -22,8 +22,8 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       <PhilosophySection />
-      <TeamCarousel />
       <TrailerSection />
+      <TeamCarousel />
       <WorldMap />
       <ExpeditionsGrid />
       <TestimonialsSection />
