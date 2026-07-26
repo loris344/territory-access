@@ -10,7 +10,7 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Loris",
     role: "Founder & Expedition Leader",
-    bio: "Passionate about extreme travel and geopolitics. Has explored over 38 countries including conflict zones, disputed territories, and restricted-access regions before founding Ligne Rouge Tours.",
+    bio: "Passionate about off-the-beaten-path travel and geopolitics. Has explored over 38 countries, from disputed territories to some of the world's most restricted-access regions, before founding Ligne Rouge Tours.",
     image: "/assets/founder.webp",
     email: "loris@lignerougetours.com",
   },
@@ -24,7 +24,7 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Aymeric",
     role: "Field Operations Analyst",
-    bio: "Specializes in risk assessment and field intelligence. Ensures every expedition meets strict security standards before departure.",
+    bio: "Handles trip preparation and on-the-ground coordination, making sure every logistical detail is carefully sorted before a group ever departs.",
     image: "/assets/aymeric.jpg",
     email: "aymeric@lignerougetours.com",
   },
