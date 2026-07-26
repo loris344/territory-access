@@ -152,7 +152,7 @@ const TourLandingPage = () => {
       </div>
 
       {/* Hero */}
-      <section className="relative min-h-[70svh] sm:min-h-[90svh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[100svh] sm:min-h-[90svh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           {heroImage && (
             <img
@@ -227,7 +227,7 @@ const TourLandingPage = () => {
           </motion.div>
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 h-16 sm:h-32 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-10 sm:h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* Trust signals */}
