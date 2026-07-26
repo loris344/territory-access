@@ -260,6 +260,17 @@ const TourLandingPage = () => {
       {/* Gallery auto-scroll carousel */}
       {galleryImages.length > 0 && <GalleryCarousel images={galleryImages} />}
 
+      {/* Mini destination description — quick context on where this trip goes, shorter than the full Overview on the regular tour page */}
+      {expedition.long_description && (
+        <section className="py-10 sm:py-14 border-b border-border">
+          <div className="max-w-2xl mx-auto px-4 sm:px-6 text-center">
+            <p className="body-text text-sm sm:text-base text-muted-foreground leading-relaxed">
+              {expedition.long_description}
+            </p>
+          </div>
+        </section>
+      )}
+
       {/* Transformational promise */}
       {(lp.promise_intro || lp.promise_bullets.length > 0) && (
         <section className="py-16 sm:py-24 border-b border-border">
