@@ -20,6 +20,7 @@ import ItineraryMap from "@/components/ItineraryMap";
 import ApplicationForm from "@/components/ApplicationForm";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import { useLandingPage } from "@/hooks/use-landing-page";
+import { useDragScroll } from "@/hooks/use-drag-scroll";
 import { optimizedImageUrl } from "@/lib/utils";
 const logoDark = "/assets/logo-dark.webp";
 
@@ -29,6 +30,7 @@ const GalleryCarousel = ({ images }: { images: string[] }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollPosRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
+  const { isDraggingRef, isDragging, dragHandlers } = useDragScroll(scrollRef, scrollPosRef);
 
   useEffect(() => {
     const container = scrollRef.current;
@@ -36,7 +38,7 @@ const GalleryCarousel = ({ images }: { images: string[] }) => {
     let animationId: number;
     const speed = 0.6;
     const step = () => {
-      if (!isPaused && container) {
+      if (!isPaused && !isDraggingRef.current && container) {
         scrollPosRef.current += speed;
         if (scrollPosRef.current >= container.scrollWidth / 2) scrollPosRef.current = 0;
         container.scrollLeft = scrollPosRef.current;
@@ -45,7 +47,7 @@ const GalleryCarousel = ({ images }: { images: string[] }) => {
     };
     animationId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animationId);
-  }, [isPaused]);
+  }, [isPaused, isDraggingRef]);
 
   const doubled = [...images, ...images];
 
@@ -55,7 +57,12 @@ const GalleryCarousel = ({ images }: { images: string[] }) => {
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div ref={scrollRef} className="overflow-hidden" style={{ scrollbarWidth: "none" }}>
+      <div
+        ref={scrollRef}
+        className={`overflow-hidden select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        style={{ scrollbarWidth: "none", touchAction: "pan-y" }}
+        {...dragHandlers}
+      >
         <div className="flex gap-2 w-max">
           {doubled.map((src, i) => (
             <div key={i} className="h-[250px] sm:h-[320px] md:h-[380px] flex-shrink-0 overflow-hidden">
@@ -64,6 +71,7 @@ const GalleryCarousel = ({ images }: { images: string[] }) => {
                 alt={`Expedition ${i + 1}`}
                 className="h-full w-auto object-cover brightness-90 contrast-105 grayscale-[10%]"
                 loading="lazy"
+                draggable={false}
               />
             </div>
           ))}

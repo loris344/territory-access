@@ -403,6 +403,11 @@ const ExpeditionDetail = () => {
         </section>
       )}
 
+      {/* Social proof */}
+      {expedition.testimonials && expedition.testimonials.length > 0 && (
+        <TestimonialsCarousel testimonials={expedition.testimonials} />
+      )}
+
       {/* Itinerary */}
       <section className="py-16 lg:py-24 bg-secondary">
         <div className="max-w-4xl mx-auto px-6 lg:px-8">
@@ -461,11 +466,6 @@ const ExpeditionDetail = () => {
           </div>
         </div>
       </section>
-
-      {/* Social proof */}
-      {expedition.testimonials && expedition.testimonials.length > 0 && (
-        <TestimonialsCarousel testimonials={expedition.testimonials} />
-      )}
 
       {/* Application CTA */}
       <section className="py-16 lg:py-24 bg-secondary">

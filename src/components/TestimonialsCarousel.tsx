@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import type { Testimonial } from "@/data/expeditions";
+import { useDragScroll } from "@/hooks/use-drag-scroll";
 
 // Same auto-scroll mechanic as the homepage's TestimonialsSection: duplicate
 // the list for a seamless loop, advance scrollLeft via rAF, pause on hover.
@@ -11,6 +12,7 @@ const TestimonialsCarousel = ({ testimonials }: { testimonials: Testimonial[] })
   const scrollRef = useRef<HTMLDivElement>(null);
   const scrollPosRef = useRef(0);
   const [isPaused, setIsPaused] = useState(false);
+  const { isDraggingRef, isDragging, dragHandlers } = useDragScroll(scrollRef, scrollPosRef);
   const duplicated = [...testimonials, ...testimonials];
 
   useEffect(() => {
@@ -19,7 +21,7 @@ const TestimonialsCarousel = ({ testimonials }: { testimonials: Testimonial[] })
     let animationId: number;
     const speed = 0.5;
     const step = () => {
-      if (!isPaused && container) {
+      if (!isPaused && !isDraggingRef.current && container) {
         scrollPosRef.current += speed;
         if (scrollPosRef.current >= container.scrollWidth / 2) scrollPosRef.current = 0;
         container.scrollLeft = scrollPosRef.current;
@@ -28,7 +30,7 @@ const TestimonialsCarousel = ({ testimonials }: { testimonials: Testimonial[] })
     };
     animationId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animationId);
-  }, [isPaused]);
+  }, [isPaused, isDraggingRef]);
 
   if (testimonials.length === 0) return null;
 
@@ -46,8 +48,9 @@ const TestimonialsCarousel = ({ testimonials }: { testimonials: Testimonial[] })
         ref={scrollRef}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
-        className="overflow-hidden cursor-grab"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+        className={`overflow-hidden select-none ${isDragging ? "cursor-grabbing" : "cursor-grab"}`}
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none", touchAction: "pan-y" }}
+        {...dragHandlers}
       >
         <div className="flex gap-6 px-4 w-max">
           {duplicated.map(({ name, detail, quote, image_url }, i) => (
@@ -58,6 +61,7 @@ const TestimonialsCarousel = ({ testimonials }: { testimonials: Testimonial[] })
                     src={image_url}
                     alt={name}
                     loading="lazy"
+                    draggable={false}
                     className="w-14 h-14 rounded-full object-cover brightness-95 contrast-105 grayscale-[10%]"
                   />
                 ) : (
