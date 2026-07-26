@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
 import TrailerSection from "@/components/TrailerSection";
 import PhilosophySection from "@/components/PhilosophySection";
+import TeamCarousel from "@/components/TeamCarousel";
 import WorldMap from "@/components/WorldMap";
 import ExpeditionsGrid from "@/components/ExpeditionsGrid";
 import TestimonialsSection from "@/components/TestimonialsSection";
@@ -21,6 +22,7 @@ const Index = () => {
       <Navbar />
       <HeroSection />
       <PhilosophySection />
+      <TeamCarousel />
       <TrailerSection />
       <WorldMap />
       <ExpeditionsGrid />

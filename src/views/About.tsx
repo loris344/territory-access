@@ -5,13 +5,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ContactBubbles from "@/components/ContactBubbles";
-const founderImg = "/assets/founder.webp";
-const gaetanImg = "/assets/gaetan.webp";
-const aymericImg = "/assets/aymeric.jpg";
-const rayaneImg = "/assets/rayane.webp";
-const rymImg = "/assets/rym.webp";
-const leaImg = "/assets/lea.webp";
-const vitalyImg = "/assets/vitaly.webp";
+import { teamMembers } from "@/data/team";
 
 const faqItems = [
   {
@@ -33,58 +27,6 @@ const faqItems = [
   {
     q: "Can I travel alone or must I join a group?",
     a: "All our scheduled expeditions are group-based with a maximum of 8 to 14 participants. However, private solo expeditions are available upon request and subject to a custom quote. Contact us directly to discuss your project.",
-  },
-];
-
-const teamMembers = [
-  {
-    name: "Loris",
-    role: "Founder & Expedition Leader",
-    bio: "Passionate about extreme travel and geopolitics. Has explored over 38 countries including conflict zones, disputed territories, and restricted-access regions before founding Ligne Rouge Tours.",
-    image: founderImg,
-    email: "loris@lignerougetours.com",
-  },
-  {
-    name: "Gaëtan",
-    role: "Operations & Logistics Coordinator",
-    bio: "Handles the operational backbone of every expedition, from route planning to on-ground logistics across complex territories.",
-    image: gaetanImg,
-    email: "gaetan@lignerougetours.com",
-  },
-  {
-    name: "Aymeric",
-    role: "Field Operations Analyst",
-    bio: "Specializes in risk assessment and field intelligence. Ensures every expedition meets strict security standards before departure.",
-    image: aymericImg,
-    email: "aymeric@lignerougetours.com",
-  },
-  {
-    name: "Rayane",
-    role: "Expedition Guide & Fixer Liaison",
-    bio: "Coordinates with local fixers and guides across North Africa and the Middle East. Expert in navigating culturally sensitive environments.",
-    image: rayaneImg,
-    email: "rayane@lignerougetours.com",
-  },
-  {
-    name: "Vitaly",
-    role: "Strategic Partnerships & Development",
-    bio: "Builds relationships with local operators and institutional partners to open access to restricted and emerging destinations.",
-    image: vitalyImg,
-    email: "vitaly@lignerougetours.com",
-  },
-  {
-    name: "Rym",
-    role: "Marketing & Brand Strategy",
-    bio: "Shapes the brand's visual identity and narrative. Drives awareness through content strategy and digital campaigns.",
-    image: rymImg,
-    email: "rym@lignerougetours.com",
-  },
-  {
-    name: "Léa",
-    role: "Communications & Community Manager",
-    bio: "Manages client relations, social media presence, and community engagement. The first point of contact for aspiring expedition members.",
-    image: leaImg,
-    email: "lea@lignerougetours.com",
   },
 ];
 
