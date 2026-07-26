@@ -152,7 +152,7 @@ const TourLandingPage = () => {
       </div>
 
       {/* Hero */}
-      <section className="relative sm:min-h-[90svh] flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-[90svh] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
           {heroImage && (
             <img
@@ -165,7 +165,7 @@ const TourLandingPage = () => {
           <div className="absolute inset-0 bg-background/60" />
         </div>
 
-        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center pt-14 pb-10 sm:pb-0">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center pt-6">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             {lp.tagline && (
               <p className="font-heading text-[10px] sm:text-xs tracking-[0.2em] uppercase text-accent-red mb-4">
