@@ -33,6 +33,12 @@ type ExpeditionOption = {
   depositAmountUsd: number;
 };
 
+type DateOption = {
+  id: string;
+  label: string;
+  remainingSpots: number;
+};
+
 interface ApplicationFormProps {
   // Query-param-driven preselection, used on the open /apply page.
   preselectedSlug?: string;
@@ -55,7 +61,8 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [submitError, setSubmitError] = useState("");
   const [expeditionOptions, setExpeditionOptions] = useState<ExpeditionOption[]>([]);
-  const [selectedDateLabel, setSelectedDateLabel] = useState("");
+  const [dateOptions, setDateOptions] = useState<DateOption[]>([]);
+  const [selectedDateId, setSelectedDateId] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const [activeApplicationId, setActiveApplicationId] = useState<string>(() => crypto.randomUUID());
   const [depositStatus, setDepositStatus] = useState<DepositStatus>("idle");
@@ -206,22 +213,38 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     fetchExpeditions();
   }, [preselectedSlug, lockedExpedition]);
 
+  // Departure date is chosen inside the form itself (not fixed to whatever
+  // link the visitor arrived from) — refetch whenever the expedition in play
+  // changes, whether that's the locked tour or the open /apply dropdown.
+  const currentExpeditionId = lockedExpedition?.id || form.expedition_id;
   useEffect(() => {
-    if (!preselectedDateId) return;
-    const fetchDateLabel = async () => {
-      const { data: dateData } = await supabase
+    if (!currentExpeditionId) {
+      setDateOptions([]);
+      setSelectedDateId("");
+      return;
+    }
+    const fetchDates = async () => {
+      const { data } = await supabase
         .from("expedition_dates")
-        .select("start_date, end_date")
-        .eq("id", preselectedDateId)
-        .single();
-      if (dateData) {
-        setSelectedDateLabel(
-          `${new Date(dateData.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} - ${new Date(dateData.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}`
-        );
-      }
+        .select("id, start_date, end_date, capacity_max, spots_taken, status")
+        .eq("expedition_id", currentExpeditionId)
+        .order("start_date", { ascending: true });
+
+      const today = new Date().toISOString().split("T")[0];
+      const options: DateOption[] = (data || [])
+        .filter((d) => (d.status === "open" || d.status === "limited") && d.end_date >= today)
+        .map((d) => ({
+          id: d.id,
+          label: `${new Date(d.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} - ${new Date(d.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}`,
+          remainingSpots: d.capacity_max - d.spots_taken,
+        }));
+
+      setDateOptions(options);
+      const preselectedStillValid = options.some((o) => o.id === preselectedDateId);
+      setSelectedDateId(preselectedStillValid ? preselectedDateId : options[0]?.id || "");
     };
-    fetchDateLabel();
-  }, [preselectedDateId]);
+    fetchDates();
+  }, [currentExpeditionId, preselectedDateId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -286,7 +309,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     const { error } = await supabase.from("applications").insert({
       id: activeApplicationId,
       expedition_id: result.data.expedition_id,
-      expedition_date_id: preselectedDateId || null,
+      expedition_date_id: selectedDateId || null,
       first_name: result.data.first_name,
       last_name: result.data.last_name,
       email: result.data.email,
@@ -453,10 +476,25 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
           </div>
         )}
 
-        {selectedDateLabel && (
-          <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-accent -mt-2">
-            Selected date: {selectedDateLabel}
-          </p>
+        {dateOptions.length > 0 && (
+          <div>
+            <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
+              Departure date
+            </label>
+            <select
+              name="expedition_date_id"
+              value={selectedDateId}
+              onChange={(e) => setSelectedDateId(e.target.value)}
+              required
+              className={inputClass}
+            >
+              {dateOptions.map((d) => (
+                <option key={d.id} value={d.id}>
+                  {d.label} · {d.remainingSpots} spots left
+                </option>
+              ))}
+            </select>
+          </div>
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
