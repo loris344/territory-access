@@ -10,6 +10,7 @@ import { useActiveExpeditions } from "@/hooks/use-expeditions";
 import type { Expedition } from "@/data/expeditions";
 import { optimizedImageUrl } from "@/lib/utils";
 import { intensityLabels } from "@/components/ExpeditionCard";
+import { preferEnglishLabels } from "@/lib/mapLabels";
 
 // Real map tiles (OpenFreeMap's dark style — MIT-licensed, no API key, no
 // usage limits, commercial use explicitly permitted) instead of the old
@@ -65,6 +66,7 @@ const WorldMap = () => {
     if (e.target.getLayer("boundary_state")) {
       e.target.setLayoutProperty("boundary_state", "visibility", "none");
     }
+    preferEnglishLabels(e.target);
     if (expeditions.length > 0) {
       const lngs = expeditions.map((exp) => exp.coordinates[0]);
       const lats = expeditions.map((exp) => exp.coordinates[1]);
