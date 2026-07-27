@@ -208,7 +208,7 @@ export const expeditions: Expedition[] = [
     duration_days: 5,
     capacity_max: 14,
     spots_taken: 0,
-    price_usd: 2100,
+    price_usd: 1450,
     intensity_level: "Easy",
     intensity_type: "political",
     difficulty_level: "easy",

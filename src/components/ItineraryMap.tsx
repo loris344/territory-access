@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { ComposableMap, Geographies, Geography, Marker, Line, ZoomableGroup } from "react-simple-maps";
+import { geoCentroid, geoContains } from "d3-geo";
 import type { ExpeditionDay } from "@/data/expeditions";
 
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
@@ -53,18 +54,73 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
         >
           <ZoomableGroup center={[centerLng, centerLat]} minZoom={minZoom} maxZoom={10} onMoveEnd={({ zoom: k }) => setZoom(k)}>
             <Geographies geography={geoUrl}>
-              {({ geographies }) =>
-                geographies.map((geo) => (
-                  <Geography
-                    key={geo.rsmKey}
-                    geography={geo}
-                    fill="hsl(0, 0%, 11%)"
-                    stroke="hsl(0, 0%, 20%)"
-                    strokeWidth={0.5 / zoom}
-                    style={{ default: { outline: "none" }, hover: { outline: "none" }, pressed: { outline: "none" } }}
-                  />
-                ))
-              }
+              {({ geographies }) => {
+                // Label the countries actually around the itinerary so
+                // visitors can orient themselves — the base TopoJSON has no
+                // place names baked in, only country borders. Centroid-based
+                // and static (computed once from the itinerary's own spread,
+                // not re-filtered on pan/zoom), same simplification as the
+                // rest of this map's framing logic.
+                const dayMaxLat = Math.max(...lats);
+                const margin = Math.max(spread * 2, 5);
+                const minLat = Math.min(...lats) - margin;
+                const maxLat = dayMaxLat + margin;
+                const minLng = Math.min(...lngs) - margin;
+                const maxLng = Math.max(...lngs) + margin;
+
+                // A tightly-zoomed itinerary (a single valley/city) sits deep
+                // inside one country's polygon — that country's TRUE centroid
+                // (e.g. central India for a Kashmir-only itinerary) is often
+                // far outside the visible frame, so its label never renders.
+                // Pin the containing country's label just above the point
+                // cluster itself instead, guaranteed to stay on screen.
+                const homeGeo = geographies.find((geo) =>
+                  geoContains(geo as unknown as Parameters<typeof geoContains>[0], [centerLng, centerLat])
+                );
+                const otherLabels = geographies
+                  .filter((geo) => geo !== homeGeo)
+                  .map((geo) => {
+                    const [lng, lat] = geoCentroid(geo as unknown as Parameters<typeof geoCentroid>[0]);
+                    return { geo, lng, lat };
+                  })
+                  .filter(({ lat, lng }) => lat >= minLat && lat <= maxLat && lng >= minLng && lng <= maxLng)
+                  .sort((a, b) => Math.hypot(a.lat - centerLat, a.lng - centerLng) - Math.hypot(b.lat - centerLat, b.lng - centerLng))
+                  .slice(0, 7);
+                const countryLabels = homeGeo
+                  ? [{ geo: homeGeo, lng: centerLng, lat: dayMaxLat + Math.max(spread, 0.05) * 0.4 }, ...otherLabels]
+                  : otherLabels;
+
+                return (
+                  <>
+                    {geographies.map((geo) => (
+                      <Geography
+                        key={geo.rsmKey}
+                        geography={geo}
+                        fill="hsl(0, 0%, 11%)"
+                        stroke="hsl(0, 0%, 20%)"
+                        strokeWidth={0.5 / zoom}
+                        style={{ default: { outline: "none" }, hover: { outline: "none" }, pressed: { outline: "none" } }}
+                      />
+                    ))}
+                    {countryLabels.map(({ geo, lng, lat }) => (
+                      <Marker key={`country-${geo.rsmKey}`} coordinates={[lng, lat]}>
+                        <text
+                          textAnchor="middle"
+                          style={{
+                            fontFamily: "var(--font-heading)",
+                            fontSize: 7 / zoom,
+                            letterSpacing: "0.05em",
+                            fill: "hsl(0, 0%, 45%)",
+                            pointerEvents: "none",
+                          }}
+                        >
+                          {String(geo.properties?.name ?? "").toUpperCase()}
+                        </text>
+                      </Marker>
+                    ))}
+                  </>
+                );
+              }}
             </Geographies>
 
             {points.slice(0, -1).map((p, i) => (

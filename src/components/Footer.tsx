@@ -11,9 +11,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           <div>
             <h4 className="heading-display text-sm mb-4">Ligne Rouge Tours</h4>
-            <p className="body-text text-muted-foreground text-sm">
+            <p className="body-text text-muted-foreground text-sm mb-6">
               We design expeditions to the world's least-visited places.
             </p>
+            <div className="flex items-center gap-6">
+              <img src="/assets/atta-member-badge.png" alt="Adventure Travel Trade Association Member" className="h-9 w-auto" />
+              <img src="/assets/abta-logo.webp" alt="ABTA - Travel with confidence" className="h-9 w-auto" />
+            </div>
           </div>
           <div>
             <h4 className="heading-display text-sm mb-4">Contact</h4>
@@ -98,11 +102,6 @@ const Footer = () => {
             >
               <Instagram size={18} />
             </a>
-          </div>
-          <div className="h-px w-12 bg-accent mx-auto mt-10" />
-          <div className="flex items-center justify-center gap-8 mt-10 flex-wrap">
-            <img src="/assets/atta-member-badge.png" alt="Adventure Travel Trade Association Member" className="h-9 w-auto" />
-            <img src="/assets/abta-logo.webp" alt="ABTA - Travel with confidence" className="h-9 w-auto" />
           </div>
         </div>
       </div>
