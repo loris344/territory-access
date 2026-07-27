@@ -326,6 +326,21 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
       return;
     }
 
+    // Computed before the insert (not after) so deposit_required/
+    // deposit_amount_usd are correct on the row from the moment it's
+    // created — they used to only get set later by create-deposit-checkout,
+    // the real Stripe path, which nothing currently calls (CardEntryFormPlaceholder
+    // stands in for it), so every application was silently stored as
+    // deposit_required=false regardless of the tour's actual requirement.
+    const matchedOption = expeditionOptions.find((o) => o.id === result.data.expedition_id);
+    const depositRequired = lockedExpedition?.depositRequired ?? matchedOption?.depositRequired ?? false;
+    // depositAmountUsd on the expedition is a per-person figure (30% of the
+    // per-person price) — scale it by how many travelers this application
+    // covers. The real charge is re-derived the same way server-side in
+    // create-deposit-checkout, this is just for the immediate on-screen offer.
+    const perPersonDepositUsd = lockedExpedition?.depositAmountUsd ?? matchedOption?.depositAmountUsd;
+    const depositAmountUsd = perPersonDepositUsd != null ? perPersonDepositUsd * result.data.participants : undefined;
+
     const { error } = await supabase.from("applications").insert({
       id: activeApplicationId,
       expedition_id: result.data.expedition_id,
@@ -340,6 +355,8 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
       physical_condition: result.data.physical_condition,
       motivation_text: result.data.motivation_text,
       status: "pending",
+      deposit_required: depositRequired,
+      deposit_amount_usd: depositRequired ? depositAmountUsd ?? null : null,
     } as any);
     setLoading(false);
 
@@ -349,7 +366,6 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     }
 
     // Strongest intent signal — fire ONLY now that the application is stored.
-    const matchedOption = expeditionOptions.find((o) => o.id === result.data.expedition_id);
     trackLead(
       "application",
       {
@@ -360,14 +376,6 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
       },
       lockedExpedition?.name || matchedOption?.name,
     );
-
-    const depositRequired = lockedExpedition?.depositRequired ?? matchedOption?.depositRequired ?? false;
-    // depositAmountUsd on the expedition is a per-person figure (30% of the
-    // per-person price) — scale it by how many travelers this application
-    // covers. The real charge is re-derived the same way server-side in
-    // create-deposit-checkout, this is just for the immediate on-screen offer.
-    const perPersonDepositUsd = lockedExpedition?.depositAmountUsd ?? matchedOption?.depositAmountUsd;
-    const depositAmountUsd = perPersonDepositUsd != null ? perPersonDepositUsd * result.data.participants : undefined;
 
     setSubmitted(true);
     if (depositRequired) {
