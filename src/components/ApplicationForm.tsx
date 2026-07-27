@@ -75,6 +75,10 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
   // Temporary: shows a visual-only card form instead of redirecting to
   // Stripe, per request, while the real payment connection is pending.
   const [showCardForm, setShowCardForm] = useState(false);
+  // Resuming from a reminder-email link (?resume=<application_id>): skip the
+  // whole form and jump straight to the deposit screen for that application.
+  const [resumeLoading, setResumeLoading] = useState(false);
+  const [resumeError, setResumeError] = useState("");
 
   const [form, setForm] = useState({
     expedition_id: lockedExpedition?.id || "",
@@ -129,6 +133,22 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
       setResolvedDeposit({ required: true, amountUsd: pending.amountUsd });
       setSubmitted(true);
       setDepositStatus("cancelled");
+    } else {
+      const resumeId = searchParams.get("resume");
+      if (resumeId) {
+        setResumeLoading(true);
+        supabase.functions.invoke("resume-application", { body: { application_id: resumeId } }).then(({ data, error }) => {
+          setResumeLoading(false);
+          if (error || !data || data.error || !data.deposit_required) {
+            setResumeError("We couldn't find that application. Please contact us directly, or start a new one below.");
+            return;
+          }
+          setActiveApplicationId(resumeId);
+          setResolvedDeposit({ required: true, amountUsd: data.deposit_amount_usd });
+          setSubmitted(true);
+          setDepositStatus(data.deposit_paid ? "paid" : "offer");
+        });
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [slug]);
@@ -364,6 +384,15 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
   const errorText = (field: string) =>
     errors[field] ? <p className="text-destructive text-xs mt-1">{errors[field]}</p> : null;
 
+  if (resumeLoading) {
+    return (
+      <div className="border border-border bg-card p-8 text-center">
+        <div className="h-px w-12 bg-accent mx-auto mb-6" />
+        <p className="body-text text-sm text-muted-foreground">Loading your application…</p>
+      </div>
+    );
+  }
+
   if (submitted) {
     if (depositStatus !== "idle") {
       const amountLabel = resolvedDeposit?.amountUsd?.toLocaleString("en-US");
@@ -445,6 +474,11 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
 
   return (
     <>
+      {resumeError && (
+        <div className="border border-destructive/50 bg-destructive/10 text-destructive text-sm px-4 py-3 mb-6">
+          {resumeError}
+        </div>
+      )}
       {submitError && (
         <div className="border border-destructive/50 bg-destructive/10 text-destructive text-sm px-4 py-3 mb-6">
           {submitError}

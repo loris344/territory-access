@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
       throw new Error("RESEND_API_KEY is not configured");
     }
 
-    const { application_id } = await req.json();
+    const { application_id, mark_deposit_attempt } = await req.json();
     if (!application_id) {
       throw new Error("application_id is required");
     }
@@ -42,6 +42,17 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // CardEntryFormPlaceholder calls this the moment the applicant submits
+    // the (visual-only) card form — the "did they reach/press Pay" signal
+    // the admin panel, Telegram, and the reminder-email cron all key off.
+    if (mark_deposit_attempt) {
+      await supabase
+        .from("applications")
+        .update({ deposit_attempted_at: new Date().toISOString() })
+        .eq("id", application_id)
+        .is("deposit_attempted_at", null);
+    }
 
     const { data: app, error: fetchError } = await supabase
       .from("applications")

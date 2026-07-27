@@ -29,3 +29,9 @@ verify_jwt = false
 
 [functions.confirm-deposit]
 verify_jwt = false
+
+[functions.resume-application]
+verify_jwt = false
+
+[functions.notify-deposit-reminder]
+verify_jwt = false

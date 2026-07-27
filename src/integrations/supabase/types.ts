@@ -43,8 +43,10 @@ export type Database = {
         Row: {
           created_at: string
           deposit_amount_usd: number | null
+          deposit_attempted_at: string | null
           deposit_paid: boolean
           deposit_paid_at: string | null
+          deposit_reminder_sent_at: string | null
           deposit_required: boolean
           email: string
           expedition_date_id: string | null
@@ -63,8 +65,10 @@ export type Database = {
         Insert: {
           created_at?: string
           deposit_amount_usd?: number | null
+          deposit_attempted_at?: string | null
           deposit_paid?: boolean
           deposit_paid_at?: string | null
+          deposit_reminder_sent_at?: string | null
           deposit_required?: boolean
           email: string
           expedition_date_id?: string | null
@@ -83,8 +87,10 @@ export type Database = {
         Update: {
           created_at?: string
           deposit_amount_usd?: number | null
+          deposit_attempted_at?: string | null
           deposit_paid?: boolean
           deposit_paid_at?: string | null
+          deposit_reminder_sent_at?: string | null
           deposit_required?: boolean
           email?: string
           expedition_date_id?: string | null
@@ -691,6 +697,7 @@ export type Database = {
         Args: { p_destination: string; p_email: string }
         Returns: undefined
       }
+      send_deposit_reminders: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "user"

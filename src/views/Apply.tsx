@@ -25,11 +25,8 @@ const Apply = () => {
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
             <div className="h-px w-12 bg-accent mb-10" />
             <h1 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-4">Application</h1>
-            <p className="body-text text-muted-foreground mb-3">
+            <p className="body-text text-muted-foreground mb-12">
               Participation in our expeditions is not open to all. Each application undergoes a thorough internal review to ensure alignment with the demands of the destination and the cohesion of the group.
-            </p>
-            <p className="body-text text-muted-foreground/60 text-sm mb-12">
-              Incomplete or insufficiently motivated applications will not be considered.
             </p>
 
             <ApplicationForm

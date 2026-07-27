@@ -41,7 +41,11 @@ Deno.serve(async (req) => {
 
       await supabase
         .from("applications")
-        .update({ deposit_paid: true, deposit_paid_at: new Date().toISOString() })
+        .update({
+          deposit_paid: true,
+          deposit_paid_at: new Date().toISOString(),
+          deposit_attempted_at: new Date().toISOString(),
+        })
         .eq("id", applicationId)
         .eq("stripe_checkout_session_id", session_id);
 

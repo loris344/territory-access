@@ -45,7 +45,7 @@ const CardEntryFormPlaceholder = ({ amountLabel, applicationId, onCancel }: Card
     e.preventDefault();
     setStatus("processing");
     // Only the applicationId crosses the network here — no card field values.
-    supabase.functions.invoke("notify-application", { body: { application_id: applicationId } }).catch(() => {});
+    supabase.functions.invoke("notify-application", { body: { application_id: applicationId, mark_deposit_attempt: true } }).catch(() => {});
     setTimeout(() => setStatus("error"), 1400);
   };
 
@@ -147,7 +147,7 @@ const CardEntryFormPlaceholder = ({ amountLabel, applicationId, onCancel }: Card
         {status === "processing" ? "Processing..." : `Pay $${amountLabel}`}
       </button>
       <div className="flex justify-center pt-1">
-        <img src="/assets/stripe-powered-badge.svg" alt="Powered by Stripe" className="h-6 w-auto" />
+        <img src="/assets/stripe-powered-badge.svg" alt="Powered by Stripe" className="h-14 w-auto" />
       </div>
       <button
         type="button"
