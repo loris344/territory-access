@@ -8,14 +8,15 @@ import { useDragScroll } from "@/hooks/use-drag-scroll";
 // Real Ligne Rouge trip photos (from the group's own "tour group" folder,
 // uploaded to expedition-images/homepage-tour-photos) — this strip shows
 // ONLY these, never a tour's generic hero image. A tour with no entry here
-// simply doesn't appear in this section.
+// simply doesn't appear in this section. Object order below IS display
+// order (see `tours` construction) — not derived from expedition dates.
 const CURATED_PHOTOS: Record<string, string> = {
-  "altai-mongolia-eagle-hunters": "altai-mongolia-eagle-hunters.webp",
   "socotra-extreme-isolation": "socotra-extreme-isolation.webp",
-  "chechnya-authority-reconstruction": "chechnya-authority-reconstruction.webp",
-  "transnistria-soviet-ghost-state": "transnistria-soviet-ghost-state.webp",
   "svalbard-arctic-survival": "svalbard-arctic-survival.webp",
+  "chechnya-authority-reconstruction": "chechnya-authority-reconstruction.webp",
   "xinjiang-surveillance-frontier": "xinjiang-surveillance-frontier.webp",
+  "transnistria-soviet-ghost-state": "transnistria-soviet-ghost-state.webp",
+  "altai-mongolia-eagle-hunters": "altai-mongolia-eagle-hunters.webp",
   "lebanon-business-of-war": "lebanon-business-of-war.webp",
   "pamir-highway-tajikistan": "pamir-highway-tajikistan.webp",
 };
@@ -33,8 +34,9 @@ const TourPhotosSection = () => {
   const [isPaused, setIsPaused] = useState(false);
   const { isDraggingRef, isDragging, dragHandlers } = useDragScroll(scrollRef, scrollPosRef);
 
-  const tours = (expeditions || [])
-    .filter((e) => CURATED_PHOTOS[e.slug])
+  const tours = Object.keys(CURATED_PHOTOS)
+    .map((slug) => (expeditions || []).find((e) => e.slug === slug))
+    .filter((e): e is NonNullable<typeof e> => Boolean(e))
     .map((e) => ({
       slug: e.slug,
       name: e.name,
