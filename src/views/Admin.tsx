@@ -11,7 +11,6 @@ import FocalPointModal from "@/components/admin/FocalPointModal";
 import ApplicationsPanel from "@/components/admin/ApplicationsPanel";
 import WaitlistPanel from "@/components/admin/WaitlistPanel";
 import InfoRequestsPanel from "@/components/admin/InfoRequestsPanel";
-import MetaEventLogPanel from "@/components/admin/MetaEventLogPanel";
 import LandingPagesPanel from "@/components/admin/LandingPagesPanel";
 
 
@@ -697,9 +696,6 @@ const Admin = () => {
 
         {/* Tour info requests */}
         <InfoRequestsPanel />
-
-        {/* Meta events (server-side ground truth of what was sent to Meta) */}
-        <MetaEventLogPanel />
 
         {/* Hero Images Manager */}
         <div className="mb-8 border border-border bg-card p-4 sm:p-6">

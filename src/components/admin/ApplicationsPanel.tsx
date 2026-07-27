@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { ChevronDown, ChevronUp, Mail, Phone, MapPin, User, FileText, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, Mail, Phone, MapPin, Users, FileText, Trash2 } from "lucide-react";
 
 type Application = {
   id: string;
@@ -26,6 +26,9 @@ type Application = {
 };
 
 const depositBadge = (app: Application) => {
+  if (!app.deposit_required) {
+    return { label: "No deposit required", className: "bg-muted text-muted-foreground" };
+  }
   if (app.deposit_paid) {
     return { label: `Deposit paid ($${app.deposit_amount_usd})`, className: "bg-green-500/10 text-green-600" };
   }
@@ -35,7 +38,15 @@ const depositBadge = (app: Application) => {
   if (app.deposit_reminder_sent_at) {
     return { label: "Reminder sent, no payment yet", className: "bg-blue-500/10 text-blue-600" };
   }
-  return { label: "Deposit pending", className: "bg-amber-500/10 text-amber-600" };
+  return { label: "Applied, no payment yet", className: "bg-amber-500/10 text-amber-600" };
+};
+
+// physical_condition is stored as "[N participant(s)] <free text>" (see
+// ApplicationForm.tsx) — split it back apart so the admin view doesn't show
+// that raw, unlabeled string.
+const parsePhysicalCondition = (raw: string) => {
+  const match = raw.match(/^\[(\d+) participant\(s\)\]\s*(.*)$/s);
+  return match ? { participants: match[1], condition: match[2] } : { participants: null, condition: raw };
 };
 
 const statusColors: Record<string, string> = {
@@ -122,7 +133,9 @@ const ApplicationsPanel = () => {
           ) : applications.length === 0 ? (
             <p className="text-sm text-muted-foreground">No applications yet.</p>
           ) : (
-            applications.map((app) => (
+            applications.map((app) => {
+              const { participants, condition } = parsePhysicalCondition(app.physical_condition);
+              return (
               <div key={app.id} className="border border-border bg-background p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div
@@ -136,11 +149,9 @@ const ApplicationsPanel = () => {
                       <span className={`font-heading text-[10px] tracking-wider uppercase px-2 py-0.5 ${statusColors[app.status] || "bg-muted text-muted-foreground"}`}>
                         {app.status}
                       </span>
-                      {app.deposit_required && (
-                        <span className={`font-heading text-[10px] tracking-wider uppercase px-2 py-0.5 ${depositBadge(app).className}`}>
-                          {depositBadge(app).label}
-                        </span>
-                      )}
+                      <span className={`font-heading text-[10px] tracking-wider uppercase px-2 py-0.5 ${depositBadge(app).className}`}>
+                        {depositBadge(app).label}
+                      </span>
                     </div>
                     <p className="text-xs text-muted-foreground mt-1">
                       <span className="text-accent">{app.expedition_name}</span>
@@ -188,9 +199,18 @@ const ApplicationsPanel = () => {
                         <span className="text-foreground">{app.nationality}</span>
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        <User className="w-3.5 h-3.5" />
-                        <span className="text-foreground">{app.physical_condition}</span>
+                        <Users className="w-3.5 h-3.5" />
+                        <span className="text-foreground">{participants ?? "1"} participant{participants !== "1" ? "s" : ""}</span>
                       </div>
+                    </div>
+
+                    <div>
+                      <h5 className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground mb-2">
+                        Physical Condition & Experience
+                      </h5>
+                      <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
+                        {condition}
+                      </p>
                     </div>
 
                     <div>
@@ -220,7 +240,8 @@ const ApplicationsPanel = () => {
                   </div>
                 )}
               </div>
-            ))
+              );
+            })
           )}
         </div>
       )}
