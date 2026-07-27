@@ -12,6 +12,7 @@ type Application = {
   email: string;
   phone: string;
   nationality: string;
+  participants: number;
   physical_condition: string;
   motivation_text: string;
   status: string;
@@ -39,14 +40,6 @@ const depositBadge = (app: Application) => {
     return { label: "Reminder sent, no payment yet", className: "bg-blue-500/10 text-blue-600" };
   }
   return { label: "Applied, no payment yet", className: "bg-amber-500/10 text-amber-600" };
-};
-
-// physical_condition is stored as "[N participant(s)] <free text>" (see
-// ApplicationForm.tsx) — split it back apart so the admin view doesn't show
-// that raw, unlabeled string.
-const parsePhysicalCondition = (raw: string) => {
-  const match = raw.match(/^\[(\d+) participant\(s\)\]\s*(.*)$/s);
-  return match ? { participants: match[1], condition: match[2] } : { participants: null, condition: raw };
 };
 
 const statusColors: Record<string, string> = {
@@ -134,7 +127,6 @@ const ApplicationsPanel = () => {
             <p className="text-sm text-muted-foreground">No applications yet.</p>
           ) : (
             applications.map((app) => {
-              const { participants, condition } = parsePhysicalCondition(app.physical_condition);
               return (
               <div key={app.id} className="border border-border bg-background p-4">
                 <div className="flex items-start justify-between gap-3">
@@ -200,7 +192,7 @@ const ApplicationsPanel = () => {
                       </div>
                       <div className="flex items-center gap-2 text-muted-foreground">
                         <Users className="w-3.5 h-3.5" />
-                        <span className="text-foreground">{participants ?? "1"} participant{participants !== "1" ? "s" : ""}</span>
+                        <span className="text-foreground">{app.participants} participant{app.participants > 1 ? "s" : ""}</span>
                       </div>
                     </div>
 
@@ -209,7 +201,7 @@ const ApplicationsPanel = () => {
                         Physical Condition & Experience
                       </h5>
                       <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-                        {condition}
+                        {app.physical_condition}
                       </p>
                     </div>
 

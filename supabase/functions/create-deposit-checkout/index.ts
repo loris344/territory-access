@@ -30,7 +30,7 @@ Deno.serve(async (req) => {
 
     const { data: app, error: appError } = await supabase
       .from("applications")
-      .select("id, email, first_name, expedition_id, expeditions!applications_expedition_id_fkey(name, deposit_required, deposit_amount_usd)")
+      .select("id, email, first_name, expedition_id, participants, expeditions!applications_expedition_id_fkey(name, deposit_required, deposit_amount_usd)")
       .eq("id", application_id)
       .single();
 
@@ -49,8 +49,13 @@ Deno.serve(async (req) => {
       });
     }
 
+    // expedition.deposit_amount_usd is a per-person figure (30% of the
+    // per-person price) — the applicant's own row says how many travelers
+    // this application covers, so the actual deposit due scales with that.
+    const participants = (app as any).participants || 1;
+    const totalDepositUsd = expedition.deposit_amount_usd * participants;
     const expeditionName = expedition.name || "Expedition";
-    const amountCents = expedition.deposit_amount_usd * 100;
+    const amountCents = totalDepositUsd * 100;
     // Only ever redirect back to a known route of our own site — never trust
     // an arbitrary path straight from the request body (open-redirect risk).
     const safePath = typeof return_path === "string" && /^\/(apply|lp\/[a-z0-9-]+)$/.test(return_path) ? return_path : "/apply";
@@ -65,7 +70,10 @@ Deno.serve(async (req) => {
     body.set("line_items[0][quantity]", "1");
     body.set("line_items[0][price_data][currency]", "usd");
     body.set("line_items[0][price_data][unit_amount]", String(amountCents));
-    body.set("line_items[0][price_data][product_data][name]", `Deposit - ${expeditionName}`);
+    body.set(
+      "line_items[0][price_data][product_data][name]",
+      `Deposit - ${expeditionName} (${participants} traveler${participants > 1 ? "s" : ""})`,
+    );
     body.set("metadata[application_id]", application_id);
     if (app.email) body.set("customer_email", app.email);
 
@@ -88,7 +96,7 @@ Deno.serve(async (req) => {
       .from("applications")
       .update({
         deposit_required: true,
-        deposit_amount_usd: expedition.deposit_amount_usd,
+        deposit_amount_usd: totalDepositUsd,
         stripe_checkout_session_id: session.id,
       })
       .eq("id", application_id);

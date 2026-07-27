@@ -2,13 +2,14 @@
 
 // Meta (Facebook) Pixel + Conversions API.
 //
-// Every lead-type form fires ONE standard `Lead` event, sent twice for
-// redundancy — once from the browser (Pixel) and once from our server
-// (the `meta-capi` edge function → Conversions API) — sharing a single
-// `event_id` so Meta deduplicates them into one conversion while maximising
-// match quality. The custom params `form_type` / `lead_quality` let us split
-// that single Lead into per-form custom conversions in Events Manager later
-// (Application_Submitted / Info_Request_Submitted / Waitlist_Submitted).
+// The application form (only) fires the standard `Lead` event — the signal
+// campaigns optimise on. Every form (including application) also fires its
+// own distinct standard event (SubmitApplication / Contact / CompleteRegistration
+// / Schedule / Subscribe) for per-form visibility in Events Manager. Each event
+// is sent twice for redundancy — once from the browser (Pixel) and once from
+// our server (the `meta-capi` edge function → Conversions API) — sharing a
+// single `event_id` so Meta deduplicates them into one conversion while
+// maximising match quality.
 
 import { supabase } from "@/integrations/supabase/client";
 
@@ -101,9 +102,9 @@ const STD_EVENT: Record<LeadFormType, string> = {
 };
 
 /**
- * Fire Meta events for a COMPLETED form submission (never on click). Sends TWO
- * events, each deduplicated browser-Pixel + server-CAPI via a shared event_id:
- *   1) `Lead` (every form) — the single aggregate event the campaign optimises on
+ * Fire Meta events for a COMPLETED form submission (never on click). Each event
+ * sent is deduplicated browser-Pixel + server-CAPI via a shared event_id:
+ *   1) `Lead` — application ONLY, the event campaigns optimise on
  *   2) a distinct standard event per form — visible per ad set as its own column
  * Fire-and-forget: never awaited, never throws into the caller.
  */
@@ -164,6 +165,6 @@ export function trackLead(
     }
   };
 
-  fire("Lead"); // aggregate event the campaign optimises on (counted once)
+  if (formType === "application") fire("Lead"); // apply-only, the event campaigns optimise on
   fire(STD_EVENT[formType]); // per-form event → its own column per ad set
 }

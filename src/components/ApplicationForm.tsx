@@ -336,7 +336,8 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
       phone: result.data.phone,
       nationality: result.data.nationality,
       linkedin_url: null,
-      physical_condition: `[${result.data.participants} participant(s)] ${result.data.physical_condition}`,
+      participants: result.data.participants,
+      physical_condition: result.data.physical_condition,
       motivation_text: result.data.motivation_text,
       status: "pending",
     } as any);
@@ -361,7 +362,12 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     );
 
     const depositRequired = lockedExpedition?.depositRequired ?? matchedOption?.depositRequired ?? false;
-    const depositAmountUsd = lockedExpedition?.depositAmountUsd ?? matchedOption?.depositAmountUsd;
+    // depositAmountUsd on the expedition is a per-person figure (30% of the
+    // per-person price) — scale it by how many travelers this application
+    // covers. The real charge is re-derived the same way server-side in
+    // create-deposit-checkout, this is just for the immediate on-screen offer.
+    const perPersonDepositUsd = lockedExpedition?.depositAmountUsd ?? matchedOption?.depositAmountUsd;
+    const depositAmountUsd = perPersonDepositUsd != null ? perPersonDepositUsd * result.data.participants : undefined;
 
     setSubmitted(true);
     if (depositRequired) {
