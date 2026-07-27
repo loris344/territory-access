@@ -288,6 +288,8 @@ const ExpeditionDetail = () => {
             )}
           </motion.div>
         </div>
+
+        <div className="absolute bottom-0 left-0 right-0 h-10 sm:h-32 bg-gradient-to-t from-background to-transparent" />
       </section>
 
       {/* Gallery auto-scroll carousel */}
