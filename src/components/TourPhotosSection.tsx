@@ -11,19 +11,19 @@ import { useDragScroll } from "@/hooks/use-drag-scroll";
 // visible tour still shows up in the strip.
 const CURATED_PHOTOS: Record<string, string> = {
   "afghanistan-wakhan-corridor": "afghanistan-wakhan-corridor.webp",
-  "darien-jungle-friction": "darien-jungle-friction.webp",
   "indian-kashmir-line-of-control": "indian-kashmir-line-of-control.webp",
   "iraqi-kurdistan-peshmerga-lines": "iraqi-kurdistan-peshmerga-lines.webp",
-  "iran-lut-desert": "iran-lut-desert.webp",
   "abkhazia-suspended-republic": "abkhazia-suspended-republic.webp",
   "altai-mongolia-eagle-hunters": "altai-mongolia-eagle-hunters.webp",
-  "bosnia-ghost-frontlines": "bosnia-ghost-frontlines.webp",
   "socotra-extreme-isolation": "socotra-extreme-isolation.webp",
   "somaliland-unrecognized-territory": "somaliland-unrecognized-territory.webp",
   "chechnya-authority-reconstruction": "chechnya-authority-reconstruction.webp",
   "transnistria-soviet-ghost-state": "transnistria-soviet-ghost-state.webp",
   "north-korea-total-system-immersion": "north-korea-total-system-immersion.webp",
   "svalbard-arctic-survival": "svalbard-arctic-survival.webp",
+  "xinjiang-surveillance-frontier": "xinjiang-surveillance-frontier.webp",
+  "lebanon-business-of-war": "lebanon-business-of-war.webp",
+  "pamir-highway-tajikistan": "pamir-highway-tajikistan.webp",
 };
 
 const CURATED_BASE_URL =
