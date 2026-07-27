@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import Map, { Marker } from "react-map-gl/maplibre";
+import type { MapLibreEvent } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { useActiveExpeditions } from "@/hooks/use-expeditions";
@@ -49,6 +50,16 @@ const WorldMap = () => {
     setTooltipPos({ x: e.clientX, y: e.clientY });
   };
 
+  // OpenFreeMap's dark style renders region/department-level borders
+  // (admin_level 4) worldwide with no minimum zoom, so zooming out tangles
+  // this whole-world view in hundreds of overlapping lines. Country borders
+  // (their own "boundary_country_*" layers) are unaffected and stay visible.
+  const handleMapLoad = useCallback((e: MapLibreEvent) => {
+    if (e.target.getLayer("boundary_state")) {
+      e.target.setLayoutProperty("boundary_state", "visibility", "none");
+    }
+  }, []);
+
   return (
     <section id="map" className="py-8 sm:py-12 lg:py-16 bg-background">
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
@@ -77,6 +88,7 @@ const WorldMap = () => {
             initialViewState={{ longitude: 50, latitude: 35, zoom: 2 }}
             minZoom={1}
             maxZoom={8}
+            onLoad={handleMapLoad}
             style={{ width: "100%", height: "clamp(280px, 50vw, 450px)" }}
             attributionControl={{ compact: true }}
           >

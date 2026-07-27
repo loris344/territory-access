@@ -24,7 +24,16 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
 
   const handleLoad = useCallback(() => {
     const map = mapRef.current;
-    if (!map || points.length === 0) return;
+    if (!map) return;
+    // OpenFreeMap's dark style renders region/department-level borders
+    // (admin_level 4) worldwide with no minimum zoom, so zooming out tangles
+    // the map in hundreds of overlapping lines. Country borders (their own
+    // "boundary_country_*" layers) are unaffected and stay visible.
+    const raw = map.getMap();
+    if (raw.getLayer("boundary_state")) {
+      raw.setLayoutProperty("boundary_state", "visibility", "none");
+    }
+    if (points.length === 0) return;
     if (points.length === 1) {
       map.jumpTo({ center: [points[0].longitude, points[0].latitude], zoom: 10 });
       return;
