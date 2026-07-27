@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import {
   Shield,
@@ -16,13 +17,15 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import WaitlistModal from "@/components/WaitlistModal";
-import ItineraryMap from "@/components/ItineraryMap";
 import ApplicationForm from "@/components/ApplicationForm";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import { useLandingPage } from "@/hooks/use-landing-page";
 import { useDragScroll } from "@/hooks/use-drag-scroll";
 import { optimizedImageUrl } from "@/lib/utils";
 const logoDark = "/assets/logo-dark.webp";
+
+// maplibre-gl needs the browser/WebGL — never render it during SSR.
+const ItineraryMap = dynamic(() => import("@/components/ItineraryMap"), { ssr: false });
 
 const ICONS: Record<string, LucideIcon> = { Shield, Mountain, Users, Clock, Check, MapPin, Quote };
 

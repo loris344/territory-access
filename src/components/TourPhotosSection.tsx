@@ -17,7 +17,6 @@ const CURATED_PHOTOS: Record<string, string> = {
   "xinjiang-surveillance-frontier": "xinjiang-surveillance-frontier.webp",
   "transnistria-soviet-ghost-state": "transnistria-soviet-ghost-state.webp",
   "altai-mongolia-eagle-hunters": "altai-mongolia-eagle-hunters.webp",
-  "afghanistan-wakhan-corridor": "afghanistan-wakhan-corridor.webp",
   "lebanon-business-of-war": "lebanon-business-of-war.webp",
   "pamir-highway-tajikistan": "pamir-highway-tajikistan.webp",
   // Sarajevo (bosnia-ghost-frontlines) is currently hidden (is_hidden=true

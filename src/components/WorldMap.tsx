@@ -2,20 +2,19 @@
 
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-  Marker,
-  ZoomableGroup,
-} from "react-simple-maps";
+import Map, { Marker } from "react-map-gl/maplibre";
+import "maplibre-gl/dist/maplibre-gl.css";
 import { motion, AnimatePresence } from "framer-motion";
 import { useActiveExpeditions } from "@/hooks/use-expeditions";
 import type { Expedition } from "@/data/expeditions";
 import { optimizedImageUrl } from "@/lib/utils";
 import { intensityLabels } from "@/components/ExpeditionCard";
 
-const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
+// Real map tiles (OpenFreeMap's dark style — MIT-licensed, no API key, no
+// usage limits, commercial use explicitly permitted) instead of the old
+// react-simple-maps + world-atlas 110m borders, which had no place names at
+// all and were too imprecise to trust once zoomed past a whole-world view.
+const MAP_STYLE = "https://tiles.openfreemap.org/styles/dark";
 
 const WorldMap = () => {
   const { data: expeditions } = useActiveExpeditions();
@@ -23,10 +22,6 @@ const WorldMap = () => {
   const [hovered, setHovered] = useState<Expedition | null>(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
   const [fixedTooltipPos, setFixedTooltipPos] = useState({ x: 0, y: 0 });
-  // ZoomableGroup scales the whole group (markers included), so close points
-  // never separate when zooming. Track the zoom and counter-scale the marker
-  // radii by 1/zoom to keep them a constant on-screen size.
-  const [zoom, setZoom] = useState(1);
   // Touch-primary devices (phones/tablets): a tap fires synthetic mouseenter +
   // mouseleave that flicker the popup open then shut, and thumbs need a bigger
   // target. On these we ignore hover and drive everything from a tap toggle.
@@ -77,75 +72,40 @@ const WorldMap = () => {
           className="relative border border-border bg-card overflow-hidden"
           onMouseMove={handleMouseMove}
         >
-          <ComposableMap
-            projection="geoMercator"
-            projectionConfig={{
-              scale: 180,
-              center: [50, 42],
-            }}
+          <Map
+            mapStyle={MAP_STYLE}
+            initialViewState={{ longitude: 50, latitude: 35, zoom: 2 }}
+            minZoom={1}
+            maxZoom={8}
             style={{ width: "100%", height: "clamp(280px, 50vw, 450px)" }}
+            attributionControl={{ compact: true }}
           >
-            <ZoomableGroup
-              center={[50, 42]}
-              minZoom={1}
-              maxZoom={8}
-              onMoveEnd={({ zoom: k }) => setZoom(k)}
-            >
-              <Geographies geography={geoUrl}>
-                {({ geographies }) =>
-                  geographies.map((geo) => (
-                    <Geography
-                      key={geo.rsmKey}
-                      geography={geo}
-                      fill="hsl(0, 0%, 11%)"
-                      stroke="hsl(0, 0%, 20%)"
-                      strokeWidth={0.5}
-                      style={{
-                        default: { outline: "none" },
-                        hover: { outline: "none", fill: "hsl(0, 0%, 15%)" },
-                        pressed: { outline: "none" },
-                      }}
-                    />
-                  ))
-                }
-              </Geographies>
-
-              {expeditions.map((exp) => (
-                <Marker
-                  key={exp.slug}
-                  coordinates={exp.coordinates}
+            {expeditions.map((exp) => (
+              <Marker
+                key={exp.slug}
+                longitude={exp.coordinates[0]}
+                latitude={exp.coordinates[1]}
+                onClick={(e) => {
+                  e.originalEvent.stopPropagation();
+                  handleMarkerClick(exp);
+                }}
+              >
+                <div
+                  className="relative flex items-center justify-center cursor-pointer"
+                  style={{ width: isTouch ? 40 : 28, height: isTouch ? 40 : 28 }}
                   onMouseEnter={() => { if (!isTouch) setHovered(exp); }}
                   onMouseLeave={() => { if (!isTouch && selected?.id !== exp.id) setHovered(null); }}
-                  onClick={() => handleMarkerClick(exp)}
                 >
                   {/* Outer glow ring */}
-                  <circle
-                    r={12 / zoom}
-                    fill="hsla(0, 0%, 96%, 0.06)"
-                    className="cursor-pointer"
-                  />
+                  <div className="absolute w-6 h-6 rounded-full" style={{ background: "hsla(0, 0%, 96%, 0.12)" }} />
                   {/* Mid ring */}
-                  <circle
-                    r={7 / zoom}
-                    fill="hsla(0, 0%, 96%, 0.12)"
-                    className="cursor-pointer"
-                  />
+                  <div className="absolute w-3.5 h-3.5 rounded-full" style={{ background: "hsla(0, 0%, 96%, 0.25)" }} />
                   {/* Core dot */}
-                  <circle
-                    r={3.5 / zoom}
-                    fill="hsl(0, 0%, 96%)"
-                    className="cursor-pointer"
-                  />
-                  {/* Invisible hit area — larger on touch for thumbs */}
-                  <circle
-                    r={(isTouch ? 20 : 14) / zoom}
-                    fill="transparent"
-                    className="cursor-pointer"
-                  />
-                </Marker>
-              ))}
-            </ZoomableGroup>
-          </ComposableMap>
+                  <div className="absolute w-1.5 h-1.5 rounded-full" style={{ background: "hsl(0, 0%, 96%)" }} />
+                </div>
+              </Marker>
+            ))}
+          </Map>
 
           {/* Tooltip - desktop: follows cursor, mobile: fixed bottom */}
           <AnimatePresence>
