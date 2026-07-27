@@ -162,7 +162,12 @@ const TourLandingPage = () => {
               style={{ objectPosition: heroImagePosition }}
             />
           )}
-          <div className="absolute inset-0 bg-background/60" />
+          {/* Transnistria's background photo runs a touch light under the
+              headline text, so its hero gets a slightly darker overlay than
+              every other landing page. Bracket syntax is required — 68 isn't
+              on Tailwind's default opacity scale (0,5,10,...,60,70,...), so
+              a bare `/68` silently generates no CSS at all. */}
+          <div className={`absolute inset-0 ${slug === "transnistria" ? "bg-background/[68%]" : "bg-background/60"}`} />
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 text-center pt-6">

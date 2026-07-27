@@ -71,6 +71,18 @@
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
+
+  /* iOS Safari auto-zooms the whole page when a focused field's font-size is
+     under 16px (our text-sm inputs are 14px). Bumping it to 16px below the
+     sm breakpoint fixes that — scoped to small viewports so desktop is
+     untouched. !important is needed to beat Tailwind's .text-sm utility
+     class (higher specificity than a bare element selector, and utilities
+     are the last-loaded layer). */
+  @media (max-width: 640px) {
+    input, textarea, select {
+      font-size: 16px !important;
+    }
+  }
 }
 
 @layer utilities {

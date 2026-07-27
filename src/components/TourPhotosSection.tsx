@@ -17,8 +17,13 @@ const CURATED_PHOTOS: Record<string, string> = {
   "xinjiang-surveillance-frontier": "xinjiang-surveillance-frontier.webp",
   "transnistria-soviet-ghost-state": "transnistria-soviet-ghost-state.webp",
   "altai-mongolia-eagle-hunters": "altai-mongolia-eagle-hunters.webp",
+  "afghanistan-wakhan-corridor": "afghanistan-wakhan-corridor.webp",
   "lebanon-business-of-war": "lebanon-business-of-war.webp",
   "pamir-highway-tajikistan": "pamir-highway-tajikistan.webp",
+  // Sarajevo (bosnia-ghost-frontlines) is currently hidden (is_hidden=true
+  // in Supabase), so this entry is a no-op until it's unhidden — the tour
+  // just won't be in `expeditions` for now.
+  "bosnia-ghost-frontlines": "bosnia-ghost-frontlines.webp",
 };
 
 const CURATED_BASE_URL =
