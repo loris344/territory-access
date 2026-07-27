@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import type { Expedition, ExpeditionDate, Testimonial } from "@/data/expeditions";
+import type { Expedition, ExpeditionDate, Testimonial, FAQItem } from "@/data/expeditions";
 
 export interface TrustSignal {
   icon: string;
@@ -97,6 +97,7 @@ async function fetchLandingPage(slug: string): Promise<LandingPageData | null> {
     deposit_required: exp.deposit_required ?? true,
     deposit_amount_usd: exp.deposit_amount_usd ?? 420,
     testimonials: ((exp.testimonials as unknown) as Testimonial[]) || [],
+    faqs: ((exp.faqs as unknown) as FAQItem[]) || [],
     itinerary: (exp.expedition_days_itinerary || [])
       .map((d: any) => ({
         day_number: d.day_number,

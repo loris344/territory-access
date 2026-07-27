@@ -14,6 +14,7 @@ import { optimizedImageUrl } from "@/lib/utils";
 import NotifyDestinationForm from "@/components/NotifyDestinationForm";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import GalleryCarousel from "@/components/GalleryCarousel";
+import TourFAQSection from "@/components/TourFAQSection";
 
 // maplibre-gl needs the browser/WebGL — never render it during SSR.
 const ItineraryMap = dynamic(() => import("@/components/ItineraryMap"), { ssr: false });
@@ -410,6 +411,9 @@ const ExpeditionDetail = () => {
           </div>
         </div>
       </section>
+
+      {/* FAQ */}
+      <TourFAQSection items={expedition.faqs || []} />
 
       {/* Application CTA */}
       <section className="py-16 lg:py-24 bg-secondary">

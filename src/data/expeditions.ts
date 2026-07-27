@@ -14,6 +14,11 @@ export interface Testimonial {
   image_url: string;
 }
 
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
 export interface ExpeditionDate {
   id: string;
   start_date: string;
@@ -52,6 +57,7 @@ export interface Expedition {
   deposit_required?: boolean;
   deposit_amount_usd?: number;
   testimonials?: Testimonial[];
+  faqs?: FAQItem[];
   itinerary: ExpeditionDay[];
   inclusions: string[];
   exclusions: string[];

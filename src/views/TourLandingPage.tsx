@@ -20,6 +20,7 @@ import WaitlistModal from "@/components/WaitlistModal";
 import ApplicationForm from "@/components/ApplicationForm";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
 import GalleryCarousel from "@/components/GalleryCarousel";
+import TourFAQSection from "@/components/TourFAQSection";
 import { useLandingPage } from "@/hooks/use-landing-page";
 import { optimizedImageUrl } from "@/lib/utils";
 const logoDark = "/assets/logo-dark.webp";
@@ -377,6 +378,9 @@ const TourLandingPage = () => {
           </div>
         </div>
       </section>
+
+      {/* FAQ */}
+      <TourFAQSection items={expedition.faqs || []} />
 
       {/* Apply directly on this page — tour is fixed, can't be changed */}
       <section id="apply" className="py-20 sm:py-28 border-t border-border scroll-mt-20">

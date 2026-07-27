@@ -1130,6 +1130,53 @@ const Admin = () => {
                     </div>
                   </div>
 
+                  <div>
+                    <h4 className="font-heading text-[10px] tracking-wider uppercase text-muted-foreground mb-3">
+                      FAQ ({(editData.faqs || []).length})
+                    </h4>
+                    <div className="space-y-3">
+                      {(editData.faqs || []).map((f: any, i: number) => (
+                        <div key={i} className="border border-border/60 p-3 space-y-2">
+                          <div className="flex items-center gap-2">
+                            <input
+                              value={f.question}
+                              placeholder="Question"
+                              onChange={(e) => {
+                                const next = [...editData.faqs];
+                                next[i] = { ...f, question: e.target.value };
+                                setEditData({ ...editData, faqs: next });
+                              }}
+                              className="flex-1 px-2 py-1.5 bg-background border border-border text-foreground text-xs"
+                            />
+                            <button
+                              onClick={() => setEditData({ ...editData, faqs: editData.faqs.filter((_: any, j: number) => j !== i) })}
+                              className="p-1.5 border border-border hover:border-destructive hover:text-destructive"
+                            >
+                              <X className="w-3 h-3" />
+                            </button>
+                          </div>
+                          <textarea
+                            value={f.answer}
+                            placeholder="Answer"
+                            rows={2}
+                            onChange={(e) => {
+                              const next = [...editData.faqs];
+                              next[i] = { ...f, answer: e.target.value };
+                              setEditData({ ...editData, faqs: next });
+                            }}
+                            className="w-full px-2 py-1.5 bg-background border border-border text-foreground text-xs resize-none"
+                          />
+                        </div>
+                      ))}
+                      <button
+                        onClick={() => setEditData({ ...editData, faqs: [...(editData.faqs || []), { question: "", answer: "" }] })}
+                        className="flex items-center gap-2 font-heading text-[10px] tracking-wider uppercase text-muted-foreground hover:text-foreground transition-colors border border-dashed border-border px-4 py-2"
+                      >
+                        <Plus className="w-3 h-3" /> Add FAQ
+                      </button>
+                    </div>
+                  </div>
+
                   <div className="flex gap-3">
                     <button onClick={saveEdit} className="flex items-center gap-2 font-heading text-xs tracking-wider uppercase px-6 py-3 bg-accent text-accent-foreground hover:bg-accent/90 transition-all">
                       <Save className="w-3.5 h-3.5" /> Save
