@@ -4,7 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import Map, { Marker, Source, Layer, type MapRef } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import type { ExpeditionDay } from "@/data/expeditions";
-import { preferEnglishLabels } from "@/lib/mapLabels";
+import { preferEnglishLabels, limitPlaceLabels } from "@/lib/mapLabels";
 
 // Real map tiles (OpenFreeMap's dark style — MIT-licensed, no API key, no
 // usage limits, commercial use explicitly permitted) instead of the old
@@ -35,6 +35,7 @@ const ItineraryMap = ({ days }: { days: ExpeditionDay[] }) => {
       raw.setLayoutProperty("boundary_state", "visibility", "none");
     }
     preferEnglishLabels(raw);
+    limitPlaceLabels(raw);
     if (points.length === 0) return;
     if (points.length === 1) {
       map.jumpTo({ center: [points[0].longitude, points[0].latitude], zoom: 10 });
