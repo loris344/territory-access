@@ -5,21 +5,15 @@ import Link from "next/link";
 import { useActiveExpeditions } from "@/hooks/use-expeditions";
 import { useDragScroll } from "@/hooks/use-drag-scroll";
 
-// Curated real photos for tours where we have better source material than
-// the tour's own hero image (uploaded to expedition-images/homepage-tour-photos).
-// Any tour not listed here falls back to its own hero_image_url, so every
-// visible tour still shows up in the strip.
+// Real Ligne Rouge trip photos (from the group's own "tour group" folder,
+// uploaded to expedition-images/homepage-tour-photos) — this strip shows
+// ONLY these, never a tour's generic hero image. A tour with no entry here
+// simply doesn't appear in this section.
 const CURATED_PHOTOS: Record<string, string> = {
-  "afghanistan-wakhan-corridor": "afghanistan-wakhan-corridor.webp",
-  "indian-kashmir-line-of-control": "indian-kashmir-line-of-control.webp",
-  "iraqi-kurdistan-peshmerga-lines": "iraqi-kurdistan-peshmerga-lines.webp",
-  "abkhazia-suspended-republic": "abkhazia-suspended-republic.webp",
   "altai-mongolia-eagle-hunters": "altai-mongolia-eagle-hunters.webp",
   "socotra-extreme-isolation": "socotra-extreme-isolation.webp",
-  "somaliland-unrecognized-territory": "somaliland-unrecognized-territory.webp",
   "chechnya-authority-reconstruction": "chechnya-authority-reconstruction.webp",
   "transnistria-soviet-ghost-state": "transnistria-soviet-ghost-state.webp",
-  "north-korea-total-system-immersion": "north-korea-total-system-immersion.webp",
   "svalbard-arctic-survival": "svalbard-arctic-survival.webp",
   "xinjiang-surveillance-frontier": "xinjiang-surveillance-frontier.webp",
   "lebanon-business-of-war": "lebanon-business-of-war.webp",
@@ -40,11 +34,11 @@ const TourPhotosSection = () => {
   const { isDraggingRef, isDragging, dragHandlers } = useDragScroll(scrollRef, scrollPosRef);
 
   const tours = (expeditions || [])
-    .filter((e) => e.hero_image_url || CURATED_PHOTOS[e.slug])
+    .filter((e) => CURATED_PHOTOS[e.slug])
     .map((e) => ({
       slug: e.slug,
       name: e.name,
-      photo: CURATED_PHOTOS[e.slug] ? `${CURATED_BASE_URL}${CURATED_PHOTOS[e.slug]}` : e.hero_image_url!,
+      photo: `${CURATED_BASE_URL}${CURATED_PHOTOS[e.slug]}`,
     }));
   const duplicated = [...tours, ...tours];
 
