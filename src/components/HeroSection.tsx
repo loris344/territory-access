@@ -5,8 +5,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 const heroBg = "/assets/hero-bg.webp";
 
-const HeroSection = () => {
-  const [heroImages, setHeroImages] = useState<string[]>([heroBg]);
+interface HeroSectionProps {
+  // Fetched at build time (see app/page.tsx) so the static export's first
+  // paint already matches the admin's current selection, instead of always
+  // flashing the bundled fallback image before the client-side fetch below
+  // resolves.
+  initialHeroImages?: string[];
+}
+
+const HeroSection = ({ initialHeroImages }: HeroSectionProps) => {
+  const [heroImages, setHeroImages] = useState<string[]>(
+    initialHeroImages && initialHeroImages.length > 0 ? initialHeroImages : [heroBg]
+  );
   const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {

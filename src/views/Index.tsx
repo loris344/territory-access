@@ -15,12 +15,16 @@ import ContactBubbles from "@/components/ContactBubbles";
 import Footer from "@/components/Footer";
 import HomeScrollMemory from "@/components/HomeScrollMemory";
 
-const Index = () => {
+interface IndexProps {
+  initialHeroImages?: string[];
+}
+
+const Index = ({ initialHeroImages }: IndexProps) => {
   return (
     <div className="min-h-screen bg-background">
       <HomeScrollMemory />
       <Navbar />
-      <HeroSection />
+      <HeroSection initialHeroImages={initialHeroImages} />
       <PhilosophySection />
       <TrailerSection />
       <TeamCarousel />
