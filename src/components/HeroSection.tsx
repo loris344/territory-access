@@ -105,6 +105,7 @@ const HeroSection = ({ initialHeroImages }: HeroSectionProps) => {
           </p>
 
           <div className="flex items-center justify-center gap-5 mb-8 sm:mb-12">
+            <img src="/assets/trustpilot-logo.png" alt="Trustpilot" className="h-5 w-auto" />
             <img src="/assets/google-reviews-logo.png" alt="Google Reviews" className="h-5 w-auto" />
             <img src="/assets/tripadvisor-logo.png" alt="Tripadvisor" className="h-5 w-auto" />
           </div>

@@ -146,6 +146,9 @@ const CardEntryFormPlaceholder = ({ amountLabel, applicationId, onCancel }: Card
       >
         {status === "processing" ? "Processing..." : `Pay $${amountLabel}`}
       </button>
+      <div className="flex justify-center pt-1">
+        <img src="/assets/stripe-powered-badge.svg" alt="Powered by Stripe" className="h-6 w-auto" />
+      </div>
       <button
         type="button"
         onClick={onCancel}

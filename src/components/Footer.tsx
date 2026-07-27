@@ -100,6 +100,10 @@ const Footer = () => {
             </a>
           </div>
           <div className="h-px w-12 bg-accent mx-auto mt-10" />
+          <div className="flex items-center justify-center gap-8 mt-10 flex-wrap">
+            <img src="/assets/atta-member-badge.png" alt="Adventure Travel Trade Association Member" className="h-9 w-auto" />
+            <img src="/assets/abta-logo.webp" alt="ABTA - Travel with confidence" className="h-9 w-auto" />
+          </div>
         </div>
       </div>
     </footer>

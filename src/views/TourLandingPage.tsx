@@ -221,6 +221,7 @@ const TourLandingPage = () => {
             )}
 
             <div className="flex items-center justify-center gap-5">
+              <img src="/assets/trustpilot-logo.png" alt="Trustpilot" className="h-5 w-auto" />
               <img src="/assets/google-reviews-logo.png" alt="Google Reviews" className="h-5 w-auto" />
               <img src="/assets/tripadvisor-logo.png" alt="Tripadvisor" className="h-5 w-auto" />
             </div>
@@ -425,7 +426,7 @@ const TourLandingPage = () => {
       </section>
 
       {/* Apply directly on this page — tour is fixed, can't be changed */}
-      <section id="apply" className="py-20 sm:py-28 border-t border-border">
+      <section id="apply" className="py-20 sm:py-28 border-t border-border scroll-mt-20">
         <div className="max-w-2xl mx-auto px-4 sm:px-6">
           <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
             <div className="flex justify-center mb-8">
