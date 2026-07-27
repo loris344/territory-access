@@ -54,11 +54,26 @@ const WorldMap = () => {
   // (admin_level 4) worldwide with no minimum zoom, so zooming out tangles
   // this whole-world view in hundreds of overlapping lines. Country borders
   // (their own "boundary_country_*" layers) are unaffected and stay visible.
+  //
+  // The fixed initialViewState zoom was tuned for a wide desktop container —
+  // on a narrow mobile viewport the same zoom crops the map down to a single
+  // region (e.g. just Europe/Middle East), hiding destinations elsewhere on
+  // the globe. fitBounds computes the right zoom for the container's actual
+  // pixel size instead, so mobile starts as zoomed-out as the screen allows
+  // while still showing every marker.
   const handleMapLoad = useCallback((e: MapLibreEvent) => {
     if (e.target.getLayer("boundary_state")) {
       e.target.setLayoutProperty("boundary_state", "visibility", "none");
     }
-  }, []);
+    if (expeditions.length > 0) {
+      const lngs = expeditions.map((exp) => exp.coordinates[0]);
+      const lats = expeditions.map((exp) => exp.coordinates[1]);
+      e.target.fitBounds(
+        [[Math.min(...lngs), Math.min(...lats)], [Math.max(...lngs), Math.max(...lats)]],
+        { padding: 40, duration: 0 },
+      );
+    }
+  }, [expeditions]);
 
   return (
     <section id="map" className="py-8 sm:py-12 lg:py-16 bg-background">
@@ -86,10 +101,10 @@ const WorldMap = () => {
           <Map
             mapStyle={MAP_STYLE}
             initialViewState={{ longitude: 50, latitude: 35, zoom: 2 }}
-            minZoom={1}
+            minZoom={0.3}
             maxZoom={8}
             onLoad={handleMapLoad}
-            style={{ width: "100%", height: "clamp(280px, 50vw, 450px)" }}
+            style={{ width: "100%", height: "clamp(360px, 60vw, 450px)" }}
             attributionControl={{ compact: true }}
           >
             {expeditions.map((exp) => (
