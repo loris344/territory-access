@@ -6,6 +6,7 @@ import TrailerSection from "@/components/TrailerSection";
 import PhilosophySection from "@/components/PhilosophySection";
 import TeamCarousel from "@/components/TeamCarousel";
 import WorldMap from "@/components/WorldMap";
+import TourPhotosSection from "@/components/TourPhotosSection";
 import ExpeditionsGrid from "@/components/ExpeditionsGrid";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CommunitySection from "@/components/CommunitySection";
@@ -29,6 +30,7 @@ const Index = ({ initialHeroImages }: IndexProps) => {
       <TrailerSection />
       <TeamCarousel />
       <WorldMap />
+      <TourPhotosSection />
       <ExpeditionsGrid />
       <TestimonialsSection />
       <CommunitySection />
