@@ -1,11 +1,10 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import { motion, AnimatePresence } from "framer-motion";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { motion } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { useExpeditionBySlug } from "@/hooks/use-expeditions";
 import Navbar from "@/components/Navbar";
@@ -13,8 +12,8 @@ import Footer from "@/components/Footer";
 import WaitlistModal from "@/components/WaitlistModal";
 import { optimizedImageUrl } from "@/lib/utils";
 import NotifyDestinationForm from "@/components/NotifyDestinationForm";
-import { NewsletterForm } from "@/components/NewsletterForm";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
+import GalleryCarousel from "@/components/GalleryCarousel";
 
 // maplibre-gl needs the browser/WebGL — never render it during SSR.
 const ItineraryMap = dynamic(() => import("@/components/ItineraryMap"), { ssr: false });
@@ -38,7 +37,6 @@ const ExpeditionDetail = () => {
   const { slug } = useParams() as { slug: string };
   const { data: expedition, isLoading } = useExpeditionBySlug(slug);
   const [galleryImages, setGalleryImages] = useState<string[]>([]);
-  const [currentImg, setCurrentImg] = useState(0);
   const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [waitlistDateId, setWaitlistDateId] = useState<string | undefined>();
   const [waitlistDateLabel, setWaitlistDateLabel] = useState<string>("");
@@ -61,37 +59,6 @@ const ExpeditionDetail = () => {
     };
     fetchGallery();
   }, [expedition]);
-
-  // Combine hero_image_url + gallery, deduplicating hero from gallery
-  const allImages = expedition
-    ? [
-        ...(expedition.hero_image_url ? [expedition.hero_image_url] : []),
-        ...galleryImages.filter((url) => {
-          if (!expedition.hero_image_url) return true;
-          // Compare URLs ignoring cache-busting query params
-          const heroBase = expedition.hero_image_url.split("?")[0];
-          const galleryBase = url.split("?")[0];
-          return galleryBase !== heroBase;
-        }),
-      ]
-    : [];
-
-  const nextImg = useCallback(() => {
-    if (allImages.length <= 1) return;
-    setCurrentImg((prev) => (prev + 1) % allImages.length);
-  }, [allImages.length]);
-
-  const prevImg = useCallback(() => {
-    if (allImages.length <= 1) return;
-    setCurrentImg((prev) => (prev - 1 + allImages.length) % allImages.length);
-  }, [allImages.length]);
-
-  // Auto-advance every 8 seconds
-  useEffect(() => {
-    if (allImages.length <= 1) return;
-    const interval = setInterval(nextImg, 8000);
-    return () => clearInterval(interval);
-  }, [nextImg, allImages.length]);
 
   if (isLoading) {
     return (
@@ -145,33 +112,22 @@ const ExpeditionDetail = () => {
       />
       <Navbar />
 
-      {/* Hero with background carousel */}
+      {/* Hero */}
       <section className="relative pt-20 pb-12 sm:pt-28 sm:pb-16 lg:pt-36 lg:pb-24 overflow-hidden">
-        {/* Background images */}
-        {allImages.length > 0 && (
+        {/* Background image */}
+        {expedition.hero_image_url ? (
           <div className="absolute inset-0">
-            <AnimatePresence mode="popLayout">
-              <motion.img
-                key={currentImg}
-                src={optimizedImageUrl(allImages[currentImg])}
-                alt=""
-                className="absolute inset-0 w-full h-full object-cover"
-                style={{
-                  objectPosition:
-                    allImages[currentImg] === expedition.hero_image_url
-                      ? expedition.hero_image_position || "50% 50%"
-                      : "50% 50%",
-                }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 1 }}
-              />
-            </AnimatePresence>
+            <img
+              src={optimizedImageUrl(expedition.hero_image_url)}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: expedition.hero_image_position || "50% 50%" }}
+            />
             <div className="absolute inset-0 bg-background/55" />
           </div>
+        ) : (
+          <div className="absolute inset-0 bg-secondary" />
         )}
-        {!allImages.length && <div className="absolute inset-0 bg-secondary" />}
 
         <div className="relative z-10 max-w-5xl mx-auto px-6 lg:px-8">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
@@ -332,20 +288,10 @@ const ExpeditionDetail = () => {
             )}
           </motion.div>
         </div>
-
-        {/* Carousel navigation */}
-        {allImages.length > 1 && (
-          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-10 flex gap-2">
-            {allImages.map((_, i) => (
-              <button
-                key={i}
-                onClick={() => setCurrentImg(i)}
-                className={`w-2 h-2 rounded-full transition-all ${i === currentImg ? "bg-foreground scale-125" : "bg-foreground/40"}`}
-              />
-            ))}
-          </div>
-        )}
       </section>
+
+      {/* Gallery auto-scroll carousel */}
+      {galleryImages.length > 0 && <GalleryCarousel images={galleryImages} />}
 
       {/* Cancellation / Postponed notice */}
       {(expedition.status === "cancelled" || expedition.status === "postponed") && (
@@ -377,18 +323,6 @@ const ExpeditionDetail = () => {
           <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed">
             {expedition.long_description}
           </p>
-        </div>
-      </section>
-
-      {/* Newsletter — soft signup once the overview has hooked the reader */}
-      <section className="py-12 lg:py-16 border-t border-border">
-        <div className="max-w-2xl mx-auto px-6 lg:px-8 text-center">
-          <div className="h-px w-12 bg-accent mb-8 mx-auto" />
-          <h2 className="heading-display text-lg sm:text-xl mb-3">Never miss a departure</h2>
-          <p className="body-text text-sm text-muted-foreground mb-6">
-            Join the list and be first to know when new expeditions open, and when a place frees up.
-          </p>
-          <NewsletterForm source="expedition-detail" />
         </div>
       </section>
 
