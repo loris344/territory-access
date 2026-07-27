@@ -19,10 +19,17 @@ const CURATED_PHOTOS: Record<string, string> = {
   "altai-mongolia-eagle-hunters": "altai-mongolia-eagle-hunters.webp",
   "lebanon-business-of-war": "lebanon-business-of-war.webp",
   "pamir-highway-tajikistan": "pamir-highway-tajikistan.webp",
-  // Sarajevo (bosnia-ghost-frontlines) is currently hidden (is_hidden=true
-  // in Supabase), so this entry is a no-op until it's unhidden — the tour
-  // just won't be in `expeditions` for now.
   "bosnia-ghost-frontlines": "bosnia-ghost-frontlines.webp",
+};
+
+// bosnia-ghost-frontlines is hidden (is_hidden=true in Supabase), enforced
+// via RLS — so it's unreachable through the public client entirely, not
+// just filtered client-side, and has no live `name` or page to link to.
+// Shown here anyway as a static, non-clickable proof-of-trip card (the tour
+// itself stays hidden everywhere else); swap to the live-lookup path below
+// once it's unhidden.
+const STATIC_NAMES: Record<string, string> = {
+  "bosnia-ghost-frontlines": "Sarajevo, Bosnia",
 };
 
 const CURATED_BASE_URL =
@@ -39,13 +46,20 @@ const TourPhotosSection = () => {
   const { isDraggingRef, isDragging, dragHandlers } = useDragScroll(scrollRef, scrollPosRef);
 
   const tours = Object.keys(CURATED_PHOTOS)
-    .map((slug) => (expeditions || []).find((e) => e.slug === slug))
-    .filter((e): e is NonNullable<typeof e> => Boolean(e))
-    .map((e) => ({
-      slug: e.slug,
-      name: e.name,
-      photo: `${CURATED_BASE_URL}${CURATED_PHOTOS[e.slug]}`,
-    }));
+    .map((slug) => {
+      const live = (expeditions || []).find((e) => e.slug === slug);
+      if (!live && !STATIC_NAMES[slug]) return null;
+      return {
+        slug,
+        name: live?.name || STATIC_NAMES[slug],
+        photo: `${CURATED_BASE_URL}${CURATED_PHOTOS[slug]}`,
+        // No live match means the tour is hidden (RLS-blocked for the public
+        // client) and has no reachable page — render the card, but don't
+        // link it anywhere.
+        clickable: Boolean(live),
+      };
+    })
+    .filter((t): t is NonNullable<typeof t> => Boolean(t));
   const duplicated = [...tours, ...tours];
 
   useEffect(() => {
@@ -86,26 +100,33 @@ const TourPhotosSection = () => {
         {...dragHandlers}
       >
         <div className="flex gap-3 px-4 w-max">
-          {duplicated.map(({ slug, name, photo }, i) => (
-            <Link
-              key={i}
-              href={`/expeditions/${slug}`}
-              draggable={false}
-              className="relative w-[260px] sm:w-[320px] h-[340px] sm:h-[400px] flex-shrink-0 overflow-hidden block group"
-            >
-              <img
-                src={photo}
-                alt={name}
-                loading="lazy"
-                draggable={false}
-                className="w-full h-full object-cover brightness-90 contrast-105 transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent" />
-              <p className="absolute bottom-4 left-4 right-4 font-heading text-xs tracking-[0.1em] uppercase text-foreground">
-                {name}
-              </p>
-            </Link>
-          ))}
+          {duplicated.map(({ slug, name, photo, clickable }, i) => {
+            const cardClassName = "relative w-[260px] sm:w-[320px] h-[340px] sm:h-[400px] flex-shrink-0 overflow-hidden block group";
+            const content = (
+              <>
+                <img
+                  src={photo}
+                  alt={name}
+                  loading="lazy"
+                  draggable={false}
+                  className="w-full h-full object-cover brightness-90 contrast-105 transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/10 to-transparent" />
+                <p className="absolute bottom-4 left-4 right-4 font-heading text-xs tracking-[0.1em] uppercase text-foreground">
+                  {name}
+                </p>
+              </>
+            );
+            return clickable ? (
+              <Link key={i} href={`/expeditions/${slug}`} draggable={false} className={cardClassName}>
+                {content}
+              </Link>
+            ) : (
+              <div key={i} className={cardClassName}>
+                {content}
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
