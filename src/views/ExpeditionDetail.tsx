@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import dynamic from "next/dynamic";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,6 +15,9 @@ import { optimizedImageUrl } from "@/lib/utils";
 import NotifyDestinationForm from "@/components/NotifyDestinationForm";
 import { NewsletterForm } from "@/components/NewsletterForm";
 import TestimonialsCarousel from "@/components/TestimonialsCarousel";
+
+// maplibre-gl needs the browser/WebGL — never render it during SSR.
+const ItineraryMap = dynamic(() => import("@/components/ItineraryMap"), { ssr: false });
 
 const statusStyles: Record<string, string> = {
   open: "bg-foreground/10 text-foreground border border-foreground/20",
@@ -431,6 +435,10 @@ const ExpeditionDetail = () => {
                 <p className="body-text text-sm text-muted-foreground">{day.description}</p>
               </motion.div>
             ))}
+          </div>
+
+          <div className="mt-10">
+            <ItineraryMap days={expedition.itinerary} />
           </div>
         </div>
       </section>
