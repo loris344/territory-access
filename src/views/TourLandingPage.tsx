@@ -212,6 +212,38 @@ const TourLandingPage = () => {
         </section>
       )}
 
+      {/* Transnistria-only ground footage clip. Vertical/portrait source (240x320
+          via Vimeo oEmbed), so it's framed narrow rather than full-width like the
+          homepage TrailerSection, which is a widescreen video. */}
+      {slug === "transnistria" && (
+        <section className="py-14 sm:py-20 border-b border-border">
+          <div className="max-w-xs sm:max-w-sm mx-auto px-4 sm:px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <p className="font-heading text-[10px] tracking-[0.2em] uppercase text-accent-red mb-4 text-center">
+                Filmed on the ground
+              </p>
+              <div
+                className="relative w-full overflow-hidden border border-border bg-black"
+                style={{ paddingTop: "133.33%" }}
+              >
+                <iframe
+                  src="https://player.vimeo.com/video/1213624013?badge=0&title=0&byline=0&portrait=0&dnt=1"
+                  className="absolute inset-0 h-full w-full"
+                  allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                  allowFullScreen
+                  title="Ligne Rouge: Transnistria"
+                />
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
       {/* Gallery auto-scroll carousel */}
       {galleryImages.length > 0 && <GalleryCarousel images={galleryImages} />}
 
