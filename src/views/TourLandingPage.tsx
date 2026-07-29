@@ -35,7 +35,7 @@ const ICONS: Record<string, LucideIcon> = { Shield, Mountain, Users, Clock, Chec
 // is a vertical/portrait source, not the widescreen homepage trailer).
 const GROUND_FOOTAGE: Record<string, { vimeoId: string; aspectPadding: string }> = {
   transnistria: { vimeoId: "1213624013", aspectPadding: "133.33%" },
-  mongolia: { vimeoId: "1213849883", aspectPadding: "177.5%" },
+  mongolia: { vimeoId: "1213893914", aspectPadding: "177.5%" },
 };
 
 const TourLandingPage = () => {
