@@ -68,6 +68,20 @@ Deno.serve(async (req) => {
     const amountLabel = app.deposit_amount_usd != null ? Number(app.deposit_amount_usd).toLocaleString("en-US") : "";
     const resumeUrl = `${SITE_URL}/apply?resume=${app.id}`;
 
+    // Fetch date info if linked (same pattern as notify-application).
+    let dateLabel = "";
+    if (app.expedition_date_id) {
+      const { data: dateData } = await supabase
+        .from("expedition_dates")
+        .select("start_date, end_date")
+        .eq("id", app.expedition_date_id)
+        .single();
+      if (dateData) {
+        dateLabel = `${dateData.start_date} → ${dateData.end_date}`;
+      }
+    }
+    const participantsLabel = `${app.participants} participant${app.participants === 1 ? "" : "s"}`;
+
     const emailHtml = `
       <div style="font-family: 'Helvetica Neue', Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
         <div style="border-bottom: 1px solid #e5e5e5; padding-bottom: 20px; margin-bottom: 24px;">
@@ -79,7 +93,7 @@ Deno.serve(async (req) => {
           Hi ${app.first_name},
         </p>
         <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
-          Your application for <strong>${expeditionName}</strong> is registered, but your pre-booking isn't confirmed yet: it's held with a $${amountLabel} deposit (30% of the total price), which we haven't received.
+          Your application for <strong>${expeditionName}</strong>${dateLabel ? ` (${dateLabel})` : ""} — ${participantsLabel} — is <strong>not registered yet</strong>. Paying the $${amountLabel} deposit (30% of the total price) is a required step to confirm it, and we haven't received it.
         </p>
         <p style="font-size: 14px; line-height: 1.8; margin: 0 0 24px 0;">
           Pick up right where you left off, it only takes a minute.

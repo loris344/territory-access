@@ -63,6 +63,10 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
   const [expeditionOptions, setExpeditionOptions] = useState<ExpeditionOption[]>([]);
   const [dateOptions, setDateOptions] = useState<DateOption[]>([]);
   const [selectedDateId, setSelectedDateId] = useState("");
+  // Shown on the confirmation screens (expedition, dates, participants) —
+  // set at submit time from local state, or re-fetched via resume-application
+  // when the screen is redrawn from a fresh pageview (Stripe redirect / resume link).
+  const [summary, setSummary] = useState<{ expeditionName?: string; dateLabel?: string; participants?: number }>({});
   const [turnstileToken, setTurnstileToken] = useState("");
   const [activeApplicationId, setActiveApplicationId] = useState<string>(() => crypto.randomUUID());
   const [depositStatus, setDepositStatus] = useState<DepositStatus>("idle");
@@ -112,10 +116,22 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     const stored = sessionStorage.getItem(depositStorageKey);
     const pending = stored ? (JSON.parse(stored) as { applicationId: string; amountUsd?: number }) : null;
 
+    // Re-derives the summary (expedition/dates/participants) from the DB on a
+    // fresh pageview, since local form state is gone by then — same source
+    // resume-application already reads for the deposit fields.
+    const fetchSummary = (applicationId: string) => {
+      supabase.functions.invoke("resume-application", { body: { application_id: applicationId } }).then(({ data, error }) => {
+        if (!error && data && !data.error) {
+          setSummary({ expeditionName: data.expedition_name, dateLabel: data.date_label, participants: data.participants });
+        }
+      });
+    };
+
     if (depositParam === "success" && sessionId) {
       if (pending) {
         setActiveApplicationId(pending.applicationId);
         setResolvedDeposit({ required: true, amountUsd: pending.amountUsd });
+        fetchSummary(pending.applicationId);
       }
       setSubmitted(true);
       setDepositStatus("confirming");
@@ -133,6 +149,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
       setResolvedDeposit({ required: true, amountUsd: pending.amountUsd });
       setSubmitted(true);
       setDepositStatus("cancelled");
+      fetchSummary(pending.applicationId);
     } else {
       const resumeId = searchParams.get("resume");
       if (resumeId) {
@@ -145,6 +162,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
           }
           setActiveApplicationId(resumeId);
           setResolvedDeposit({ required: true, amountUsd: data.deposit_amount_usd });
+          setSummary({ expeditionName: data.expedition_name, dateLabel: data.date_label, participants: data.participants });
           setSubmitted(true);
           setDepositStatus(data.deposit_paid ? "paid" : "offer");
         });
@@ -365,6 +383,12 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
       return;
     }
 
+    setSummary({
+      expeditionName: lockedExpedition?.name || matchedOption?.name,
+      dateLabel: dateOptions.find((d) => d.id === selectedDateId)?.label,
+      participants: result.data.participants,
+    });
+
     // Strongest intent signal — fire ONLY now that the application is stored.
     trackLead(
       "application",
@@ -398,6 +422,33 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
   const errorText = (field: string) =>
     errors[field] ? <p className="text-destructive text-xs mt-1">{errors[field]}</p> : null;
 
+  // Shown across the confirmation screens below so applicants can double-check
+  // what they applied for without scrolling back up.
+  const summaryBlock =
+    summary.expeditionName || summary.dateLabel || summary.participants != null ? (
+      <div className="border border-border bg-secondary/40 px-5 py-4 mb-6 text-left">
+        <p className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2">Your Application</p>
+        {summary.expeditionName && (
+          <p className="body-text text-sm">
+            <span className="text-muted-foreground">Expedition — </span>
+            {summary.expeditionName}
+          </p>
+        )}
+        {summary.dateLabel && (
+          <p className="body-text text-sm">
+            <span className="text-muted-foreground">Dates — </span>
+            {summary.dateLabel}
+          </p>
+        )}
+        {summary.participants != null && (
+          <p className="body-text text-sm">
+            <span className="text-muted-foreground">Participants — </span>
+            {summary.participants}
+          </p>
+        )}
+      </div>
+    ) : null;
+
   if (resumeLoading) {
     return (
       <div className="border border-border bg-card p-8 text-center">
@@ -424,8 +475,9 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
           {depositStatus === "paid" && (
             <>
               <h3 className="heading-display text-lg mb-3">Deposit Received</h3>
+              {summaryBlock}
               <p className="body-text text-sm text-muted-foreground mb-2">
-                Your ${amountLabel} deposit (30% of the total price) has been received and your pre-booking is confirmed.
+                Your ${amountLabel} deposit (30% of the total price) has been received. Your application is now registered.
               </p>
               <p className="body-text text-sm text-muted-foreground mb-2">
                 The remaining balance (70%) is due between 30 and 45 days before departure. Our team will contact you within 48 hours to confirm the details of your file.
@@ -439,10 +491,11 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
           {(depositStatus === "offer" || depositStatus === "paying" || depositStatus === "cancelled") && (
             <>
               <h3 className="heading-display text-lg mb-3">
-                {depositStatus === "cancelled" ? "Payment Not Completed" : "Application Received"}
+                {depositStatus === "cancelled" ? "Payment Not Completed" : "One Last Step"}
               </h3>
+              {summaryBlock}
               <p className="body-text text-sm text-muted-foreground mb-2">
-                Your application has been registered. A ${amountLabel} deposit (30% of the total price) is required now to confirm your pre-booking.
+                Your application isn&apos;t registered yet. Paying the ${amountLabel} deposit (30% of the total price) is required now to confirm it.
               </p>
               <p className="body-text text-sm text-muted-foreground mb-2">
                 The remaining balance (70%) is due between 30 and 45 days before departure. Our team will contact you within 48 hours to confirm the details of your file.
@@ -476,6 +529,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
       <div className="border border-border bg-card p-8 text-center">
         <div className="h-px w-12 bg-accent mx-auto mb-6" />
         <h3 className="heading-display text-lg mb-3">Application Received</h3>
+        {summaryBlock}
         <p className="body-text text-sm text-muted-foreground mb-2">
           Your application has been registered. Our team will carefully review your profile and assess your eligibility for this expedition.
         </p>

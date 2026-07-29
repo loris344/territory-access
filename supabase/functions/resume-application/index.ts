@@ -27,7 +27,9 @@ Deno.serve(async (req) => {
 
     const { data: app, error } = await supabase
       .from("applications")
-      .select("first_name, deposit_required, deposit_amount_usd, deposit_paid, expeditions!applications_expedition_id_fkey(name)")
+      .select(
+        "first_name, participants, expedition_date_id, deposit_required, deposit_amount_usd, deposit_paid, expeditions!applications_expedition_id_fkey(name)",
+      )
       .eq("id", application_id)
       .single();
 
@@ -38,10 +40,26 @@ Deno.serve(async (req) => {
       });
     }
 
+    // Same date-range formatting as the confirmation/reminder emails, so the
+    // resumed screen can show the same summary the applicant already saw.
+    let dateLabel: string | null = null;
+    if (app.expedition_date_id) {
+      const { data: dateData } = await supabase
+        .from("expedition_dates")
+        .select("start_date, end_date")
+        .eq("id", app.expedition_date_id)
+        .single();
+      if (dateData) {
+        dateLabel = `${new Date(dateData.start_date).toLocaleDateString("en-US", { day: "numeric", month: "short" })} - ${new Date(dateData.end_date).toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" })}`;
+      }
+    }
+
     return new Response(
       JSON.stringify({
         first_name: app.first_name,
         expedition_name: (app as any).expeditions?.name || null,
+        date_label: dateLabel,
+        participants: app.participants,
         deposit_required: app.deposit_required,
         deposit_amount_usd: app.deposit_amount_usd,
         deposit_paid: app.deposit_paid,
