@@ -30,6 +30,14 @@ const ItineraryMap = dynamic(() => import("@/components/ItineraryMap"), { ssr: f
 
 const ICONS: Record<string, LucideIcon> = { Shield, Mountain, Users, Clock, Check, MapPin, Quote };
 
+// Ground footage clips for specific tours, keyed by landing page slug.
+// aspectPadding is height/width from the Vimeo oEmbed response (each clip
+// is a vertical/portrait source, not the widescreen homepage trailer).
+const GROUND_FOOTAGE: Record<string, { vimeoId: string; aspectPadding: string }> = {
+  transnistria: { vimeoId: "1213624013", aspectPadding: "133.33%" },
+  mongolia: { vimeoId: "1213849883", aspectPadding: "177.5%" },
+};
+
 const TourLandingPage = () => {
   const { slug } = useParams() as { slug: string };
   const { data: lp, isLoading } = useLandingPage(slug);
@@ -212,10 +220,10 @@ const TourLandingPage = () => {
         </section>
       )}
 
-      {/* Transnistria-only ground footage clip. Vertical/portrait source (240x320
-          via Vimeo oEmbed), so it's framed narrow rather than full-width like the
-          homepage TrailerSection, which is a widescreen video. */}
-      {slug === "transnistria" && (
+      {/* Ground footage clip for tours that have one. Framed narrow/portrait
+          rather than full-width like the homepage TrailerSection, which is a
+          widescreen video. */}
+      {GROUND_FOOTAGE[slug] && (
         <section className="py-14 sm:py-20 border-b border-border">
           <div className="max-w-xs sm:max-w-sm mx-auto px-4 sm:px-6">
             <motion.div
@@ -229,14 +237,14 @@ const TourLandingPage = () => {
               </p>
               <div
                 className="relative w-full overflow-hidden border border-border bg-black"
-                style={{ paddingTop: "133.33%" }}
+                style={{ paddingTop: GROUND_FOOTAGE[slug].aspectPadding }}
               >
                 <iframe
-                  src="https://player.vimeo.com/video/1213624013?badge=0&title=0&byline=0&portrait=0&dnt=1"
+                  src={`https://player.vimeo.com/video/${GROUND_FOOTAGE[slug].vimeoId}?badge=0&title=0&byline=0&portrait=0&dnt=1`}
                   className="absolute inset-0 h-full w-full"
                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
                   allowFullScreen
-                  title="Ligne Rouge: Transnistria"
+                  title={`Ligne Rouge: ${expedition.name}`}
                 />
               </div>
             </motion.div>
