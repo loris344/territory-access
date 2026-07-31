@@ -81,7 +81,7 @@ const CardEntryFormPlaceholder = ({ amountLabel, applicationId, onCancel }: Card
           <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground text-left">
             Card number
           </label>
-          <img src="/assets/stripe-powered-badge.svg" alt="Powered by Stripe" className="h-20 w-auto" />
+          <img src="/assets/stripe-powered-badge.svg" alt="Powered by Stripe" className="h-12 w-auto" />
         </div>
         <input
           type="text"
