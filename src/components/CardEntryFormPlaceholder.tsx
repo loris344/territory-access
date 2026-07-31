@@ -76,13 +76,13 @@ const CardEntryFormPlaceholder = ({ amountLabel, applicationId, onCancel }: Card
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="flex justify-center pb-1">
-        <img src="/assets/stripe-powered-badge.svg" alt="Powered by Stripe" className="h-16 w-auto" />
-      </div>
       <div>
-        <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
-          Card number
-        </label>
+        <div className="flex items-center justify-between mb-2">
+          <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground text-left">
+            Card number
+          </label>
+          <img src="/assets/stripe-powered-badge.svg" alt="Powered by Stripe" className="h-20 w-auto" />
+        </div>
         <input
           type="text"
           inputMode="numeric"
