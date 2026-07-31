@@ -477,7 +477,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
               <h3 className="heading-display text-lg mb-3">Deposit Received</h3>
               {summaryBlock}
               <p className="body-text text-sm text-muted-foreground mb-2">
-                Your ${amountLabel} deposit (30% of the total price) has been received. Your application is now registered.
+                Your ${amountLabel} USD deposit (30% of the total price) has been received. Your application is now registered.
               </p>
               <p className="body-text text-sm text-muted-foreground mb-2">
                 The remaining balance (70%) is due between 30 and 45 days before departure. Our team will contact you within 48 hours to confirm the details of your file.
@@ -495,7 +495,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
               </h3>
               {summaryBlock}
               <p className="body-text text-sm text-muted-foreground mb-2">
-                Your application isn&apos;t registered yet. Paying the ${amountLabel} deposit (30% of the total price) is required now to confirm it.
+                Your application isn&apos;t registered yet. Paying the ${amountLabel} USD deposit (30% of the total price) is required now to confirm it.
               </p>
               <p className="body-text text-sm text-muted-foreground mb-2">
                 The remaining balance (70%) will be due between 30 and 45 days before departure, once your deposit is received and your file is reviewed.
@@ -516,7 +516,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
                   onClick={() => setShowCardForm(true)}
                   className="w-full font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all duration-300 mt-4 disabled:opacity-50"
                 >
-                  {`Pay $${amountLabel} Deposit`}
+                  {`Pay $${amountLabel} USD Deposit`}
                 </button>
               )}
             </>
