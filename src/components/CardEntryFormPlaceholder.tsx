@@ -76,6 +76,9 @@ const CardEntryFormPlaceholder = ({ amountLabel, applicationId, onCancel }: Card
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="flex justify-center pb-1">
+        <img src="/assets/stripe-powered-badge.svg" alt="Powered by Stripe" className="h-16 w-auto" />
+      </div>
       <div>
         <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
           Card number
@@ -146,9 +149,6 @@ const CardEntryFormPlaceholder = ({ amountLabel, applicationId, onCancel }: Card
       >
         {status === "processing" ? "Processing..." : `Pay $${amountLabel} USD`}
       </button>
-      <div className="flex justify-center pt-1">
-        <img src="/assets/stripe-powered-badge.svg" alt="Powered by Stripe" className="h-14 w-auto" />
-      </div>
       <button
         type="button"
         onClick={onCancel}
