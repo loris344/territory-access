@@ -498,7 +498,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
                 Your application isn&apos;t registered yet. Paying the ${amountLabel} USD deposit (30% of the total price) is required now to confirm it.
               </p>
               <p className="body-text text-sm text-muted-foreground mb-2">
-                The remaining balance (70%) will be due between 30 and 45 days before departure, once your deposit is received and your file is reviewed.
+                The remaining balance (70%) will be due between 30 and 45 days before departure, once your deposit is received and your file is reviewed. Our team will then contact you within 48 hours with more information.
               </p>
               <p className="body-text text-sm text-muted-foreground mb-4">
                 The deposit is fully refundable if your application isn&apos;t accepted, or if we&apos;re ever unable to run this departure.
