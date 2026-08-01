@@ -682,7 +682,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
 
         <div>
           <label className="font-heading text-[10px] tracking-[0.15em] uppercase text-muted-foreground mb-2 block">
-            Physical condition & relevant experience
+            Physical condition
           </label>
           <textarea
             name="physical_condition"
