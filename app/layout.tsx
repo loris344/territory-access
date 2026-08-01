@@ -90,16 +90,14 @@ export default function RootLayout({
         <meta name="facebook-domain-verification" content="1a50ia1p7oskzkjdc4eg9agnh8479g" />
         {/* Preload the LCP hero image so it paints as early as possible. */}
         <link rel="preload" as="image" href="/assets/hero-bg.webp" fetchPriority="high" />
-        {/* Google Fonts: was a `@import` inside our own CSS bundle, which forced a
-            serial chain (HTML -> our CSS -> @import -> font CSS -> font files). A
-            top-level <link> here is discovered immediately and fetched in parallel
-            instead, removing an extra network round-trip from the critical path. */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
-        />
+        {/* Fonts are self-hosted (see src/index.css) — preload the two woff2
+            files directly, same-origin, no external DNS/TLS hop needed. */}
+        <link rel="preload" as="font" type="font/woff2" href="/fonts/space-grotesk-latin.woff2" crossOrigin="anonymous" />
+        <link rel="preload" as="font" type="font/woff2" href="/fonts/inter-latin.woff2" crossOrigin="anonymous" />
+        {/* Warm the connection to Supabase ahead of the client-side data
+            fetch that TourLandingPage/ExpeditionDetail/etc. fire after
+            hydrating — saves the DNS/TCP/TLS handshake off that request. */}
+        <link rel="preconnect" href="https://hyeqshzcujnupxxeocfy.supabase.co" crossOrigin="anonymous" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
