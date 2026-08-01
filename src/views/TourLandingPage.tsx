@@ -106,6 +106,7 @@ const TourLandingPage = () => {
           </Link>
           <a
             href="#apply"
+            onClick={() => setSelectedDateId(undefined)}
             className="font-heading text-[10px] tracking-[0.15em] uppercase px-5 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-all"
           >
             Apply now
@@ -169,6 +170,7 @@ const TourLandingPage = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4">
               <a
                 href="#apply"
+                onClick={() => setSelectedDateId(undefined)}
                 className="font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all w-full sm:w-auto text-center"
               >
                 Apply - ${expedition.price_usd.toLocaleString("en-US")} / pers.
