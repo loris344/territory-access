@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import TourLandingPage from "@/views/TourLandingPage";
 import { buildMetadata } from "@/lib/seo";
 import { supabase } from "@/integrations/supabase/client";
+import { fetchLandingPage, type LandingPageData } from "@/lib/fetch-landing-page";
 
 // Static export (GitHub Pages): pre-render one page per landing page at
 // build time. A new landing page created in /admin needs a rebuild to get
@@ -44,27 +46,40 @@ export default async function LandingPageRoute({
 }: {
   params: { slug: string };
 }) {
-  // The client view re-fetches everything itself so admin edits show up
-  // live without a rebuild — but that means the hero image URL isn't known
-  // until JS hydrates and that fetch resolves, starving the LCP image of
-  // any head start. Preloading it here (known at build time, same query
-  // generateMetadata already runs) lets the browser start the image
-  // request immediately from the static HTML instead of waiting on JS.
-  const { data } = await supabase
-    .from("landing_pages")
-    .select("hero_image_url, expeditions(hero_image_url)")
-    .eq("slug", params.slug)
-    .maybeSingle();
-  const heroUrl = data?.hero_image_url || (data as any)?.expeditions?.hero_image_url;
+  // The client view (<TourLandingPage>, via useLandingPage) used to be the
+  // ONLY place this data was ever fetched — meaning nothing on the page,
+  // not even the headline text, could render until JS hydrated AND that
+  // client-side fetch resolved. Under real-world throttling that pushed
+  // LCP past 20s even after the image itself was preloaded, because the
+  // fetch (not the image) was what the actual LCP element (the H1) was
+  // waiting on.
+  //
+  // Prefetching here, at build time, into a QueryClient under the exact
+  // same query key useLandingPage uses, means the client hook picks up
+  // this data as its initial cache entry via HydrationBoundary below —
+  // the real headline/hero/etc. are in the static HTML from the start,
+  // no network round-trip needed for first paint. useLandingPage still
+  // refetches once mounted (default staleTime: 0), so a visitor who loads
+  // the page after an admin edit still sees the update — it just arrives
+  // a beat after the initial (build-time) render instead of gating it.
+  const queryClient = new QueryClient();
+  await queryClient.fetchQuery({
+    queryKey: ["landing-page", params.slug],
+    queryFn: () => fetchLandingPage(params.slug),
+  });
+  const lp = queryClient.getQueryData<LandingPageData | null>(["landing-page", params.slug]);
+  const heroUrl = lp?.hero_image_url || lp?.expedition?.hero_image_url;
 
   return (
     <>
       {heroUrl && <link rel="preload" as="image" href={heroUrl} fetchPriority="high" />}
-      {/* <TourLandingPage> embeds <ApplicationForm>, which uses useSearchParams()
-          for the Stripe deposit redirect flow — must sit under a Suspense boundary. */}
-      <Suspense>
-        <TourLandingPage />
-      </Suspense>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        {/* <TourLandingPage> embeds <ApplicationForm>, which uses useSearchParams()
+            for the Stripe deposit redirect flow — must sit under a Suspense boundary. */}
+        <Suspense>
+          <TourLandingPage />
+        </Suspense>
+      </HydrationBoundary>
     </>
   );
 }

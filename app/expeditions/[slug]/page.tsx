@@ -33,7 +33,31 @@ export async function generateMetadata({
   });
 }
 
-export default function ExpeditionDetailPage() {
-  // <ExpeditionDetail> reads the slug via useParams() on the client.
-  return <ExpeditionDetail />;
+export default async function ExpeditionDetailPage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  // Unlike the landing pages, ExpeditionDetail already renders instantly
+  // from a bundled static fallback (useExpeditions' placeholderData) while
+  // the live query resolves in the background — no fetch gates first
+  // paint here. The one gap: no head start on the hero image request.
+  // Preload it (same query generateMetadata already runs) so the browser
+  // starts fetching it immediately instead of waiting for hydration to
+  // discover the <img> tag.
+  const { data } = await supabase
+    .from("expeditions")
+    .select("hero_image_url")
+    .eq("slug", params.slug)
+    .maybeSingle();
+
+  return (
+    <>
+      {data?.hero_image_url && (
+        <link rel="preload" as="image" href={data.hero_image_url} fetchPriority="high" />
+      )}
+      {/* <ExpeditionDetail> reads the slug via useParams() on the client. */}
+      <ExpeditionDetail />
+    </>
+  );
 }
