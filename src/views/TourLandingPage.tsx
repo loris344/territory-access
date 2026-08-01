@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import dynamic from "next/dynamic";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import {
   Shield,
   Mountain,
@@ -45,6 +45,11 @@ const TourLandingPage = () => {
   const [waitlistDateId, setWaitlistDateId] = useState<string | undefined>();
   const [waitlistDateLabel, setWaitlistDateLabel] = useState("");
   const [selectedDateId, setSelectedDateId] = useState<string | undefined>();
+  // maplibre-gl is heavy — don't pull it in until the itinerary section is
+  // actually about to be scrolled into view (map renders unconditionally
+  // otherwise, on every load, even for visitors who never scroll that far).
+  const mapRef = useRef<HTMLDivElement>(null);
+  const mapInView = useInView(mapRef, { once: true, margin: "200px" });
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -245,6 +250,7 @@ const TourLandingPage = () => {
                   className="absolute inset-0 h-full w-full"
                   allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
                   allowFullScreen
+                  loading="lazy"
                   title={`Ligne Rouge: ${expedition.name}`}
                 />
               </div>
@@ -328,8 +334,8 @@ const TourLandingPage = () => {
               ))}
             </div>
 
-            <div className="mt-10">
-              <ItineraryMap days={expedition.itinerary} />
+            <div className="mt-10" ref={mapRef}>
+              {mapInView && <ItineraryMap days={expedition.itinerary} />}
             </div>
           </div>
         </section>

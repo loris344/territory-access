@@ -39,12 +39,32 @@ export async function generateMetadata({
   });
 }
 
-export default function LandingPageRoute() {
-  // <TourLandingPage> embeds <ApplicationForm>, which uses useSearchParams()
-  // for the Stripe deposit redirect flow — must sit under a Suspense boundary.
+export default async function LandingPageRoute({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  // The client view re-fetches everything itself so admin edits show up
+  // live without a rebuild — but that means the hero image URL isn't known
+  // until JS hydrates and that fetch resolves, starving the LCP image of
+  // any head start. Preloading it here (known at build time, same query
+  // generateMetadata already runs) lets the browser start the image
+  // request immediately from the static HTML instead of waiting on JS.
+  const { data } = await supabase
+    .from("landing_pages")
+    .select("hero_image_url, expeditions(hero_image_url)")
+    .eq("slug", params.slug)
+    .maybeSingle();
+  const heroUrl = data?.hero_image_url || (data as any)?.expeditions?.hero_image_url;
+
   return (
-    <Suspense>
-      <TourLandingPage />
-    </Suspense>
+    <>
+      {heroUrl && <link rel="preload" as="image" href={heroUrl} fetchPriority="high" />}
+      {/* <TourLandingPage> embeds <ApplicationForm>, which uses useSearchParams()
+          for the Stripe deposit redirect flow — must sit under a Suspense boundary. */}
+      <Suspense>
+        <TourLandingPage />
+      </Suspense>
+    </>
   );
 }
