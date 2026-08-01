@@ -98,16 +98,36 @@ const TourLandingPage = () => {
 
   // The top CTAs jump the full length of the page (this section sits at the
   // very bottom). The site's global `scroll-behavior: smooth` (src/index.css)
-  // turns that into a ~1.5-2s animated scroll — long enough that a visitor
-  // tapping/swiping partway through (a natural reflex on mobile) cancels it
-  // early, stranding them around the FAQ section instead of at Apply. Jumping
-  // instantly for these two removes that window entirely; the per-date CTAs
-  // below start much closer to #apply so their smooth scroll is short enough
-  // to not have this problem.
+  // lets the browser pick the duration itself, which scales with distance —
+  // for this distance that's ~1.5-2s, long enough that a visitor tapping/
+  // swiping partway through (a natural reflex on mobile) cancels it early,
+  // stranding them around the FAQ section instead of at Apply. Animating it
+  // ourselves with a short, fixed duration keeps the visible scroll-down
+  // (unlike an instant jump) while shrinking that interruption window to
+  // something a reflex touch is unlikely to land in. The per-date CTAs below
+  // start much closer to #apply, so their native smooth scroll is already
+  // short enough to not have this problem.
   const jumpToApply = (e: React.MouseEvent) => {
     e.preventDefault();
     setSelectedDateId(undefined);
-    document.getElementById("apply")?.scrollIntoView({ behavior: "instant", block: "start" });
+    const target = document.getElementById("apply");
+    if (!target) return;
+    const scrollMarginTop = parseFloat(getComputedStyle(target).scrollMarginTop) || 0;
+    const startY = window.scrollY;
+    const endY = target.getBoundingClientRect().top + window.scrollY - scrollMarginTop;
+    const duration = 600;
+    const startTime = performance.now();
+    const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t ** 3 : 1 - (-2 * t + 2) ** 3 / 2);
+    const step = (now: number) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      // Explicit behavior: "instant" on every step — otherwise each call
+      // inherits the page's global CSS scroll-behavior: smooth and the
+      // browser tries to smooth-scroll *between* our own animation frames,
+      // compounding into something slower and jankier than intended.
+      window.scrollTo({ top: startY + (endY - startY) * easeInOutCubic(progress), left: 0, behavior: "instant" });
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
   };
 
   return (
