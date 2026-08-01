@@ -96,6 +96,20 @@ const TourLandingPage = () => {
     return mixed;
   })();
 
+  // The top CTAs jump the full length of the page (this section sits at the
+  // very bottom). The site's global `scroll-behavior: smooth` (src/index.css)
+  // turns that into a ~1.5-2s animated scroll — long enough that a visitor
+  // tapping/swiping partway through (a natural reflex on mobile) cancels it
+  // early, stranding them around the FAQ section instead of at Apply. Jumping
+  // instantly for these two removes that window entirely; the per-date CTAs
+  // below start much closer to #apply so their smooth scroll is short enough
+  // to not have this problem.
+  const jumpToApply = (e: React.MouseEvent) => {
+    e.preventDefault();
+    setSelectedDateId(undefined);
+    document.getElementById("apply")?.scrollIntoView({ behavior: "instant", block: "start" });
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Minimal top bar */}
@@ -106,7 +120,7 @@ const TourLandingPage = () => {
           </Link>
           <a
             href="#apply"
-            onClick={() => setSelectedDateId(undefined)}
+            onClick={jumpToApply}
             className="font-heading text-[10px] tracking-[0.15em] uppercase px-5 py-2 bg-accent text-accent-foreground hover:bg-accent/90 transition-all"
           >
             Apply now
@@ -170,7 +184,7 @@ const TourLandingPage = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mb-4">
               <a
                 href="#apply"
-                onClick={() => setSelectedDateId(undefined)}
+                onClick={jumpToApply}
                 className="font-heading text-xs tracking-[0.15em] uppercase px-8 py-4 bg-accent text-accent-foreground hover:bg-accent/90 transition-all w-full sm:w-auto text-center"
               >
                 Apply - ${expedition.price_usd.toLocaleString("en-US")} / pers.
@@ -336,7 +350,10 @@ const TourLandingPage = () => {
               ))}
             </div>
 
-            <div className="mt-10" ref={mapRef}>
+            {/* min-h reserves the space the map + detail panel will occupy once
+                mounted, so mounting it as the visitor scrolls near it doesn't
+                shift the sections below it. */}
+            <div className="mt-10 min-h-[480px] sm:min-h-[560px]" ref={mapRef}>
               {mapInView && <ItineraryMap days={expedition.itinerary} />}
             </div>
           </div>
