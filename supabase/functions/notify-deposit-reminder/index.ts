@@ -8,6 +8,22 @@ const corsHeaders = {
 
 const SITE_URL = "https://lignerougetours.com";
 
+const reassuranceHtml = `
+  <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid #e5e5e5; text-align: center;">
+    <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="margin: 0 auto 14px auto;">
+      <tr>
+        <td style="padding: 0 4px;"><img src="https://lignerougetours.com/assets/founder.webp" width="48" height="48" alt="Loris" style="border-radius: 50%; display: block;" /></td>
+        <td style="padding: 0 4px;"><img src="https://lignerougetours.com/assets/lea.webp" width="48" height="48" alt="Léa" style="border-radius: 50%; display: block;" /></td>
+        <td style="padding: 0 4px;"><img src="https://lignerougetours.com/assets/rym.webp" width="48" height="48" alt="Rym" style="border-radius: 50%; display: block;" /></td>
+      </tr>
+    </table>
+    <p style="font-size: 13px; line-height: 1.6; color: #555; margin: 0 0 14px 0;">Talk to us directly, we&#39;re here to help.</p>
+    <a href="https://wa.me/33767135458" style="display: inline-block; background: #25D366; color: #ffffff; text-decoration: none; padding: 12px 28px; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 2px;">
+      &#128172; Contact us on WhatsApp
+    </a>
+  </div>
+`;
+
 const footerHtml = `
   <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid #e5e5e5; text-align: center;">
     <p style="font-size: 13px; line-height: 1.7; color: #555; margin: 0 0 16px 0;">
@@ -107,7 +123,8 @@ Deno.serve(async (req) => {
             Secure Your Spot
           </a>
         </div>
-        <p style="font-size: 14px; line-height: 1.8; margin: 0;">
+        ${reassuranceHtml}
+        <p style="font-size: 14px; line-height: 1.8; margin: 24px 0 0 0;">
           The Ligne Rouge Tours Team
         </p>
         ${footerHtml}
