@@ -37,9 +37,9 @@ const depositBadge = (app: Application) => {
     return { label: "Payment attempted", className: "bg-orange-500/10 text-orange-600" };
   }
   if (app.deposit_reminder_sent_at) {
-    return { label: "Reminder sent, no payment yet", className: "bg-blue-500/10 text-blue-600" };
+    return { label: "Deposit invite sent, no payment yet", className: "bg-blue-500/10 text-blue-600" };
   }
-  return { label: "Applied, no payment yet", className: "bg-amber-500/10 text-amber-600" };
+  return { label: "Applied, pending review", className: "bg-amber-500/10 text-amber-600" };
 };
 
 const statusColors: Record<string, string> = {

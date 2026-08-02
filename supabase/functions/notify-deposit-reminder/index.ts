@@ -23,10 +23,14 @@ const footerHtml = `
 `;
 
 // Fired by the send-deposit-reminders pg_cron job (every 15 min, see
-// 20260727140000_deposit_attempt_tracking.sql) for applicants who submitted
-// the application form for a deposit-gated tour but never reached the
-// deposit step. One-shot: the cron function marks deposit_reminder_sent_at
-// before calling this, so it never re-fires for the same application.
+// 20260727140000_deposit_attempt_tracking.sql), ~2h after a deposit-gated
+// application is submitted. This is now the PRIMARY way applicants are
+// invited to pay the deposit — the form no longer offers it immediately on
+// submit (see ApplicationForm's "pending_review" status), so this doubles as
+// the "your file has been reviewed, dates are available" confirmation email,
+// not just a nudge for stragglers. One-shot: the cron function marks
+// deposit_reminder_sent_at before calling this, so it never re-fires for the
+// same application.
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -93,14 +97,14 @@ Deno.serve(async (req) => {
           Hi ${app.first_name},
         </p>
         <p style="font-size: 14px; line-height: 1.8; margin: 0 0 16px 0;">
-          Your application for <strong>${expeditionName}</strong>${dateLabel ? ` (${dateLabel})` : ""} — ${participantsLabel} — is <strong>not registered yet</strong>. Paying the $${amountLabel} deposit (30% of the total price) is a required step to confirm it, and we haven't received it.
+          Good news — we've reviewed your application for <strong>${expeditionName}</strong>${dateLabel ? ` (${dateLabel})` : ""} — ${participantsLabel} — and your selected dates are available.
         </p>
         <p style="font-size: 14px; line-height: 1.8; margin: 0 0 24px 0;">
-          Pick up right where you left off, it only takes a minute.
+          To secure your spot, the next step is a $${amountLabel} deposit (30% of the total price). It's fully refundable if your application isn&#39;t accepted, or if we&#39;re ever unable to run this departure. Once we receive it, a member of our team will personally reach out to you.
         </p>
         <div style="text-align: center; margin: 0 0 24px 0;">
           <a href="${resumeUrl}" style="display: inline-block; background: #1a1a1a; color: #fff; text-decoration: none; padding: 14px 32px; font-size: 13px; letter-spacing: 0.1em; text-transform: uppercase;">
-            Complete Your Deposit
+            Secure Your Spot
           </a>
         </div>
         <p style="font-size: 14px; line-height: 1.8; margin: 0;">
@@ -120,7 +124,7 @@ Deno.serve(async (req) => {
         from: "Ligne Rouge Tours <noreply@lignerougetours.com>",
         to: [app.email],
         reply_to: "contact@lignerougetours.com",
-        subject: `Complete your deposit - ${expeditionName}`,
+        subject: `Your dates are available - ${expeditionName}`,
         html: emailHtml,
       }),
     });

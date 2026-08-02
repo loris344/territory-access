@@ -52,7 +52,7 @@ interface ApplicationFormProps {
   onSubmitted?: () => void;
 }
 
-type DepositStatus = "idle" | "offer" | "paying" | "confirming" | "paid" | "cancelled";
+type DepositStatus = "idle" | "pending_review" | "offer" | "paying" | "confirming" | "paid" | "cancelled";
 
 const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedExpedition, slug, onSubmitted }: ApplicationFormProps) => {
   const searchParams = useSearchParams();
@@ -404,11 +404,11 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
     setSubmitted(true);
     if (depositRequired) {
       setResolvedDeposit({ required: true, amountUsd: depositAmountUsd });
-      setDepositStatus("offer");
-      // The confirmation email is intentionally NOT sent here — it only goes
-      // out once the deposit step is actually submitted (see
-      // CardEntryFormPlaceholder), otherwise it would tell people their
-      // application is "received" before the part that actually matters.
+      // Don't ask for the deposit yet — the team reviews the file first.
+      // send_deposit_reminders (pg_cron) emails the deposit link a couple
+      // hours later, once availability is confirmed; that link resumes the
+      // form straight into "offer" (see the resume-application branch above).
+      setDepositStatus("pending_review");
     } else {
       // No deposit gate for this tour: the application is complete as-is.
       supabase.functions.invoke("notify-application", { body: { application_id: activeApplicationId } }).catch(() => {});
@@ -469,6 +469,21 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
             <>
               <h3 className="heading-display text-lg mb-3">Confirming your payment...</h3>
               <p className="body-text text-sm text-muted-foreground">Please wait a moment.</p>
+            </>
+          )}
+
+          {depositStatus === "pending_review" && (
+            <>
+              <h3 className="heading-display text-lg mb-3">Application Received</h3>
+              {summaryBlock}
+              <p className="body-text text-sm text-muted-foreground mb-2">
+                Thank you for applying. Our team is reviewing your file now — within the next few hours you&apos;ll
+                receive an email confirming availability for your selected dates.
+              </p>
+              <p className="body-text text-sm text-muted-foreground">
+                From there, you&apos;ll be invited to secure your spot with a refundable deposit. Once it&apos;s
+                received, a member of our team will personally reach out to you.
+              </p>
             </>
           )}
 
