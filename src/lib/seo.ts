@@ -4,7 +4,7 @@ export const SITE_NAME = "Ligne Rouge Tours";
 export const DEFAULT_TITLE =
   "Ligne Rouge Tours | Expeditions to the World's Least-Visited Places";
 export const DEFAULT_DESCRIPTION =
-  "We design expeditions to the world's least-visited places. For those who'd rather live the story than read about it.";
+  "The world only 1% will ever see. For those who'd rather live the story than read about it.";
 export const SITE_URL = "https://lignerougetours.com";
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image-v2.jpg`;
 

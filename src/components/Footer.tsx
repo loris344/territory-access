@@ -12,7 +12,7 @@ const Footer = () => {
           <div>
             <h4 className="heading-display text-sm mb-4">Ligne Rouge Tours</h4>
             <p className="body-text text-muted-foreground text-sm mb-6">
-              We design expeditions to the world's least-visited places.
+              The world only 1% will ever see.
             </p>
             <div className="flex items-center gap-6">
               <img src="/assets/atta-member-badge.png" alt="Adventure Travel Trade Association Member" className="h-9 w-auto" />
