@@ -101,10 +101,19 @@ export function useExpeditionBySlug(slug: string | undefined) {
   };
 }
 
+// Kept out of the main catalog surfaces (homepage grid, map, photo strip)
+// while still is_hidden=false in Supabase, since is_hidden also gates its
+// landing page (see 20260725171133_hide_expeditions.sql) — no is_hidden=true
+// state exists that keeps the landing page working but hides the tour
+// elsewhere, so it's filtered out here instead. Its own tour page
+// (/expeditions/transnistria-soviet-ghost-state) and landing page
+// (/lp/transnistria) are unaffected — they don't go through this hook.
+const CATALOG_HIDDEN_SLUGS = ["transnistria-soviet-ghost-state"];
+
 export function useActiveExpeditions() {
   const { data: expeditions, ...rest } = useExpeditions();
   return {
     ...rest,
-    data: expeditions || [],
+    data: (expeditions || []).filter((e) => !CATALOG_HIDDEN_SLUGS.includes(e.slug)),
   };
 }
