@@ -27,7 +27,7 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="flex items-center justify-between h-20 sm:h-24">
           <Link href="/" className="flex items-center">
-            <img src={logoDark} alt="Ligne Rouge Tours" className="h-16 sm:h-20 w-auto" />
+            <img src={logoDark} alt="Ligne Rouge Tours" className="h-12 sm:h-16 w-auto" />
           </Link>
 
           {/* Desktop */}
