@@ -136,7 +136,7 @@ const TourLandingPage = () => {
       <div className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border">
         <div className="max-w-7xl mx-auto px-6 lg:px-8 h-[72px] sm:h-20 flex items-center justify-between">
           <Link href="/" className="flex items-center">
-            <img src={logoDark} alt="Ligne Rouge Tours" className="h-[60px] sm:h-10 w-auto" />
+            <img src={logoDark} alt="Ligne Rouge Tours" className="h-[68px] sm:h-10 w-auto" />
           </Link>
           <a
             href="#apply"
