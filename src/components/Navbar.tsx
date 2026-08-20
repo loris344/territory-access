@@ -25,9 +25,9 @@ const Navbar = () => {
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/90 backdrop-blur-sm border-b border-border">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
+        <div className="flex items-center justify-between h-[72px] sm:h-20">
           <Link href="/" className="flex items-center">
-            <img src={logoDark} alt="Ligne Rouge Tours" className="h-14 sm:h-10 w-auto" />
+            <img src={logoDark} alt="Ligne Rouge Tours" className="h-[60px] sm:h-10 w-auto" />
           </Link>
 
           {/* Desktop */}
