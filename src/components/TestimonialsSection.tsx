@@ -13,26 +13,26 @@ const annaImg = "/assets/anna-afghanistan.webp";
 const testimonials = [
   {
     name: "Lucas",
-    destination: "Iran",
+    destination: "Sahara Desert",
     date: "October 2023",
     image: lucasImg,
-    text: "An incredible experience. Iran is a country of unsuspected cultural richness. The organization was flawless, every detail thought through so we could fully enjoy the journey.",
+    text: "An incredible experience. The desert has a way of putting everything in perspective. The organization was flawless, every detail thought through so we could fully live it, not just watch it.",
     rating: 5,
   },
   {
     name: "Isaac",
-    destination: "Transnistria",
+    destination: "Svalbard, Arctic",
     date: "March 2024",
     image: isaacImg,
-    text: "I would never have dared to go alone. Ligne Rouge made this trip possible and truly unforgettable. A fascinating territory, frozen in time.",
+    text: "I would never have dared to go alone. Ligne Rouge made this trip possible and truly unforgettable. A frozen, silent world unlike anything I'd ever felt.",
     rating: 5,
   },
   {
     name: "Arnaud",
-    destination: "Somaliland",
+    destination: "Patagonia",
     date: "January 2023",
     image: arnaudImg,
-    text: "Somaliland completely surprised me. Raw landscapes, authentic encounters. The team on the ground was outstanding, I felt safe at every moment.",
+    text: "Patagonia completely surprised me. Raw landscapes, real effort, real silence. The team on the ground was outstanding, every step of the way.",
     rating: 5,
   },
   {
@@ -45,10 +45,10 @@ const testimonials = [
   },
   {
     name: "Anna",
-    destination: "Afghanistan",
+    destination: "Peruvian Andes",
     date: "November 2022",
     image: annaImg,
-    text: "Traveling to Afghanistan as a woman seemed impossible. Ligne Rouge organized everything with total professionalism and respect. A transformative experience.",
+    text: "I didn't think I was capable of this. Ligne Rouge organized everything with total professionalism, and pushed me exactly where I needed to be pushed. A transformative experience.",
     rating: 5,
   },
 ];

@@ -4,9 +4,9 @@ import { motion } from "framer-motion";
 
 const EthicalSection = () => {
   const points = [
-    "We stay within terrain we know and trust. Real challenge, never recklessness.",
-    "Every route is scouted and prepared by guides who know the terrain, never left to chance.",
-    "What you experience is authentic. No staged shows, no performances for tourists.",
+    "Every route is scouted and walked by our own team before we ever bring a group.",
+    "Guides are chosen for their years on that exact terrain, not for charisma. They make the calls that matter.",
+    "What you experience is real: no staged shows, no performances, no shortcuts.",
     "Local communities come first. Always, without exception.",
   ];
 
@@ -25,7 +25,7 @@ const EthicalSection = () => {
             How We Operate
           </h2>
           <p className="body-text text-muted-foreground text-base sm:text-lg max-w-3xl mb-10">
-            Real challenge only works when it's genuinely safe. Every expedition follows a strict set of principles: this is what separates a real experience from a reckless one.
+            We push you to a real edge, never a reckless one. Every expedition follows the same discipline, whoever is leading it.
           </p>
 
           <ul className="space-y-4">

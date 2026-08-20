@@ -30,8 +30,8 @@ export const teamMembers: TeamMember[] = [
   },
   {
     name: "Rayane",
-    role: "Expedition Guide & Fixer Liaison",
-    bio: "Coordinates with local fixers and guides across North Africa and the Middle East. Expert in navigating remote and culturally rich environments.",
+    role: "Expedition Guide & Local Partnerships",
+    bio: "Coordinates with local guides and partners across North Africa and the Middle East. Expert in navigating remote and culturally rich environments.",
     image: "/assets/rayane.webp",
     email: "rayane@lignerougetours.com",
   },

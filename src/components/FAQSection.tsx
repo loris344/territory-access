@@ -15,7 +15,7 @@ const faqItems = [
   },
   {
     q: "Are these destinations safe?",
-    a: "Every destination is chosen and prepared with real care: trusted local fixers, detailed safety planning, and protocols built from experience on the ground. We're always upfront about what to expect before you commit. Nothing is left to chance on our end.",
+    a: "Every destination is chosen and prepared with real care: experienced local guides, detailed logistics, and protocols built from real experience on the ground. We're always upfront about what to expect before you commit. Nothing is left to chance on our end.",
   },
   {
     q: "What is the selection process?",

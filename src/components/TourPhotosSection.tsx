@@ -22,15 +22,13 @@ const CURATED_PHOTOS: Record<string, string> = {
   "bosnia-ghost-frontlines": "bosnia-ghost-frontlines.webp",
 };
 
-// bosnia-ghost-frontlines is hidden (is_hidden=true in Supabase), enforced
-// via RLS — so it's unreachable through the public client entirely, not
-// just filtered client-side, and has no live `name` or page to link to.
-// Shown here anyway as a static, non-clickable proof-of-trip card (the tour
-// itself stays hidden everywhere else); swap to the live-lookup path below
-// once it's unhidden.
-const STATIC_NAMES: Record<string, string> = {
-  "bosnia-ghost-frontlines": "Sarajevo, Bosnia",
-};
+// Static-name bypass for curated slugs whose tour is hidden in Supabase
+// (is_hidden=true, RLS-blocked for the public client, so no live `name` or
+// page to link to) but should still render as a non-clickable proof-of-trip
+// card. Empty while every expedition is hidden — see 20260820120000_hide_
+// all_expeditions.sql — so this section doesn't show orphaned destination
+// cards for tours that are supposed to be fully off the site.
+const STATIC_NAMES: Record<string, string> = {};
 
 const CURATED_BASE_URL =
   "https://hyeqshzcujnupxxeocfy.supabase.co/storage/v1/object/public/expedition-images/homepage-tour-photos/";
