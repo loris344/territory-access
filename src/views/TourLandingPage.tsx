@@ -23,7 +23,7 @@ import GalleryCarousel from "@/components/GalleryCarousel";
 import TourFAQSection from "@/components/TourFAQSection";
 import { useLandingPage } from "@/hooks/use-landing-page";
 import { optimizedImageUrl } from "@/lib/utils";
-const logoDark = "/assets/logo-dark.webp";
+const logoDark = "/assets/Lignerougetourslogo.png";
 
 // maplibre-gl needs the browser/WebGL — never render it during SSR.
 const ItineraryMap = dynamic(() => import("@/components/ItineraryMap"), { ssr: false });

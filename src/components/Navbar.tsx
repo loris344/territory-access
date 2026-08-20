@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-const logoDark = "/assets/logo-dark.webp";
+const logoDark = "/assets/Lignerougetourslogo.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
