@@ -2,7 +2,6 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { expeditions as staticExpeditions } from "@/data/expeditions";
 import type { Expedition, ExpeditionDate, Testimonial, FAQItem } from "@/data/expeditions";
 
 async function fetchExpeditions(): Promise<Expedition[]> {
@@ -84,9 +83,13 @@ export function useExpeditions() {
   return useQuery({
     queryKey: ["expeditions"],
     queryFn: fetchExpeditions,
-    // Render instantly from the bundled static catalog, then swap to live data
-    // in the background (hero images, multiple departures, admin edits).
-    placeholderData: staticExpeditions,
+    // All expeditions are currently hidden (is_hidden=true) while the catalog
+    // is reworked to match the new brand positioning. The static catalog
+    // doesn't know about is_hidden, so it can't be used as placeholderData
+    // right now — it would flash all tours before the real (empty) Supabase
+    // response lands. Restore `placeholderData: staticExpeditions` once tours
+    // are unhidden.
+    placeholderData: [],
     // Avoid refetching on every navigation within a session.
     staleTime: 5 * 60 * 1000,
   });
