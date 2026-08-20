@@ -23,7 +23,7 @@ const faqItems = [
   },
   {
     q: "What happens if an expedition is cancelled?",
-    a: "If we cancel due to security, political, or force majeure reasons, you receive a full refund of all payments made. We do not offer compensation beyond the refund. If you cancel, our cancellation policy applies based on timing.",
+    a: "If we cancel due to safety, weather, logistical, or force majeure reasons, you receive a full refund of all payments made. We do not offer compensation beyond the refund. If you cancel, our cancellation policy applies based on timing.",
   },
   {
     q: "Can I travel alone or must I join a group?",

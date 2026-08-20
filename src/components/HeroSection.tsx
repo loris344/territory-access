@@ -91,17 +91,21 @@ const HeroSection = ({ initialHeroImages }: HeroSectionProps) => {
             />
           </div>
 
+          <p className="font-heading text-[10px] sm:text-xs tracking-[0.25em] uppercase text-accent-red mb-4 sm:mb-6">
+            Where's your line?
+          </p>
+
           <h1 className="heading-display text-2xl sm:text-4xl md:text-5xl lg:text-6xl leading-tight mb-5 sm:mb-8">
-            The world
+            Discover
             <br />
-            <span className="text-accent-red">only 1% will ever see.</span>
+            <span className="text-accent-red">how far you can go.</span>
           </h1>
 
           <p className="body-text text-muted-foreground text-sm sm:text-lg max-w-2xl mx-auto mb-3 sm:mb-5">
             For those who'd rather live the story than read about it.
           </p>
           <p className="font-heading text-[9px] sm:text-[10px] tracking-[0.2em] uppercase text-muted-foreground/60 mb-6">
-            By application only · Small groups, real access
+            By application only · Small groups, real terrain
           </p>
 
           <div className="flex items-center justify-center gap-5 mb-8 sm:mb-12">

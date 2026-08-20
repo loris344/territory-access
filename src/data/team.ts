@@ -10,14 +10,14 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Loris",
     role: "Founder & Expedition Leader",
-    bio: "Passionate about off-the-beaten-path travel and geopolitics. Has explored over 38 countries, from disputed territories to some of the world's most restricted-access regions, before founding Ligne Rouge Tours.",
+    bio: "Passionate about off-the-beaten-path travel and pushing personal limits. Has explored over 38 countries, from remote deserts to some of the world's most extreme and isolated regions, before founding Ligne Rouge Tours.",
     image: "/assets/founder.webp",
     email: "loris@lignerougetours.com",
   },
   {
     name: "Gaëtan",
     role: "Operations & Logistics Coordinator",
-    bio: "Handles the operational backbone of every expedition, from route planning to on-ground logistics across complex territories.",
+    bio: "Handles the operational backbone of every expedition, from route planning to on-ground logistics across demanding terrain.",
     image: "/assets/gaetan.webp",
     email: "gaetan@lignerougetours.com",
   },
@@ -31,14 +31,14 @@ export const teamMembers: TeamMember[] = [
   {
     name: "Rayane",
     role: "Expedition Guide & Fixer Liaison",
-    bio: "Coordinates with local fixers and guides across North Africa and the Middle East. Expert in navigating culturally sensitive environments.",
+    bio: "Coordinates with local fixers and guides across North Africa and the Middle East. Expert in navigating remote and culturally rich environments.",
     image: "/assets/rayane.webp",
     email: "rayane@lignerougetours.com",
   },
   {
     name: "Vitaly",
     role: "Strategic Partnerships & Development",
-    bio: "Builds relationships with local operators and institutional partners to open access to restricted and emerging destinations.",
+    bio: "Builds relationships with local operators and institutional partners to open access to remote and emerging destinations.",
     image: "/assets/vitaly.webp",
     email: "vitaly@lignerougetours.com",
   },

@@ -722,7 +722,7 @@ const ApplicationForm = ({ preselectedSlug = "", preselectedDateId = "", lockedE
             required
             rows={5}
             className={inputClass + " resize-none"}
-            placeholder="What draws you to this destination? What are you looking to experience?"
+            placeholder="What are you hoping to push through, or discover, on this expedition?"
           />
           {errorText("motivation_text")}
         </div>

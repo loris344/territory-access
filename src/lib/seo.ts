@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 
 export const SITE_NAME = "Ligne Rouge Tours";
 export const DEFAULT_TITLE =
-  "Ligne Rouge Tours | Expeditions to the World's Least-Visited Places";
+  "Ligne Rouge Tours | Immersive Expeditions to the Wildest Places on Earth";
 export const DEFAULT_DESCRIPTION =
-  "The world only 1% will ever see. For those who'd rather live the story than read about it.";
+  "Immersive expeditions into the world's wildest places, designed to show you how far you can go.";
 export const SITE_URL = "https://lignerougetours.com";
 export const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image-v2.jpg`;
 

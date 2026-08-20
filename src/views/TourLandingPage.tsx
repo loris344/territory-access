@@ -476,7 +476,7 @@ const TourLandingPage = () => {
               <div className="h-px w-16 bg-accent" />
             </div>
 
-            <h2 className="heading-display text-2xl sm:text-3xl mb-4 text-center">Ready to cross the line?</h2>
+            <h2 className="heading-display text-2xl sm:text-3xl mb-4 text-center">Where's your line?</h2>
             <p className="body-text text-muted-foreground text-sm sm:text-base max-w-xl mx-auto mb-10 text-center">
               Each application is reviewed to make sure this expedition is a good fit for you, particularly your physical readiness for the terrain.
             </p>

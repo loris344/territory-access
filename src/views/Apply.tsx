@@ -26,7 +26,7 @@ const Apply = () => {
             <div className="h-px w-12 bg-accent mb-10" />
             <h1 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-4">Application</h1>
             <p className="body-text text-muted-foreground mb-12">
-              Participation in our expeditions is not open to all. Each application undergoes a thorough internal review to ensure alignment with the demands of the destination and the cohesion of the group.
+              Participation in our expeditions is not open to all. Each application is reviewed individually to make sure you're ready for the challenge ahead, and that the group is right for you.
             </p>
 
             <ApplicationForm

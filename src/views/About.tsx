@@ -10,7 +10,7 @@ import { teamMembers } from "@/data/team";
 const faqItems = [
   {
     q: "Who can apply for an expedition?",
-    a: "Anyone over 18 in good physical and mental condition. No prior expedition experience is required, but a genuine willingness to step outside your comfort zone is mandatory. Each application is reviewed individually.",
+    a: "Anyone over 18 in good physical and mental condition. No prior expedition experience is required, but a genuine willingness to step into discomfort is non-negotiable. Every application is reviewed individually. We look for mindset, not résumés.",
   },
   {
     q: "Are these destinations safe?",
@@ -22,7 +22,7 @@ const faqItems = [
   },
   {
     q: "What happens if an expedition is cancelled?",
-    a: "If we cancel due to security, political, or force majeure reasons, you receive a full refund of all payments made. We do not offer compensation beyond the refund. If you cancel, our cancellation policy applies based on timing.",
+    a: "If we cancel due to safety, weather, logistical, or force majeure reasons, you receive a full refund of all payments made. We do not offer compensation beyond the refund. If you cancel, our cancellation policy applies based on timing.",
   },
   {
     q: "Can I travel alone or must I join a group?",
@@ -46,18 +46,22 @@ const About = () => {
             <div className="h-px w-12 bg-accent mb-10" />
             <h1 className="heading-display text-2xl sm:text-3xl md:text-4xl mb-8">Who We Are</h1>
             <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
-              Ligne Rouge Tours is not a travel agency. We're an expedition company built around real access: remote
-              regions, politically complex places, extreme environments, and territories most travelers never get
-              to see.
+              Ligne Rouge Tours is not a travel agency. We're an expedition company built around one question:
+              how far are you capable of going?
+            </p>
+            <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
+              Every expedition takes you into the wildest, most demanding landscapes on Earth: deserts, glaciers,
+              jungles, high altitude, deep isolation. And draws a line for you to cross: cold, distance, effort,
+              solitude. You don't need to be an expert. You need to be ready to find out what you're made of.
             </p>
             <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
               We design each expedition as a genuine immersion: thoughtfully planned, intense, and built to challenge
-              you in the best way. Our clients aren't tourists. They're people who want to experience the world
-              firsthand, not observe it from a distance.
+              you in the best way. Our clients aren't tourists collecting destinations. They're people who want to
+              feel something real, push past what they thought they could do, and come back changed.
             </p>
             <p className="body-text text-muted-foreground text-base sm:text-lg leading-relaxed">
-              Every expedition is built around trusted local guides, careful security planning, and a belief that
-              direct experience beats passive observation. We do not sell vacations. We offer access.
+              Every expedition is built around trusted local guides, careful safety planning, and a belief that
+              real experience beats passive observation. We do not sell vacations. We offer a line worth crossing.
             </p>
           </motion.div>
         </div>

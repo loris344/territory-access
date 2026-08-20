@@ -12,7 +12,7 @@ const Footer = () => {
           <div>
             <h4 className="heading-display text-sm mb-4">Ligne Rouge Tours</h4>
             <p className="body-text text-muted-foreground text-sm mb-6">
-              The world only 1% will ever see.
+              Discover how far you can go.
             </p>
             <div className="flex items-center gap-6">
               <img src="/assets/atta-member-badge.png" alt="Adventure Travel Trade Association Member" className="h-9 w-auto" />
@@ -78,7 +78,7 @@ const Footer = () => {
         </div>
         <div className="mt-16 pt-10 border-t border-border text-center">
           <p className="font-heading text-xs sm:text-sm tracking-[0.15em] uppercase text-muted-foreground mb-6">
-            Ready to cross the line?
+            Where's your line?
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <Link

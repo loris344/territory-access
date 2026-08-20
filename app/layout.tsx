@@ -46,7 +46,7 @@ const organizationJsonLd = {
   name: SITE_NAME,
   url: SITE_URL,
   logo: `${SITE_URL}/favicon.png`,
-  description: "We design expeditions to the world's least-visited places.",
+  description: "We design immersive expeditions into the world's wildest places, built to show you how far you can go.",
   address: {
     "@type": "PostalAddress",
     streetAddress: "7 rue des Archives",

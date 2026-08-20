@@ -28,7 +28,7 @@ const statusStyles: Record<string, string> = {
 };
 const statusLabels: Record<string, string> = {
   open: "OPEN",
-  limited: "LIMITED ACCESS",
+  limited: "FEW SPOTS LEFT",
   closed: "CLOSED",
   cancelled: "CANCELLED",
   postponed: "POSTPONED",

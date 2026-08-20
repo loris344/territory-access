@@ -9,9 +9,9 @@ const corsHeaders = {
 const SITE_URL = "https://lignerougetours.com";
 const SITE_NAME = "Ligne Rouge Tours";
 const DEFAULT_TITLE =
-  "Ligne Rouge Tours — Expeditions in Territories Others Avoid";
+  "Ligne Rouge Tours | Immersive Expeditions to the Wildest Places on Earth";
 const DEFAULT_DESCRIPTION =
-  "We organize expeditions in territories others avoid. For those who refuse to observe the world from a distance.";
+  "Immersive expeditions into the world's wildest places, designed to show you how far you can go.";
 const DEFAULT_OG_IMAGE = `${SITE_URL}/og-image-v2.jpg`;
 
 function buildHtml({
@@ -77,17 +77,17 @@ Deno.serve(async (req) => {
       {
         "/": { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION },
         "/about": {
-          title: `Who We Are — ${SITE_NAME}`,
+          title: `Who We Are | ${SITE_NAME}`,
           description:
-            "Meet the Ligne Rouge Tours team. We design structured immersions in conflict zones, disputed territories, and extreme environments.",
+            "Meet the Ligne Rouge Tours team. We design immersive expeditions into the wildest, most demanding landscapes on Earth, built to show you how far you can go.",
         },
         "/apply": {
-          title: `Apply — ${SITE_NAME}`,
+          title: `Apply | ${SITE_NAME}`,
           description:
             "Apply for a Ligne Rouge Tours expedition. Participation is by application only, reviewed individually.",
         },
         "/legal": {
-          title: `Legal Notice & Terms — ${SITE_NAME}`,
+          title: `Legal Notice & Terms | ${SITE_NAME}`,
           description:
             "Legal notice, terms and conditions, and cancellation policy for Ligne Rouge Tours expeditions.",
         },
@@ -126,7 +126,7 @@ Deno.serve(async (req) => {
         .single();
 
       if (expedition) {
-        const title = `${expedition.name} — ${expedition.country} — ${SITE_NAME}`;
+        const title = `${expedition.name}, ${expedition.country} | ${SITE_NAME}`;
         const ogImage = expedition.hero_image_url || DEFAULT_OG_IMAGE;
         const pageUrl = `${SITE_URL}/expeditions/${expedition.slug}`;
 
