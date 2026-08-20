@@ -2,16 +2,24 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import TourLandingPage from "@/views/TourLandingPage";
+import RetiredPageRedirect from "@/components/RetiredPageRedirect";
 import { buildMetadata } from "@/lib/seo";
 import { supabase } from "@/integrations/supabase/client";
 import { fetchLandingPage, type LandingPageData } from "@/lib/fetch-landing-page";
+
+// Landing pages retired along with their underlying tour on 2026-08-20 —
+// their URLs were live/indexable before that, so they get a soft redirect
+// instead of a bare 404. See RETIRED_EXPEDITION_SLUGS for the equivalent
+// on /expeditions/[slug].
+const RETIRED_LANDING_PAGE_SLUGS = ["kashmir"] as const;
 
 // Static export (GitHub Pages): pre-render one page per landing page at
 // build time. A new landing page created in /admin needs a rebuild to get
 // its own page — same tradeoff as app/expeditions/[slug].
 export async function generateStaticParams() {
   const { data } = await supabase.from("landing_pages").select("slug");
-  return (data || []).map((lp) => ({ slug: lp.slug as string }));
+  const liveSlugs = (data || []).map((lp) => lp.slug as string);
+  return [...liveSlugs, ...RETIRED_LANDING_PAGE_SLUGS].map((slug) => ({ slug }));
 }
 
 export async function generateMetadata({
@@ -19,6 +27,10 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
+  if ((RETIRED_LANDING_PAGE_SLUGS as readonly string[]).includes(params.slug)) {
+    return buildMetadata({ title: "Expedition No Longer Available", noIndex: true });
+  }
+
   const { data } = await supabase
     .from("landing_pages")
     .select("headline, subheadline, slug, expeditions(short_description, hero_image_url)")
@@ -46,6 +58,10 @@ export default async function LandingPageRoute({
 }: {
   params: { slug: string };
 }) {
+  if ((RETIRED_LANDING_PAGE_SLUGS as readonly string[]).includes(params.slug)) {
+    return <RetiredPageRedirect to="/" />;
+  }
+
   // The client view (<TourLandingPage>, via useLandingPage) used to be the
   // ONLY place this data was ever fetched — meaning nothing on the page,
   // not even the headline text, could render until JS hydrated AND that
